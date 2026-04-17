@@ -1,0 +1,64 @@
+.page { min-height: 100vh; background: var(--void); position: relative; padding-bottom: 80px; }
+.bg { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(70,50,150,0.07) 0%, transparent 70%); pointer-events: none; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 48px; border-bottom: 1px solid var(--border); }
+.logo { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold); text-decoration: none; letter-spacing: 0.08em; }
+.logo span { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 8px; letter-spacing: 0.2em; }
+.back { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.back:hover { color: var(--gold); }
+.hero { text-align: center; padding: 60px 24px 40px; max-width: 680px; margin: 0 auto; }
+.eyebrow { font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+.ornament { font-size: 40px; display: block; margin: 0 0 16px; }
+.title { font-family: 'Cinzel', serif; font-size: clamp(24px, 3.5vw, 38px); font-weight: 700; color: var(--text); margin: 0 0 12px; }
+.gold { color: var(--gold); }
+.sub { font-size: 15px; color: var(--muted); line-height: 1.7; margin: 0; }
+
+.signGrid { max-width: 900px; margin: 0 auto; padding: 0 24px 32px; display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.signCard { background: var(--deep); border: 1px solid var(--border); border-radius: 12px; padding: 14px 8px; cursor: pointer; text-align: center; transition: all 0.2s; font-family: inherit; }
+.signCard:hover { border-color: rgba(212,175,55,0.3); transform: translateY(-2px); }
+.signCardActive { background: rgba(212,175,55,0.06); }
+.signSymbol { font-size: 24px; margin-bottom: 6px; }
+.signName { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.signDates { font-size: 9px; color: var(--muted); line-height: 1.4; }
+
+.reading { max-width: 780px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Header */
+.readingHeader { display: flex; align-items: center; gap: 20px; background: var(--deep); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; }
+.readingSymbol { font-size: 56px; line-height: 1; flex-shrink: 0; }
+.readingName { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 700; color: var(--text); margin: 0 0 6px; }
+.readingMeta { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sep { opacity: 0.4; }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; }
+.tab { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 10px 24px; font-size: 14px; font-weight: 600; color: var(--muted); font-family: 'Cinzel', serif; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s; }
+.tab:hover { border-color: rgba(212,175,55,0.3); color: var(--text); }
+.tabActive { background: rgba(212,175,55,0.1); border-color: rgba(212,175,55,0.4); color: var(--gold); }
+
+/* Main Text */
+.mainText { background: var(--deep); border: 1px solid var(--border); border-radius: 14px; padding: 28px; }
+.mainText p { font-size: 16px; color: var(--text); line-height: 1.85; margin: 0; }
+
+/* Scores */
+.scoresGrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.scoreCard { background: var(--deep); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.scoreLabel { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+.scoreText { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+/* Advice */
+.advice { background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.2); border-radius: 12px; padding: 20px 24px; }
+.adviceLabel { font-size: 11px; font-weight: 700; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
+.adviceText { font-size: 15px; color: var(--gold); font-style: italic; margin: 0; line-height: 1.7; }
+
+.prompt { max-width: 600px; margin: 0 auto; padding: 0 24px; background: var(--deep); border: 1px solid var(--border); border-radius: 16px; height: 120px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 15px; }
+
+@media (max-width: 768px) {
+  .nav { padding: 18px 20px; }
+  .signGrid { grid-template-columns: repeat(4, 1fr); }
+  .scoresGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .signGrid { grid-template-columns: repeat(3, 1fr); }
+  .scoresGrid { grid-template-columns: repeat(2, 1fr); }
+  .readingHeader { flex-direction: column; text-align: center; }
+}

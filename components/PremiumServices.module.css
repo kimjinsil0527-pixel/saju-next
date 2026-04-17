@@ -1,0 +1,104 @@
+.section { padding: 100px 0; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--border);
+}
+
+.item {
+  background: var(--surface);
+  padding: 40px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+.item:hover { background: var(--surface2); }
+
+.span2 {
+  grid-column: span 2;
+  align-items: center;
+  background: linear-gradient(135deg, rgba(200,169,110,0.06), rgba(94,203,161,0.04)) !important;
+  border-top: 1px solid var(--border-bright);
+  cursor: default;
+}
+
+.iconWrap {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: var(--void);
+}
+.iconWrapGold {
+  background: linear-gradient(135deg, rgba(200,169,110,0.15), rgba(232,114,74,0.1));
+}
+
+.itemLabel {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.itemTitle {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.itemDesc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.itemPrice {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 500;
+}
+.from {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-right: 4px;
+}
+
+.ctaRight {
+  text-align: right;
+  flex-shrink: 0;
+}
+.ctaMeta {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.ctaPrice {
+  font-family: 'Cinzel', serif;
+  font-size: 28px;
+  color: var(--gold);
+}
+.ctaBtn {
+  margin-top: 16px;
+  width: 160px;
+  text-align: center;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .section { padding: 60px 0; }
+  .grid { grid-template-columns: 1fr; }
+  .item { padding: 28px 20px; }
+  .span2 { grid-column: span 1; flex-direction: column; }
+  .ctaRight { text-align: left; width: 100%; }
+  .ctaBtn { width: 100%; }
+  .ctaPrice { font-size: 22px; }
+}

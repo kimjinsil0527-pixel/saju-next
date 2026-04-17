@@ -1,0 +1,1039 @@
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 120px 48px 80px;
+  min-height: 100vh;
+}
+
+/* ─── HEADER ─── */
+.header {
+  text-align: center;
+  margin-bottom: 64px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+.eyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: var(--gold-dim);
+  margin-bottom: 20px;
+}
+.name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.zodiac {
+  font-size: 14px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+.zodiac span {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* ─── SECTION ─── */
+.section {
+  margin-bottom: 60px;
+}
+.sectionTitle {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 28px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ─── PILLARS ─── */
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pillarCard {
+  background: var(--deep);
+  padding: 24px 16px;
+  text-align: center;
+  transition: background 0.3s;
+}
+.pillarCard:hover { background: var(--surface2); }
+
+.pillarLabel {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.pillarStem {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.pillarStemKor {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  letter-spacing: 0.1em;
+}
+.pillarDivider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 auto 16px;
+  width: 40px;
+}
+.pillarBranch {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--text-mid);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.pillarBranchKor {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+}
+.pillarZodiac {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--jade);
+  letter-spacing: 0.15em;
+}
+
+.pillarUnknown {
+  opacity: 0.4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.unknownText {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 20px 0 4px;
+}
+.unknownSub {
+  font-size: 10px;
+  color: var(--text-dim);
+  opacity: 0.7;
+}
+
+/* ─── ELEMENT ─── */
+.elementGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.elementCard {
+  background: var(--deep);
+  padding: 20px 12px;
+  text-align: center;
+}
+.elementEmoji { font-size: 22px; margin-bottom: 8px; }
+.elementName {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.elementBar {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.elementBarFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+.elementCount {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.elementSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.summaryCard {
+  background: var(--surface);
+  padding: 24px 20px;
+}
+.summaryLabel {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.summaryValue {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.summaryDesc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ─── ENERGY PROFILE ─── */
+.energyWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.energyGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.energyCard {
+  background: var(--deep);
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.energyBadge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.25em;
+  padding: 5px 14px;
+  border-radius: 20px;
+  align-self: flex-start;
+}
+
+.energyTitle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.energyElement {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.energyKeyword {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.15em;
+  margin-top: 4px;
+}
+
+.energyTraits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.energyTrait {
+  font-size: 11px;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-weight: 500;
+}
+
+.energyDesc {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.85;
+}
+
+.energyShadow {
+  background: rgba(232, 114, 74, 0.06);
+  border: 1px solid rgba(232, 114, 74, 0.15);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+
+.shadowLabel {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #E8724A;
+  margin-bottom: 6px;
+}
+
+.energyShadow p, .energyTip p {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
+.energyTip {
+  background: rgba(94, 203, 161, 0.06);
+  border: 1px solid rgba(94, 203, 161, 0.15);
+  border-radius: 4px;
+  padding: 14px 16px;
+}
+
+.tipLabel {
+  display: block;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--jade);
+  margin-bottom: 6px;
+}
+
+.energyBalance {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px 28px;
+}
+
+.balanceLabel {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.balanceBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.balanceLeft, .balanceRight {
+  flex: 1;
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0a0a1a;
+  text-align: center;
+}
+
+.balanceMid {
+  font-size: 18px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.balanceDesc {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.8;
+}
+
+/* ─── DETAIL SECTIONS (연애·재물·건강) ─── */
+.detailCard {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.detailTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 24px 28px 0;
+}
+
+.detailTag {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  border: 1px solid;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-weight: 500;
+}
+
+.detailBody {
+  padding: 20px 28px 24px;
+}
+
+.detailPara {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.9;
+  margin-bottom: 14px;
+}
+.detailPara:last-child { margin-bottom: 0; }
+
+.detailLock {
+  border-top: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(200,169,110,0.05), rgba(94,203,161,0.03));
+  padding: 20px 28px;
+}
+
+.detailLockInner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.lockIcon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.lockLabel {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.lockText {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+}
+
+/* ─── TODAY FORTUNE ─── */
+.todayCard {
+  background: linear-gradient(135deg, rgba(35,35,72,0.85), rgba(22,22,48,0.92));
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+}
+.todayQuote, .todayQuoteEnd {
+  font-size: 40px;
+  color: var(--gold-dim);
+  line-height: 0.5;
+  display: block;
+}
+.todayQuoteEnd { margin-top: 16px; }
+.todayText {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 300;
+  color: var(--text);
+  line-height: 1.8;
+  letter-spacing: 0.08em;
+  margin: 16px 0;
+}
+
+/* ─── UPSELL ─── */
+.upsellSection { margin-bottom: 0; }
+.upsellCard {
+  background: linear-gradient(135deg, rgba(200,169,110,0.06), rgba(94,203,161,0.03));
+  border: 1px solid var(--border-bright);
+  border-radius: 4px;
+  padding: 48px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.upsellTopLine {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.upsellEyebrow {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  color: var(--gold-dim);
+  margin-bottom: 12px;
+}
+.upsellTitle {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.upsellDesc {
+  font-size: 14px;
+  color: var(--text-dim);
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+.upsellFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 360px;
+  margin: 0 auto 32px;
+  text-align: left;
+}
+.upsellFeature {
+  font-size: 13px;
+  color: var(--text-mid);
+  display: flex;
+  gap: 8px;
+}
+.upsellCheck { color: var(--gold); flex-shrink: 0; }
+
+.upsellButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ─── LOADING ─── */
+.loadingWrap {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+}
+.loadingSymbol {
+  font-size: 48px;
+  animation: spin 3s linear infinite;
+}
+.loadingText {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16px;
+  color: var(--text-mid);
+  letter-spacing: 0.2em;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .page { padding: 100px 20px 60px; }
+  .pillarsGrid { grid-template-columns: repeat(2, 1fr); }
+  .elementGrid { grid-template-columns: repeat(3, 1fr); }
+  .elementSummary { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .energyGrid { grid-template-columns: 1fr; }
+  .detailLockInner { flex-wrap: wrap; }
+  .detailLockInner > button { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .detailTags { padding: 16px 16px 0; }
+  .detailBody { padding: 16px; }
+  .detailLock { padding: 16px; }
+  .page { padding: 90px 16px 48px; }
+  .pillarStem { font-size: 36px; }
+  .pillarBranch { font-size: 28px; }
+  .elementGrid { grid-template-columns: repeat(3, 1fr); }
+  .todayCard { padding: 28px 20px; }
+  .upsellCard { padding: 32px 20px; }
+  .upsellButtons { flex-direction: column; align-items: center; }
+  .upsellButtons > * { width: 100%; max-width: 320px; text-align: center; }
+}
+
+/* ─── LIFE PERIODS ─── */
+.lifePeriods {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.lifePeriodCard {
+  background: var(--deep);
+  padding: 28px 24px;
+}
+.lifePeriodBadge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 10px;
+}
+.lifePeriodAge {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  color: var(--gold-dim);
+  margin-bottom: 12px;
+}
+.lifePeriodText {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.85;
+}
+.wealthCard {
+  background: var(--surface);
+  border: 1px solid rgba(200,169,110,0.2);
+  border-radius: 4px;
+  padding: 24px 28px;
+}
+.wealthLabel {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.wealthText {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.85;
+}
+
+/* ─── MONTHLY GRID ─── */
+.monthlyNote {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+.monthlyGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.monthlyCard {
+  background: var(--deep);
+  padding: 18px 14px;
+  transition: background 0.2s;
+}
+.monthlyCard:hover { background: var(--surface2); }
+.monthlyName {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  margin-bottom: 6px;
+}
+.monthlySipsin {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.monthlyBars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+.monthlyBar {
+  height: 4px;
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+}
+.monthlyBarActive {
+  background: var(--gold-dim);
+}
+.monthlyText {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+/* ─── PILLAR CHART NEW ELEMENTS ─── */
+.dmStrengthBadge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.dmStrengthLabel {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.dmStrengthValue {
+  font-size: 14px;
+  font-weight: 700;
+}
+.dmStrengthNote {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+.pillarSipsin {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.pillarSipsinBranch {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+.pillarHidden {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 12px;
+  color: rgba(200,169,110,0.5);
+  letter-spacing: 0.2em;
+  margin-top: 6px;
+}
+.interactionsRow {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.interactionGroup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 8px 14px;
+  font-size: 12px;
+}
+.interactionIcon { opacity: 0.7; }
+.interactionLabel { font-weight: 700; }
+.interactionItems { color: var(--text-mid); }
+
+/* ─── LUCK PILLARS (大運) ─── */
+.luckPillarsNote {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.luckPillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.luckPillarCard {
+  background: var(--deep);
+  padding: 16px 10px;
+  text-align: center;
+  position: relative;
+  transition: background 0.2s;
+}
+.luckPillarCard:hover { background: var(--surface2); }
+.luckPillarActive {
+  background: rgba(200,169,110,0.08) !important;
+  border-color: rgba(200,169,110,0.3) !important;
+}
+.luckPillarNow {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.luckAge {
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  margin-top: 12px;
+  letter-spacing: 0.05em;
+}
+.luckStem {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.luckDivider {
+  height: 1px;
+  background: var(--border);
+  margin: 8px auto;
+  width: 24px;
+}
+.luckBranch {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  color: var(--text-mid);
+  margin-bottom: 4px;
+}
+.luckName {
+  letter-spacing: 0.08em;
+  text-transform: capitalize;
+}
+.luckLockBox {
+  background: linear-gradient(135deg, rgba(200,169,110,0.04), transparent);
+  border: 1px solid rgba(200,169,110,0.2);
+  border-radius: 4px;
+  padding: 20px 24px;
+}
+.luckLockInner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 20px;
+  flex-wrap: wrap;
+}
+
+/* ─── RESPONSIVE ADDITIONS ─── */
+@media (max-width: 900px) {
+  .lifePeriods { grid-template-columns: 1fr; }
+  .monthlyGrid { grid-template-columns: repeat(3, 1fr); }
+  .luckPillarsGrid { grid-template-columns: repeat(4, 1fr); }
+  .dmStrengthBadge { gap: 8px; }
+  .dmStrengthNote { margin-left: 0; }
+}
+@media (max-width: 600px) {
+  .monthlyGrid { grid-template-columns: repeat(2, 1fr); }
+  .luckPillarsGrid { grid-template-columns: repeat(4, 1fr); }
+  .luckPillarCard { padding: 12px 6px; }
+  .luckStem { font-size: 18px; }
+  .luckBranch { font-size: 14px; }
+  .luckAge { font-size: 8px; }
+}
+
+/* ─── Chart Pattern ─── */
+.gyeokgukCard {
+  background: linear-gradient(135deg, rgba(200,169,110,0.06), rgba(200,169,110,0.01));
+  border: 1px solid rgba(200,169,110,0.25);
+  border-radius: 8px;
+  padding: 28px 32px;
+}
+.gyeokgukHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.gyeokgukName {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+.gyeokgukNameEn {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+.gyeokgukDesc {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-mid);
+  margin-bottom: 20px;
+}
+.gyeokgukStrengthsWrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.gyeokgukColLabel {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.gyeokgukList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.gyeokgukList li {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.gyeokgukList li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+  color: var(--gold-dim);
+}
+
+/* ─── Favorable Element ─── */
+.yongshinCard {
+  background: rgba(107,174,118,0.04);
+  border: 1px solid rgba(107,174,118,0.2);
+  border-radius: 8px;
+  padding: 28px 32px;
+}
+.yongshinMethod {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--jade);
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.yongshinElements {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.yongshinEl {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 90px;
+}
+.yongshinElLabel {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.yongshinElValue {
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.yongshinReasoning {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-mid);
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border-left: 2px solid rgba(107,174,118,0.3);
+  border-radius: 0 4px 4px 0;
+}
+.yongshinLucky {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.yongshinLuckyRow {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  align-items: baseline;
+}
+.yongshinLuckyLabel {
+  color: var(--text-dim);
+  min-width: 120px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.yongshinLuckyVal {
+  color: var(--text-mid);
+}
+
+/* ─── Seasonal Balance ─── */
+.johuCard {
+  background: rgba(106,174,221,0.04);
+  border: 1px solid rgba(106,174,221,0.18);
+  border-radius: 8px;
+  padding: 24px 28px;
+}
+.johuHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.johuSeason {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 16px;
+  color: var(--text);
+}
+.johuTendency {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.johuElements {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+.johuEl {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.johuElLabel {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.johuElValue {
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.johuNote {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+/* ─── responsive additions ─── */
+@media (max-width: 600px) {
+  .gyeokgukStrengthsWrap { grid-template-columns: 1fr; }
+  .gyeokgukCard, .yongshinCard, .johuCard { padding: 20px 18px; }
+}

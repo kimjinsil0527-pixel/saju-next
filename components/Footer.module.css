@@ -1,0 +1,109 @@
+.footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--border);
+  background: rgba(15,15,34,0.97);
+}
+
+.top {
+  display: flex;
+  gap: 48px;
+  padding: 60px 48px 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  flex-shrink: 0;
+  max-width: 260px;
+}
+
+.logo {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-decoration: none;
+}
+.logo span {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  display: block;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-top: 2px;
+}
+.tagline {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-top: 14px;
+  line-height: 1.65;
+}
+.copy {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  line-height: 1.65;
+}
+
+.colGroup {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.colTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.col a {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.col a:hover { color: var(--gold); }
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.bottomLinks {
+  display: flex;
+  gap: 20px;
+}
+.bottomLinks a {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.bottomLinks a:hover { color: var(--gold); }
+
+@media (max-width: 1024px) {
+  .colGroup { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .top { flex-direction: column; padding: 40px 24px 32px; gap: 32px; }
+  .brand { max-width: 100%; }
+  .colGroup { grid-template-columns: repeat(2, 1fr); }
+  .bottom { flex-direction: column; gap: 12px; text-align: center; padding: 16px 24px; }
+}
+@media (max-width: 480px) {
+  .colGroup { grid-template-columns: 1fr 1fr; gap: 24px; }
+}

@@ -1,0 +1,80 @@
+.page { min-height: 100vh; background: var(--void); position: relative; padding-bottom: 80px; }
+.bg { position: fixed; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,175,55,0.06) 0%, transparent 70%); pointer-events: none; }
+
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 48px; border-bottom: 1px solid var(--border); }
+.logo { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold); text-decoration: none; letter-spacing: 0.08em; }
+.logo span { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 8px; letter-spacing: 0.2em; }
+.back { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.back:hover { color: var(--gold); }
+
+.hero { text-align: center; padding: 60px 24px 40px; max-width: 680px; margin: 0 auto; }
+.eyebrow { font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+.ornament { font-size: 36px; margin: 0 0 18px; display: block; }
+.title { font-family: 'Cinzel', serif; font-size: clamp(22px, 3.5vw, 34px); font-weight: 700; color: var(--text); margin: 0 0 12px; }
+.sub { font-size: 15px; color: var(--muted); line-height: 1.7; margin: 0; }
+
+.body { max-width: 680px; margin: 0 auto; padding: 0 24px; display: flex; flex-direction: column; gap: 20px; }
+
+/* Element Hero */
+.elementHero {
+  background: var(--deep);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.elementHeroTopLine { position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+.elementEmoji { font-size: 48px; margin-bottom: 12px; display: block; }
+.elementLabel { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 6px; }
+.elementName { font-family: 'Cinzel', serif; font-size: 28px; font-weight: 700; margin-bottom: 20px; }
+.pillarRow { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.pillarMini { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.pillarHanja { font-family: 'Noto Serif KR', serif; font-size: 32px; font-weight: 700; }
+.pillarRom { font-size: 11px; color: var(--muted); }
+.pillarSep { font-size: 20px; color: var(--border); }
+
+/* Fortune */
+.fortuneCard { background: var(--deep); border: 1px solid var(--border); border-radius: 16px; padding: 32px; text-align: center; }
+.fortuneQuote { font-size: 36px; color: var(--gold); opacity: 0.5; line-height: 0.5; }
+.fortuneText { font-size: 17px; color: var(--text); line-height: 1.75; margin: 16px 0; font-style: italic; }
+.fortuneQuoteEnd { font-size: 36px; color: var(--gold); opacity: 0.5; line-height: 0.5; }
+
+/* Section */
+.section { }
+.sectionTitle { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 600; letter-spacing: 0.12em; color: var(--gold); text-transform: uppercase; margin: 0 0 16px; }
+
+/* Pillars Row */
+.pillarsRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pillarCard { background: var(--deep); border: 1px solid var(--border); border-radius: 12px; padding: 18px 12px; text-align: center; }
+.pillarCardLabel { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 10px; }
+.pillarCardStem { font-family: 'Noto Serif KR', serif; font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.pillarCardRom { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.pillarCardDivider { height: 1px; background: var(--border); margin: 8px 0; }
+.pillarCardBranch { font-family: 'Noto Serif KR', serif; font-size: 24px; color: var(--text); margin-bottom: 4px; }
+
+/* Lucky */
+.luckyGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.luckyCard { background: var(--deep); border: 1px solid var(--border); border-radius: 12px; padding: 20px 16px; text-align: center; }
+.luckyIcon { font-size: 24px; margin-bottom: 10px; }
+.luckyLabel { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+.luckyValue { font-size: 14px; color: var(--gold); font-weight: 500; }
+
+/* Caution */
+.cautionCard { background: rgba(232, 114, 74, 0.06); border: 1px solid rgba(232, 114, 74, 0.2); border-radius: 12px; padding: 20px 24px; display: flex; gap: 16px; align-items: flex-start; }
+.cautionIcon { font-size: 20px; flex-shrink: 0; }
+.cautionLabel { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; color: var(--ember); text-transform: uppercase; margin-bottom: 6px; }
+.cautionText { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+/* CTA */
+.ctaWrap { text-align: center; padding: 32px 0 0; }
+.ctaText { font-size: 15px; color: var(--muted); margin: 0 0 16px; }
+.ctaBtn { display: inline-block; background: linear-gradient(135deg, var(--gold), #b8952a); color: #0a0a0f; border-radius: 10px; padding: 13px 32px; font-size: 14px; font-weight: 700; font-family: 'Cinzel', serif; letter-spacing: 0.05em; text-decoration: none; transition: opacity 0.2s; }
+.ctaBtn:hover { opacity: 0.88; }
+
+@media (max-width: 560px) {
+  .nav { padding: 18px 20px; }
+  .luckyGrid { grid-template-columns: 1fr; }
+  .pillarsRow { grid-template-columns: repeat(3, 1fr); }
+}

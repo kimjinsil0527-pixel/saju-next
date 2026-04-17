@@ -1,0 +1,142 @@
+.section {
+  padding: 100px 0;
+  background: var(--surface);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.card {
+  background: var(--void);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cardTop {
+  background: linear-gradient(135deg, #0C0C20, #1A1040);
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.cardTitle {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+.cardBadge {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.pillars {
+  display: flex;
+  gap: 8px;
+}
+.pillar {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.hanja {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+.wood { color: #6BAE76; }
+.fire { color: #E8724A; }
+.earth { color: #C8A96E; }
+.water { color: #6AAEDD; }
+.metal { color: #AAAACC; }
+.pillarLabel {
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  letter-spacing: 0.15em;
+}
+
+.cardBody { padding: 24px; }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.rowLabel { font-size: 12px; color: var(--text-dim); }
+.rowValue { font-size: 12px; color: var(--text); }
+.jade { color: var(--jade); }
+
+.lockedWrap { position: relative; margin-top: 8px; }
+.locked {
+  filter: blur(3px);
+  pointer-events: none;
+  user-select: none;
+}
+.lockOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, transparent 30%, rgba(15,15,34,0.96));
+  gap: 10px;
+}
+.lockIcon { font-size: 24px; }
+.lockText { font-size: 13px; color: var(--gold); font-weight: 500; letter-spacing: 0.05em; }
+
+.textSide {}
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+.feature {
+  display: flex;
+  gap: 16px;
+}
+.featureDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.featureText {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.7;
+}
+.featureText strong { color: var(--text); font-weight: 500; }
+
+@media (max-width: 900px) {
+  .section { padding: 60px 0; }
+  .layout { grid-template-columns: 1fr; gap: 40px; }
+  .cardTop { padding: 16px; }
+  .pillars { gap: 4px; }
+  .hanja { font-size: 18px; }
+}
+@media (max-width: 480px) {
+  .features { gap: 14px; }
+  .featureText { font-size: 13px; }
+}

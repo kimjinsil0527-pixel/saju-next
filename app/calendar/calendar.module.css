@@ -1,0 +1,72 @@
+.page { min-height: 100vh; background: var(--void); position: relative; padding-bottom: 80px; }
+.bg { position: fixed; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,175,55,0.05) 0%, transparent 70%); pointer-events: none; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 48px; border-bottom: 1px solid var(--border); }
+.logo { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold); text-decoration: none; letter-spacing: 0.08em; }
+.logo span { font-size: 11px; font-weight: 400; color: var(--muted); margin-left: 8px; letter-spacing: 0.2em; }
+.back { font-size: 13px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.back:hover { color: var(--gold); }
+.hero { text-align: center; padding: 60px 24px 40px; max-width: 680px; margin: 0 auto; }
+.eyebrow { font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin: 0 0 14px; }
+.ornament { font-size: 36px; margin: 0 0 16px; display: block; }
+.title { font-family: 'Cinzel', serif; font-size: clamp(24px, 3.5vw, 36px); font-weight: 700; color: var(--text); margin: 0 0 12px; }
+.gold { color: var(--gold); }
+.sub { font-size: 15px; color: var(--muted); line-height: 1.7; margin: 0; }
+.body { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+/* Lookup */
+.lookupCard { background: var(--deep); border: 1px solid var(--border); border-radius: 16px; padding: 28px 32px; position: relative; overflow: hidden; margin-bottom: 24px; }
+.topLine { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.lookupRow { display: flex; align-items: flex-end; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.field label { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.field input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+.field input:focus { border-color: var(--gold); }
+.lookupBtn { background: linear-gradient(135deg, var(--gold), #b8952a); color: #0a0a0f; border: none; border-radius: 8px; padding: 12px 28px; font-size: 14px; font-weight: 700; font-family: 'Cinzel', serif; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s; white-space: nowrap; }
+.lookupBtn:hover { opacity: 0.88; }
+.todayLink { margin-top: 12px; }
+.linkBtn { background: none; border: none; color: var(--gold); font-size: 13px; cursor: pointer; font-family: inherit; padding: 0; opacity: 0.8; transition: opacity 0.2s; }
+.linkBtn:hover { opacity: 1; }
+
+/* Result */
+.resultWrap { display: flex; flex-direction: column; gap: 16px; }
+.resultHeader { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.resultDate { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+.solarBadge { background: rgba(212,175,55,0.12); border: 1px solid rgba(212,175,55,0.3); border-radius: 6px; padding: 6px 14px; font-size: 13px; color: var(--gold); font-weight: 600; }
+
+/* Pillars */
+.pillarsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.pillarCard { background: var(--deep); border: 1px solid var(--border); border-radius: 12px; padding: 20px 14px; text-align: center; }
+.pillarLabel { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+.pillarStem { font-family: 'Noto Serif KR', serif; font-size: 38px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.pillarStemRom { font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+.pillarDivider { height: 1px; background: var(--border); margin: 8px 0; }
+.pillarBranch { font-family: 'Noto Serif KR', serif; font-size: 28px; color: var(--text); margin-bottom: 4px; }
+.pillarBranchRom { font-size: 10px; color: var(--muted); margin-bottom: 8px; }
+.pillarElement { font-size: 12px; font-weight: 600; text-transform: capitalize; margin-top: 8px; }
+
+/* Day Element */
+.dayElement { background: var(--deep); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.dayElementLeft { display: flex; align-items: center; gap: 14px; }
+.dayElementLabel { font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+.dayElementName { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 700; text-transform: capitalize; }
+.zodiacBadge { font-size: 13px; color: var(--gold); background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.2); border-radius: 6px; padding: 6px 14px; }
+
+/* Actions */
+.actionsGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.auspCard { background: rgba(107, 174, 118, 0.06); border: 1px solid rgba(107, 174, 118, 0.2); border-radius: 12px; padding: 20px; }
+.auspTitle { font-size: 13px; font-weight: 700; color: var(--jade); margin: 0 0 12px; }
+.auspList { padding-left: 16px; margin: 0; }
+.auspList li { font-size: 14px; color: var(--muted); line-height: 1.8; }
+.cautionBox { background: rgba(232, 114, 74, 0.05); border: 1px solid rgba(232, 114, 74, 0.2); border-radius: 12px; padding: 20px; }
+.cautionTitle { font-size: 13px; font-weight: 700; color: var(--ember); margin: 0 0 12px; }
+.cautionList { padding-left: 16px; margin: 0; }
+.cautionList li { font-size: 14px; color: var(--muted); line-height: 1.8; }
+
+.promptBox { background: var(--deep); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-align: center; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.promptBox strong { color: var(--gold); }
+
+@media (max-width: 560px) {
+  .nav { padding: 18px 20px; }
+  .lookupRow { flex-direction: column; align-items: stretch; }
+  .actionsGrid { grid-template-columns: 1fr; }
+}

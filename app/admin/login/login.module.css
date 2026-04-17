@@ -1,0 +1,17 @@
+.page { min-height: 100vh; background: var(--void); display: flex; align-items: center; justify-content: center; position: relative; }
+.bg { position: fixed; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,175,55,0.07) 0%, transparent 70%); pointer-events: none; }
+.card { background: var(--deep); border: 1px solid var(--border); border-radius: 20px; padding: 48px 40px; width: 100%; max-width: 380px; position: relative; text-align: center; }
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 20px 20px 0 0; }
+.logo { font-family: 'Cinzel', serif; font-size: 32px; font-weight: 700; color: var(--gold); margin-bottom: 8px; letter-spacing: 0.1em; }
+.title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.sub { font-size: 12px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 32px; }
+.form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 7px; text-align: left; }
+.field label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.field input { background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 8px; padding: 13px 16px; color: var(--text); font-size: 15px; font-family: inherit; outline: none; transition: border-color 0.2s; }
+.field input:focus { border-color: var(--gold); }
+.field input::placeholder { color: rgba(255,255,255,0.2); }
+.error { font-size: 13px; color: var(--ember); text-align: center; background: rgba(232,114,74,0.08); border: 1px solid rgba(232,114,74,0.2); border-radius: 8px; padding: 10px; }
+.btn { background: linear-gradient(135deg, var(--gold), #b8952a); color: #0a0a0f; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; font-family: 'Cinzel', serif; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s; }
+.btn:hover:not(:disabled) { opacity: 0.88; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }

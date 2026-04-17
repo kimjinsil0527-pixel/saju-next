@@ -1,0 +1,169 @@
+.section {
+  padding: 100px 0;
+  background: linear-gradient(to bottom, transparent, rgba(22,22,44,0.5), transparent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr 1fr;
+  align-items: start;
+}
+
+.card {
+  border: 1px solid var(--border);
+  padding: 40px 32px;
+  background: var(--deep);
+  position: relative;
+}
+
+.featured {
+  background: linear-gradient(160deg, rgba(32,32,68,1), rgba(24,24,52,1));
+  border-color: var(--gold-dim);
+  margin: -16px 0;
+  padding-top: 56px;
+  padding-bottom: 56px;
+  z-index: 2;
+}
+.featured::before {
+  content: '가장 인기';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--gold);
+  color: var(--void);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 5px 20px;
+  white-space: nowrap;
+}
+
+.topLine {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.tier {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.tagline {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.price { margin-bottom: 32px; }
+
+.priceMain {
+  font-family: 'Cinzel', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--gold);
+  line-height: 1;
+}
+.won {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  vertical-align: top;
+  margin-top: 6px;
+  display: inline-block;
+}
+.priceFree {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--jade);
+}
+.period {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 24px 0;
+}
+
+.features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.features li span { flex-shrink: 0; margin-top: 1px; }
+.disabled { opacity: 0.35; }
+
+.gold { color: var(--gold); }
+.ember { color: var(--ember); }
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border-bright);
+  border-radius: 2px;
+  background: none;
+  color: var(--gold);
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn:hover { background: rgba(200, 169, 110, 0.08); }
+
+.btnFeatured {
+  background: var(--gold);
+  color: var(--void);
+  border-color: var(--gold);
+  font-weight: 700;
+}
+.btnFeatured:hover {
+  background: var(--gold-bright) !important;
+  box-shadow: 0 8px 32px rgba(200, 169, 110, 0.35);
+  transform: translateY(-2px);
+}
+
+.btnJade {
+  border-color: rgba(94, 203, 161, 0.4);
+  color: var(--jade);
+}
+.btnJade:hover { background: rgba(94, 203, 161, 0.08) !important; }
+
+.btnEmber {
+  border-color: rgba(232, 114, 74, 0.4);
+  color: var(--ember);
+}
+.btnEmber:hover { background: rgba(232, 114, 74, 0.08) !important; }
+
+@media (max-width: 900px) {
+  .section { padding: 60px 0; }
+  .grid { grid-template-columns: 1fr; gap: 2px; }
+  .featured { margin: 0; padding-top: 40px; padding-bottom: 40px; }
+  .card { padding: 28px 24px; }
+  .priceMain { font-size: 32px; }
+}

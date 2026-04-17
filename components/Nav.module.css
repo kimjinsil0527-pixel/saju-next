@@ -1,0 +1,60 @@
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  background: linear-gradient(to bottom, rgba(15,15,34,0.96), transparent);
+  backdrop-filter: blur(4px);
+}
+
+.logo {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.12em;
+  text-decoration: none;
+}
+.logo span {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  display: block;
+  letter-spacing: 0.3em;
+  color: var(--text-dim);
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+.links a {
+  font-size: 13px;
+  color: var(--text-mid);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+}
+.links a:hover { color: var(--gold); }
+
+.cta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .nav { padding: 14px 20px; }
+  .links { display: none; }
+}
+@media (max-width: 480px) {
+  .cta { gap: 8px; }
+  .cta button:first-child { display: none; }
+  .logo { font-size: 18px; }
+  .logo span { font-size: 9px; letter-spacing: 0.2em; }
+}
