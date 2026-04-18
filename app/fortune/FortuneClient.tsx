@@ -97,7 +97,7 @@ export default function FortuneClient() {
   const calendar = params.get('calendar') || '양력'
 
   useEffect(() => {
-    if (!date) { router.replace('/'); return }
+    if (!date) { router.replace('/today'); return }
     fetch('/api/saju', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
