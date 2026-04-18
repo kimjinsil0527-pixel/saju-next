@@ -1,16 +1,21 @@
 import { Suspense } from 'react'
+import { cookies } from 'next/headers'
 import FortuneClient from './FortuneClient'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import StarCanvas from '@/components/StarCanvas'
 
-export default function FortunePage() {
+export default async function FortunePage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('admin_token')?.value
+  const isAdmin = !!token && token === process.env.AUTH_SECRET
+
   return (
     <>
       <StarCanvas />
       <Nav />
       <Suspense fallback={<LoadingScreen />}>
-        <FortuneClient />
+        <FortuneClient isAdmin={isAdmin} />
       </Suspense>
       <Footer />
     </>

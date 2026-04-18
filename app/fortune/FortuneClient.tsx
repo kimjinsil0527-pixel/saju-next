@@ -84,7 +84,7 @@ const ELEMENT_EMOJI: Record<string, string> = {
 const PILLAR_LABELS = ['Year', 'Month', 'Day', 'Hour']
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export default function FortuneClient() {
+export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }) {
   const params = useSearchParams()
   const router = useRouter()
   const [result, setResult] = useState<SajuResult | null>(null)
@@ -289,6 +289,7 @@ export default function FortuneClient() {
             data={analysis.ilganProfile.loveDetail}
             lockLabel="Want to know more?"
             accentColor="var(--ember)"
+            isAdmin={isAdmin}
           />
         </section>
       )}
@@ -301,6 +302,7 @@ export default function FortuneClient() {
             data={analysis.ilganProfile.wealthDetail}
             lockLabel="Want to know more?"
             accentColor="var(--gold)"
+            isAdmin={isAdmin}
           />
         </section>
       )}
@@ -313,6 +315,7 @@ export default function FortuneClient() {
             data={analysis.ilganProfile.healthDetail}
             lockLabel="Want to know more?"
             accentColor="var(--jade)"
+            isAdmin={isAdmin}
           />
         </section>
       )}
@@ -567,7 +570,7 @@ export default function FortuneClient() {
               )
             })}
           </div>
-          <div className={styles.luckLockBox}>
+          {!isAdmin && <div className={styles.luckLockBox}>
             <div className={styles.luckLockInner}>
               <span>🔒</span>
               <div>
@@ -584,7 +587,7 @@ export default function FortuneClient() {
                 Unlock Premium
               </button>
             </div>
-          </div>
+          </div>}
         </section>
       )}
 
@@ -710,10 +713,12 @@ function DetailSection({
   data,
   lockLabel,
   accentColor,
+  isAdmin = false,
 }: {
   data: { tags: string[]; body: string; lock: string }
   lockLabel: string
   accentColor: string
+  isAdmin?: boolean
 }) {
   return (
     <div className={styles.detailCard}>
@@ -729,18 +734,25 @@ function DetailSection({
           <p key={i} className={styles.detailPara}>{para}</p>
         ))}
       </div>
-      <div className={styles.detailLock}>
-        <div className={styles.detailLockInner}>
-          <span className={styles.lockIcon}>🔒</span>
-          <div>
-            <div className={styles.lockLabel}>{lockLabel}</div>
-            <p className={styles.lockText}>{data.lock}</p>
+      {!isAdmin && (
+        <div className={styles.detailLock}>
+          <div className={styles.detailLockInner}>
+            <span className={styles.lockIcon}>🔒</span>
+            <div>
+              <div className={styles.lockLabel}>{lockLabel}</div>
+              <p className={styles.lockText}>{data.lock}</p>
+            </div>
+            <button className="btn-primary" style={{ marginLeft: 'auto', flexShrink: 0, fontSize: '13px', padding: '10px 20px' }} onClick={() => window.location.href = '/checkout?plan=premium'}>
+              Unlock Premium
+            </button>
           </div>
-          <button className="btn-primary" style={{ marginLeft: 'auto', flexShrink: 0, fontSize: '13px', padding: '10px 20px' }} onClick={() => window.location.href = '/checkout?plan=premium'}>
-            Unlock Premium
-          </button>
         </div>
-      </div>
+      )}
+      {isAdmin && (
+        <div style={{ marginTop: 12, padding: '6px 12px', background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 6, fontSize: 11, color: 'var(--gold)', display: 'inline-block' }}>
+          ✦ Admin Preview — hidden from users
+        </div>
+      )}
     </div>
   )
 }
