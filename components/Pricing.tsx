@@ -49,8 +49,9 @@ export default function Pricing() {
               <div className={styles.name}>Premium</div>
               <div className={styles.tagline}>Annual report + deep analysis<br />Most popular plan</div>
               <div className={styles.price}>
-                <div className={styles.priceMain}><span className={styles.won}>$</span>12.99</div>
-                <div className={styles.period}>/ mo · $8.99/mo billed annually</div>
+                <div className={styles.priceMain}><span className={styles.won}>$</span>8.99</div>
+                <div className={styles.period}>/ mo · billed annually ($107.88/yr)</div>
+                <div className={styles.priceSub}>or $12.99/mo month-to-month</div>
               </div>
               <div className={styles.divider} />
               <ul className={styles.features}>

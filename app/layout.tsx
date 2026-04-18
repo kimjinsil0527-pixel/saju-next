@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'MINGYUN — Decode Your Destiny',
   description: 'AI-powered Four Pillars of Destiny analysis. Daily fortune, annual reports, and expert 1:1 consultation.',
   keywords: 'four pillars, bazi, saju, fortune, astrology, compatibility, destiny, horoscope',
-  metadataBase: new URL('https://mingyun.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://saju-next-rho.vercel.app'),
   openGraph: {
     title: 'MINGYUN — Decode Your Destiny',
     description: 'AI-powered Four Pillars analysis. Start free, no sign-up required.',
