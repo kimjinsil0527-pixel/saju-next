@@ -15,7 +15,7 @@ export default function Nav() {
 
       <ul className={styles.links}>
         <li><Link href="/today">Today</Link></li>
-        <li><Link href="/fortune">Fortune</Link></li>
+        <li><Link href="/#hero">Fortune</Link></li>
         <li><Link href="/love-hub">Love</Link></li>
         <li><Link href="/lucky">Lucky</Link></li>
         <li><Link href="#pricing">Plans</Link></li>

@@ -40,7 +40,7 @@ export default function Hero() {
   }
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} id="hero">
       <p className={styles.eyebrow}>Four Pillars of Destiny · Precision Analysis</p>
       <h1 className={styles.title}>
         <span className={styles.thin}>Discover your </span>

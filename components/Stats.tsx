@@ -3,7 +3,7 @@ import styles from './Stats.module.css'
 const items = [
   { num: '25+', label: 'Reading Types' },
   { num: '100%', label: 'Free to Start' },
-  { num: '0', label: 'Ads. Ever.' },
+  { num: 'Zero', label: 'Ads or Spam' },
   { num: '24/7', label: 'Always Available' },
 ]
 
