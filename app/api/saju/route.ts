@@ -144,17 +144,42 @@ export async function POST(req: NextRequest) {
       calendar?: string  // 'Solar' | 'Lunar'
     }
 
-    if (!birthdate) {
+    if (!birthdate || typeof birthdate !== 'string') {
       return NextResponse.json({ error: 'Please enter your birth date.' }, { status: 400 })
     }
 
+    // Strict date format validation
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthdate)) {
+      return NextResponse.json({ error: 'Invalid date format. Use YYYY-MM-DD.' }, { status: 400 })
+    }
+
     const [yearStr, monthStr, dayStr] = birthdate.split('-')
-    let year = parseInt(yearStr)
-    let month = parseInt(monthStr)
-    let day = parseInt(dayStr)
+    let year = parseInt(yearStr, 10)
+    let month = parseInt(monthStr, 10)
+    let day = parseInt(dayStr, 10)
 
     if (isNaN(year) || isNaN(month) || isNaN(day)) {
       return NextResponse.json({ error: 'Invalid date format.' }, { status: 400 })
+    }
+
+    // Reject obviously invalid dates
+    const NOW_YEAR = new Date().getFullYear()
+    if (year < 1900 || year > NOW_YEAR) {
+      return NextResponse.json({ error: 'Birth year must be between 1900 and the current year.' }, { status: 400 })
+    }
+    if (month < 1 || month > 12) {
+      return NextResponse.json({ error: 'Invalid month.' }, { status: 400 })
+    }
+    if (day < 1 || day > 31) {
+      return NextResponse.json({ error: 'Invalid day.' }, { status: 400 })
+    }
+
+    // Validate gender and calendar enum values
+    if (gender && !['male', 'female', 'M', 'F'].includes(gender)) {
+      return NextResponse.json({ error: 'Invalid gender value.' }, { status: 400 })
+    }
+    if (calendar && !['Solar', 'Lunar'].includes(calendar)) {
+      return NextResponse.json({ error: 'Invalid calendar value.' }, { status: 400 })
     }
 
     // ─── Lunar → Solar conversion ──────────────────────────────────────────
@@ -245,7 +270,7 @@ export async function POST(req: NextRequest) {
     const johu = getJohu(dayMasterIdx, monthPillar.branchIdx)
 
     // ─── Annual Fortune (current year Ten God → Day Master) ────────────────
-    const currentYear = new Date().getFullYear()
+    const currentYear = NOW_YEAR
     const currentYearPillar = getYearPillar(currentYear)
     const annualSipsin = calcAnnualSipsin(dayMasterIdx, currentYearPillar.stemIdx)
     const annualTexts = ANNUAL_FORTUNE[annualSipsin] ?? ANNUAL_FORTUNE['비견']

@@ -3,14 +3,42 @@ import { createServiceClient } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   try {
-    const { paymentKey, orderId, amount } = await req.json()
+    const { paymentKey, orderId, amount: clientAmount } = await req.json()
+
+    if (!paymentKey || !orderId) {
+      return NextResponse.json({ error: '잘못된 요청입니다.' }, { status: 400 })
+    }
 
     const secretKey = process.env.TOSS_SECRET_KEY
     if (!secretKey || secretKey.includes('your-secret-key')) {
-      return NextResponse.json({ error: '토스페이먼츠 시크릿 키가 설정되지 않았습니다.' }, { status: 400 })
+      return NextResponse.json({ error: '결제 설정이 완료되지 않았습니다.' }, { status: 400 })
     }
 
-    // 토스페이먼츠 결제 승인 API 호출
+    // ── Re-verify amount from DB — never trust client ─────────────────────────
+    const sb = createServiceClient()
+    const { data: dbPayment, error: fetchError } = await sb
+      .from('payments')
+      .select('amount, status')
+      .eq('order_id', orderId)
+      .single()
+
+    if (fetchError || !dbPayment) {
+      return NextResponse.json({ error: '주문 정보를 찾을 수 없습니다.' }, { status: 404 })
+    }
+
+    if (dbPayment.status !== 'pending') {
+      return NextResponse.json({ error: '이미 처리된 주문입니다.' }, { status: 400 })
+    }
+
+    // Reject if client-sent amount doesn't match DB record
+    if (clientAmount !== undefined && Number(clientAmount) !== Number(dbPayment.amount)) {
+      console.warn(`[confirm] Amount mismatch: client=${clientAmount}, db=${dbPayment.amount}, orderId=${orderId}`)
+      return NextResponse.json({ error: '결제 금액이 일치하지 않습니다.' }, { status: 400 })
+    }
+
+    const authorizedAmount = dbPayment.amount  // always use DB amount for Toss call
+
+    // ── Toss Payments 결제 승인 ───────────────────────────────────────────────
     const encoded = Buffer.from(secretKey + ':').toString('base64')
     const tossRes = await fetch('https://api.tosspayments.com/v1/payments/confirm', {
       method: 'POST',
@@ -18,20 +46,16 @@ export async function POST(req: NextRequest) {
         Authorization: `Basic ${encoded}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ paymentKey, orderId, amount }),
+      body: JSON.stringify({ paymentKey, orderId, amount: authorizedAmount }),
     })
 
     const tossData = await tossRes.json()
 
     if (!tossRes.ok) {
-      // 실패 시 DB 업데이트
-      const sb = createServiceClient()
       await sb.from('payments').update({ status: 'failed' }).eq('order_id', orderId)
-      return NextResponse.json({ error: tossData.message ?? '결제 승인 실패' }, { status: 400 })
+      return NextResponse.json({ error: '결제 승인에 실패했습니다.' }, { status: 400 })
     }
 
-    // 성공 시 DB 업데이트
-    const sb = createServiceClient()
     await sb.from('payments').update({
       payment_key: paymentKey,
       status: 'done',
