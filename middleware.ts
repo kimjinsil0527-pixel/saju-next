@@ -43,7 +43,19 @@ export function middleware(request: NextRequest) {
   if (pathname.startsWith('/admin')) {
     const token = request.cookies.get('admin_token')?.value
     const validToken = process.env.AUTH_SECRET
-    if (!token || token !== validToken) {
+
+    // Timing-safe comparison to prevent timing attacks (Edge Runtime compatible)
+    function timingSafeEqual(a: string, b: string): boolean {
+      if (a.length !== b.length) return false
+      let diff = 0
+      for (let i = 0; i < a.length; i++) {
+        diff |= a.charCodeAt(i) ^ b.charCodeAt(i)
+      }
+      return diff === 0
+    }
+    const isValid = !!(token && validToken && timingSafeEqual(token, validToken))
+
+    if (!isValid) {
       return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }

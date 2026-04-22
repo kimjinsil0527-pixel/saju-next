@@ -55,14 +55,18 @@ function CheckoutForm() {
     setError('')
 
     try {
-      const orderId = `ORDER_${Date.now()}_${Math.random().toString(36).slice(2, 8).toUpperCase()}`
-
-      // Supabase에 pending 결제 기록 생성
-      await fetch('/api/payments/create', {
+      // orderId는 서버에서 생성 — 클라이언트 생성 금지
+      const createRes = await fetch('/api/payments/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId, amount: Number(plan.price), plan: planKey, customerName: name, customerEmail: email }),
+        body: JSON.stringify({ plan: planKey, customerName: name, customerEmail: email }),
       })
+      const createData = await createRes.json()
+      if (!createData.ok || !createData.orderId) {
+        throw new Error('결제 정보 생성 실패')
+      }
+      const orderId = createData.orderId
+      const amount = createData.amount
 
       const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY
 
@@ -80,7 +84,7 @@ function CheckoutForm() {
 
       await payment.requestPayment({
         method: 'CARD',
-        amount: { currency: 'KRW', value: Number(plan.price) },
+        amount: { currency: 'KRW', value: amount },
         orderId,
         orderName: `MINGYUN ${plan.name}`,
         successUrl: `${window.location.origin}/checkout/success`,

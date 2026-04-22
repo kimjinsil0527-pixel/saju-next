@@ -1,47 +1,57 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 
-// ── Server-side price table (cents / won) ─────────────────────────────────────
-// These are the ONLY valid amounts. Clients cannot override these.
+import crypto from 'crypto'
+
+// ── Server-side price table (KRW) ────────────────────────────────────────────
+// Canonical prices. Client-sent amounts are IGNORED — only plan key matters.
 const PLAN_PRICES: Record<string, number> = {
-  premium_monthly: 1299,   // $12.99
-  premium_annual: 8999,    // $89.99 / year (≈ $8.99/mo × 10)
-  vip: 7999,               // $79.99 VIP session
-  credits_10: 999,         // 10 star credits
-  credits_30: 2499,        // 30 star credits
-  credits_100: 6999,       // 100 star credits
+  premium: 10900,    // ₩10,900/월
+  vip: 29900,        // ₩29,900/세션
+}
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function generateOrderId(): string {
+  const rand = crypto.randomBytes(6).toString('hex').toUpperCase()
+  return `ORDER_${Date.now()}_${rand}`
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { orderId, plan, customerName, customerEmail } = await req.json()
+    const { plan, customerName, customerEmail } = await req.json()
 
-    // Validate required fields
-    if (!orderId || typeof orderId !== 'string') {
-      return NextResponse.json({ error: 'Invalid order ID.' }, { status: 400 })
-    }
     if (!plan || typeof plan !== 'string') {
       return NextResponse.json({ error: 'Invalid plan.' }, { status: 400 })
     }
 
-    // Server-side amount determination — never trust client-sent amount
+    // Server-side amount — never trust client-sent amount
     const amount = PLAN_PRICES[plan]
     if (amount === undefined) {
       return NextResponse.json({ error: 'Unknown plan.' }, { status: 400 })
     }
 
+    // Validate email format server-side
+    if (customerEmail && !EMAIL_RE.test(String(customerEmail))) {
+      return NextResponse.json({ error: 'Invalid email format.' }, { status: 400 })
+    }
+
+    // Generate orderId server-side (prevents client enumeration)
+    const orderId = generateOrderId()
+
     const sb = createServiceClient()
     const { error } = await sb.from('payments').insert({
       order_id: orderId,
-      amount,           // authoritative server-side amount
+      amount,
       plan,
       status: 'pending',
-      customer_name: customerName ?? null,
-      customer_email: customerEmail ?? null,
+      customer_name: customerName ? String(customerName).slice(0, 100) : null,
+      customer_email: customerEmail ? String(customerEmail).slice(0, 254) : null,
     })
 
     if (error) throw error
-    return NextResponse.json({ ok: true, amount })
+    // Return the server-generated orderId so client can use it for Toss
+    return NextResponse.json({ ok: true, orderId, amount })
   } catch (err) {
     console.error('payment create error:', err)
     return NextResponse.json({ ok: false })
