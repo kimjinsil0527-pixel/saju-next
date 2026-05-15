@@ -4,7 +4,7 @@ import {
   getElementBalance, getDominant, getWeakness,
   getChartSipsin, getDayMasterStrength, getLuckPillars,
   getBranchInteractions, JIJANGGAN, SIPSIN_EN, SIPSIN_FORTUNE_LEVEL,
-  getSipsin, getYongshin, getGyeokguk, getJohu,
+  getSipsin, getYongshin, getGyeokguk, getJohu,h
 } from '@/lib/sajuCalc'
 import { ILGAN_PROFILE, ELEMENT_PROFILE, getLifePeriodFortune } from '@/lib/sajuContent'
 import { Lunar } from 'lunar-javascript'
@@ -175,10 +175,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate gender and calendar enum values
-    if (gender && !['male', 'female', 'M', 'F'].includes(gender)) {
+    if (gender && !['male', 'female', 'M', 'F', 'Male', 'Female'].includes(gender)) {
       return NextResponse.json({ error: 'Invalid gender value.' }, { status: 400 })
     }
-    if (calendar && !['Solar', 'Lunar'].includes(calendar)) {
+    if (calendar && !['Solar', 'Lunar', '양력', '음력'].includes(calendar)) {
       return NextResponse.json({ error: 'Invalid calendar value.' }, { status: 400 })
     }
 
