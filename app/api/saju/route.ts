@@ -4,7 +4,7 @@ import {
   getElementBalance, getDominant, getWeakness,
   getChartSipsin, getDayMasterStrength, getLuckPillars,
   getBranchInteractions, JIJANGGAN, SIPSIN_EN, SIPSIN_FORTUNE_LEVEL,
-  getSipsin, getYongshin, getGyeokguk, getJohu,h
+  getSipsin, getYongshin, getGyeokguk, getJohu,
 } from '@/lib/sajuCalc'
 import { ILGAN_PROFILE, ELEMENT_PROFILE, getLifePeriodFortune } from '@/lib/sajuContent'
 import { Lunar } from 'lunar-javascript'
