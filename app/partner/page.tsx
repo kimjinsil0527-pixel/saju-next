@@ -30,7 +30,7 @@ export default function PartnerPage() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/" className={styles.back}>← Home</Link>
       </nav>
 
@@ -38,7 +38,7 @@ export default function PartnerPage() {
         {/* Hero */}
         <div className={styles.hero}>
           <p className={styles.eyebrow}>Business</p>
-          <h1 className={styles.title}>Partner with <span className={styles.gold}>MINGYUN</span></h1>
+          <h1 className={styles.title}>Partner with <span className={styles.gold}>UNMYUNG</span></h1>
           <p className={styles.sub}>A new platform built on classical Four Pillars methodology. We are growing — and looking for the right partners to grow with.</p>
         </div>
 

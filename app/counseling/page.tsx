@@ -20,7 +20,7 @@ export default function CounselingPage() {
       <div className={styles.bg} />
 
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <div className={styles.navLinks}>
           <Link href="/#free-services">Free Reading</Link>
           <Link href="/#pricing">Plans</Link>
@@ -43,7 +43,7 @@ export default function CounselingPage() {
           <div className={styles.comingSoonIcon}>🌙</div>
           <h2 className={styles.comingSoonTitle}>Consultants Being Onboarded</h2>
           <p className={styles.comingSoonDesc}>
-            We are currently reviewing and verifying practitioners to join the MINGYUN consultation roster.
+            We are currently reviewing and verifying practitioners to join the UNMYUNG consultation roster.
             All consultants are individually assessed before going live — we do not list anyone unverified.
           </p>
           <p className={styles.comingSoonDesc}>

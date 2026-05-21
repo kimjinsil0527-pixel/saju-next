@@ -387,7 +387,7 @@ export default function LoveHub() {
       <div className={styles.bg} />
 
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/" className={styles.back}>← Back to Home</Link>
       </nav>
 
@@ -405,7 +405,7 @@ export default function LoveHub() {
             <span className={styles.creditStar}>★</span>
             <div>
               <p className={styles.creditTitle}>Star Credits — Use for any reading below</p>
-              <p className={styles.creditSub}>Credits never expire · Use across all MINGYUN services</p>
+              <p className={styles.creditSub}>Credits never expire · Use across all UNMYUNG services</p>
             </div>
           </div>
           <div className={styles.creditPacks}>

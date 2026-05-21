@@ -12,7 +12,7 @@ export default function Dashboard() {
       <div className={styles.bg} />
 
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <div className={styles.navRight}>
           <Link href="/" className={styles.navLink}>Home</Link>
           <div className={styles.userBadge}>J</div>

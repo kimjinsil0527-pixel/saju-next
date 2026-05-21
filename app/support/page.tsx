@@ -16,7 +16,7 @@ export default function Support() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/" className={styles.back}>← Back to Home</Link>
       </nav>
 
@@ -30,7 +30,7 @@ export default function Support() {
             <span>✉</span>
             <div>
               <div className={styles.contactLabel}>Email Support</div>
-              <div className={styles.contactValue}>support@mingyun.app</div>
+              <div className={styles.contactValue}>support@unmyung.app</div>
             </div>
           </div>
           <div className={styles.contactItem}>

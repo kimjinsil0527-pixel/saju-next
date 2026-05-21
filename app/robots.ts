@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api/', '/dashboard', '/checkout'],
       },
     ],
-    sitemap: 'https://mingyun.app/sitemap.xml',
+    sitemap: 'https://unmyung.app/sitemap.xml',
   }
 }

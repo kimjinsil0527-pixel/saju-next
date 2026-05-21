@@ -7,11 +7,11 @@ export default function Footer() {
       <div className={styles.top}>
         <div className={styles.brand}>
           <Link href="/" className={styles.logo}>
-            MINGYUN<span>FOUR PILLARS</span>
+            UNMYUNG<span>FOUR PILLARS</span>
           </Link>
           <p className={styles.tagline}>Decode your destiny through the ancient wisdom of Four Pillars.</p>
           <p className={styles.copy}>
-            © 2026 MINGYUN. Fortune readings are for reference only.<br />
+            © 2026 UNMYUNG. Fortune readings are for reference only.<br />
             Final decisions remain the responsibility of the user.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function Footer() {
       </div>
 
       <div className={styles.bottom}>
-        <span>© 2026 MINGYUN. All rights reserved.</span>
+        <span>© 2026 UNMYUNG. All rights reserved.</span>
         <div className={styles.bottomLinks}>
           <Link href="/terms">Terms</Link>
           <Link href="/privacy">Privacy</Link>

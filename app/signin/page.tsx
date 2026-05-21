@@ -15,7 +15,7 @@ export default function SignIn() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <div className={styles.wrap}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
 
         <div className={styles.card}>
           <div className={styles.topLine} />

@@ -34,9 +34,9 @@ export default function AdminLoginPage() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <div className={styles.card}>
-        <div className={styles.logo}>MINGYUN</div>
+        <div className={styles.logo}>UNMYUNG</div>
         <div className={styles.title}>관리자 로그인</div>
-        <div className={styles.sub}>MINGYUN Admin Panel</div>
+        <div className={styles.sub}>UNMYUNG Admin Panel</div>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.field}>
             <label>비밀번호</label>

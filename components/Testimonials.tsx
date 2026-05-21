@@ -15,7 +15,7 @@ export default function Testimonials() {
       <div className="section-wrap">
         <ScrollReveal>
           <div className="section-header">
-            <p className="section-eyebrow">Why MINGYUN</p>
+            <p className="section-eyebrow">Why UNMYUNG</p>
             <div className="ornament-divider"><span className="ornament-symbol">☽</span></div>
             <h2 className="section-title">Built with <span className="gold">integrity</span></h2>
             <p className="section-desc">We are a new service. No inflated numbers, no paid reviews — just honest tools based on classical wisdom.</p>

@@ -28,7 +28,7 @@ export default function AnalyticsClient({ totalViews, todayViews, weekViews, top
   return (
     <div className={styles.page}>
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}>MINGYUN</div>
+        <div className={styles.sidebarLogo}>UNMYUNG</div>
         <div className={styles.sidebarSub}>Admin Panel</div>
         <nav className={styles.sidebarNav}>
           <a href="/admin" className={styles.navItem}><span>📊</span> 대시보드</a>

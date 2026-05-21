@@ -61,7 +61,7 @@ export default function AdminDashboard({ stats }: { stats: Stats }) {
     <div className={styles.page}>
       {/* 사이드바 */}
       <aside className={styles.sidebar}>
-        <div className={styles.sidebarLogo}>MINGYUN</div>
+        <div className={styles.sidebarLogo}>UNMYUNG</div>
         <div className={styles.sidebarSub}>Admin Panel</div>
         <nav className={styles.sidebarNav}>
           <a href="/admin" className={`${styles.navItem} ${styles.navActive}`}>

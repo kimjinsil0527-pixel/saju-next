@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Refund Policy — MINGYUN',
-  description: 'Refund and cancellation policy for MINGYUN services.',
+  title: 'Refund Policy — UNMYUNG',
+  description: 'Refund and cancellation policy for UNMYUNG services.',
 }
 
 export default function RefundPage() {
@@ -10,7 +10,7 @@ export default function RefundPage() {
       <h1 style={{ fontSize: 42, marginBottom: 8 }}>Refund Policy</h1>
       <p style={{ opacity: 0.5, marginBottom: 48 }}>Last updated: April 21, 2026</p>
 
-      <p>This Refund Policy applies to all purchases made through MINGYUN ("we", "our", "the Service"). All transactions are processed by <strong>Paddle.com Market Limited</strong>, our authorized Merchant of Record, which handles billing, VAT, and refund processing on our behalf.</p>
+      <p>This Refund Policy applies to all purchases made through UNMYUNG ("we", "our", "the Service"). All transactions are processed by <strong>Paddle.com Market Limited</strong>, our authorized Merchant of Record, which handles billing, VAT, and refund processing on our behalf.</p>
 
       <h2 style={{ marginTop: 40 }}>1. Free Features</h2>
       <p>The core Four Pillars reading and daily fortune features are provided free of charge. No payment is required, and no refund policy applies.</p>
@@ -24,11 +24,11 @@ export default function RefundPage() {
       </ul>
 
       <h2 style={{ marginTop: 32 }}>3. Star Credits</h2>
-      <p>Star Credits are a prepaid digital currency used within MINGYUN. Once purchased:</p>
+      <p>Star Credits are a prepaid digital currency used within UNMYUNG. Once purchased:</p>
       <ul style={{ paddingLeft: 24, marginTop: 8 }}>
         <li>Credits are non-refundable once issued to your account.</li>
         <li>Credits do not expire and remain valid for the lifetime of your account.</li>
-        <li>If you have not used any credits, you may request a full refund within <strong>30 days</strong> of purchase by contacting us at <a href="mailto:support@mingyun.app" style={{ color: '#c9a96e' }}>support@mingyun.app</a>.</li>
+        <li>If you have not used any credits, you may request a full refund within <strong>30 days</strong> of purchase by contacting us at <a href="mailto:support@unmyung.app" style={{ color: '#c9a96e' }}>support@unmyung.app</a>.</li>
       </ul>
 
       <h2 style={{ marginTop: 32 }}>4. Premium Subscription</h2>
@@ -51,7 +51,7 @@ export default function RefundPage() {
       <p>If a verified technical failure on our part prevents you from accessing paid content or completing a session, contact us within <strong>14 days</strong> and we will issue a full refund or credit at our discretion.</p>
 
       <h2 style={{ marginTop: 32 }}>7. How to Request a Refund</h2>
-      <p>Email <a href="mailto:support@mingyun.app" style={{ color: '#c9a96e' }}>support@mingyun.app</a> with:</p>
+      <p>Email <a href="mailto:support@unmyung.app" style={{ color: '#c9a96e' }}>support@unmyung.app</a> with:</p>
       <ul style={{ paddingLeft: 24, marginTop: 8 }}>
         <li>Your order ID or email address used at purchase</li>
         <li>The reason for your request</li>
@@ -68,7 +68,7 @@ export default function RefundPage() {
       <p>We reserve the right to update this policy at any time. Continued use of the Service after changes constitutes acceptance of the revised policy.</p>
 
       <p style={{ marginTop: 48, padding: '20px 24px', background: 'rgba(200,169,110,0.07)', borderRadius: 8, fontSize: 14 }}>
-        Questions? Contact us at <a href="mailto:support@mingyun.app" style={{ color: '#c9a96e' }}>support@mingyun.app</a>
+        Questions? Contact us at <a href="mailto:support@unmyung.app" style={{ color: '#c9a96e' }}>support@unmyung.app</a>
       </p>
     </main>
   )

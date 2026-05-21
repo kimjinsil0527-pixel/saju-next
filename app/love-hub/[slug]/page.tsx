@@ -763,7 +763,7 @@ export default function LoveReadingPage({ params }: { params: Promise<{ slug: st
       <div className={styles.bg} />
 
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/love-hub" className={styles.back}>← Love Hub</Link>
       </nav>
 

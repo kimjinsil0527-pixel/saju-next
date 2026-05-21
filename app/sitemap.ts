@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://mingyun.app'
+  const base = 'https://unmyung.app'
   const now = new Date()
 
   const staticPages = [

@@ -86,7 +86,7 @@ function CheckoutForm() {
         method: 'CARD',
         amount: { currency: 'KRW', value: amount },
         orderId,
-        orderName: `MINGYUN ${plan.name}`,
+        orderName: `UNMYUNG ${plan.name}`,
         successUrl: `${window.location.origin}/checkout/success`,
         failUrl: `${window.location.origin}/checkout?plan=${planKey}&error=true`,
         customerEmail: email,
@@ -104,7 +104,7 @@ function CheckoutForm() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <div className={styles.header}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/#pricing" className={styles.back}>← 플랜 변경</Link>
       </div>
 

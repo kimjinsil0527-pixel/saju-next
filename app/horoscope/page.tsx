@@ -54,7 +54,7 @@ export default function HoroscopePage() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/" className={styles.back}>← Home</Link>
       </nav>
 

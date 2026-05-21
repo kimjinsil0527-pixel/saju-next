@@ -9,7 +9,7 @@ export default function Nav() {
   return (
     <nav className={styles.nav}>
       <Link href="/" className={styles.logo}>
-        MINGYUN
+        UNMYUNG
         <span>FOUR PILLARS</span>
       </Link>
 

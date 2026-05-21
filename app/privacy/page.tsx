@@ -6,7 +6,7 @@ export default function Privacy() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <nav className={styles.nav}>
-        <Link href="/" className={styles.logo}>MINGYUN</Link>
+        <Link href="/" className={styles.logo}>UNMYUNG</Link>
         <Link href="/" className={styles.back}>← Back to Home</Link>
       </nav>
       <div className={styles.content}>
@@ -16,7 +16,7 @@ export default function Privacy() {
 
         <div className={styles.body}>
           <h2>1. Data Controller</h2>
-          <p>The data controller responsible for your personal data is <strong>MINGYUN</strong>, reachable at <a href="mailto:support@mingyun.app">support@mingyun.app</a>. Payment processing and related data are handled by Paddle.com Market Limited as our Merchant of Record.</p>
+          <p>The data controller responsible for your personal data is <strong>UNMYUNG</strong>, reachable at <a href="mailto:support@unmyung.app">support@unmyung.app</a>. Payment processing and related data are handled by Paddle.com Market Limited as our Merchant of Record.</p>
 
           <h2>2. Information We Collect</h2>
           <p>We collect only what is necessary to provide the Service:</p>
@@ -55,7 +55,7 @@ export default function Privacy() {
           <p>We use only <strong>essential cookies</strong> (session management) and anonymized analytics via Vercel Analytics. We do not use advertising cookies, cross-site tracking, or third-party marketing cookies. Session cookies expire after 30 days of inactivity.</p>
 
           <h2>8. Children's Privacy</h2>
-          <p>MINGYUN is not directed at children under 13 (or under 16 in certain EU jurisdictions). We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us immediately.</p>
+          <p>UNMYUNG is not directed at children under 13 (or under 16 in certain EU jurisdictions). We do not knowingly collect personal information from children. If you believe a child has provided us with personal data, please contact us immediately.</p>
 
           <h2>9. Your Rights</h2>
           <p>Depending on your jurisdiction, you have the following rights regarding your personal data:</p>
@@ -68,19 +68,19 @@ export default function Privacy() {
             <li><strong>Objection:</strong> Object to processing based on legitimate interests.</li>
             <li><strong>Withdraw Consent:</strong> Where processing is based on consent, withdraw it at any time.</li>
           </ul>
-          <p>To exercise any of these rights, contact us at <a href="mailto:support@mingyun.app">support@mingyun.app</a>. We will respond within <strong>30 days</strong>. Deletion requests are fulfilled within 7 business days.</p>
+          <p>To exercise any of these rights, contact us at <a href="mailto:support@unmyung.app">support@unmyung.app</a>. We will respond within <strong>30 days</strong>. Deletion requests are fulfilled within 7 business days.</p>
 
           <h2>10. Supervisory Authority</h2>
           <p>If you are located in the EEA or UK and believe we have not handled your data in accordance with applicable law, you have the right to lodge a complaint with your national data protection authority. For EU-wide guidance, visit <a href="https://edpb.europa.eu" target="_blank" rel="noopener">edpb.europa.eu</a>. UK residents may contact the Information Commissioner's Office (ICO) at <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a>.</p>
 
           <h2>11. Service Discontinuation</h2>
-          <p>If MINGYUN ceases operations, all user data will be permanently deleted within 90 days of the service end date. No user data will be transferred to third parties upon closure. Registered users will be notified by email at least 30 days before any planned discontinuation.</p>
+          <p>If UNMYUNG ceases operations, all user data will be permanently deleted within 90 days of the service end date. No user data will be transferred to third parties upon closure. Registered users will be notified by email at least 30 days before any planned discontinuation.</p>
 
           <h2>12. Changes to This Policy</h2>
           <p>We may update this policy periodically. We will notify registered users of significant changes via email. Continued use of the Service after the effective date constitutes acceptance of the updated policy. Material changes affecting your rights will require explicit re-acknowledgement where required by law.</p>
 
           <h2>13. Contact</h2>
-          <p>For any privacy-related questions or to exercise your rights, contact us at <a href="mailto:support@mingyun.app">support@mingyun.app</a>.</p>
+          <p>For any privacy-related questions or to exercise your rights, contact us at <a href="mailto:support@unmyung.app">support@unmyung.app</a>.</p>
         </div>
       </div>
     </div>
