@@ -4,13 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useState } from 'react'
 import styles from './checkout.module.css'
 
-const PLANS = {
+const PLANS: Record<string, { name: string; displayPrice: string; billing: string; annualNote: string; features: string[] }> = {
   premium: {
-    name: 'Premium',
-    price: '10900',
-    displayPrice: '₩10,900',
+    name: 'Premium 월간',
+    displayPrice: '₩19,900',
     billing: '월 결제',
-    annualNote: '연간 결제 시 ₩7,900/월 (₩94,800/년)',
+    annualNote: '연간 결제 시 ₩12,400/월 (₩149,000/년)',
     features: [
       '전체 연간 운세 리포트 (PDF)',
       '재물·직업·애정 심층 분석',
@@ -18,14 +17,26 @@ const PLANS = {
       '심층 궁합 리포트',
       '10장 타로 스프레드',
       '월별 운세 캘린더',
+      '매월 ★30 크레딧 지급',
+    ],
+  },
+  premium_annual: {
+    name: 'Premium 연간',
+    displayPrice: '₩149,000',
+    billing: '연 결제 (월 ₩12,400)',
+    annualNote: '월간 대비 38% 절약',
+    features: [
+      'Premium 월간의 모든 혜택',
+      '매월 ★80 크레딧 지급 (월간의 2.7배)',
+      '연간 전체 운세 리포트 PDF',
+      '우선 상담 예약 권한',
     ],
   },
   vip: {
-    name: 'VIP 상담',
-    price: '29900',
-    displayPrice: '₩29,900',
-    billing: '1회 세션',
-    annualNote: '세션 종류 및 시간에 따라 가격 상이',
+    name: 'VIP 1:1 상담',
+    displayPrice: '₩79,900',
+    billing: '1회 세션 (60분)',
+    annualNote: '30분 세션은 ₩49,900',
     features: [
       'Premium의 모든 혜택',
       '공인 사주 전문가 1:1 상담',
@@ -35,12 +46,47 @@ const PLANS = {
       '택일 서비스',
     ],
   },
+  credits_starter: {
+    name: 'Star Credits Starter',
+    displayPrice: '₩3,900',
+    billing: '★10 크레딧',
+    annualNote: '만료 없음 · 즉시 충전',
+    features: ['사랑 리딩 1회 이용 가능', '만료 없음', '모든 리딩에 사용 가능'],
+  },
+  credits_basic: {
+    name: 'Star Credits Basic',
+    displayPrice: '₩9,900',
+    billing: '★30 크레딧',
+    annualNote: '만료 없음 · 즉시 충전',
+    features: ['연애 리딩 3~4회 이용', '만료 없음', '모든 리딩에 사용 가능'],
+  },
+  credits_popular: {
+    name: 'Star Credits Popular',
+    displayPrice: '₩24,900',
+    billing: '★80 크레딧 (+10 보너스)',
+    annualNote: '가장 인기 · 만료 없음',
+    features: ['★90 크레딧 실질 지급', '프리미엄 리딩 6~8회', '만료 없음'],
+  },
+  credits_value: {
+    name: 'Star Credits Value',
+    displayPrice: '₩59,900',
+    billing: '★200 크레딧 (+30 보너스)',
+    annualNote: '만료 없음 · 최대 절약',
+    features: ['★230 크레딧 실질 지급', '심층 리딩 15회 이상', '만료 없음'],
+  },
+  credits_pro: {
+    name: 'Star Credits Pro',
+    displayPrice: '₩119,000',
+    billing: '★500 크레딧 (+100 보너스)',
+    annualNote: '만료 없음 · 파워 유저용',
+    features: ['★600 크레딧 실질 지급', '전 리딩 무제한 이용', '만료 없음'],
+  },
 }
 
 function CheckoutForm() {
   const router = useRouter()
   const params = useSearchParams()
-  const planKey = (params.get('plan') ?? 'premium') as keyof typeof PLANS
+  const planKey = params.get('plan') ?? 'premium'
   const plan = PLANS[planKey] ?? PLANS.premium
 
   const [name, setName] = useState('')

@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation'
 import styles from './credits.module.css'
 
 const PACKS = [
-  { id: 'starter',  credits: 10,  price: 1.99,  label: 'Starter',  perCredit: '0.20', popular: false, bonus: null },
-  { id: 'basic',    credits: 30,  price: 4.99,  label: 'Basic',    perCredit: '0.17', popular: false, bonus: null },
-  { id: 'popular',  credits: 80,  price: 9.99,  label: 'Popular',  perCredit: '0.12', popular: true,  bonus: '+10 bonus' },
-  { id: 'value',    credits: 200, price: 19.99, label: 'Value',    perCredit: '0.10', popular: false, bonus: '+30 bonus' },
-  { id: 'pro',      credits: 500, price: 39.99, label: 'Pro',      perCredit: '0.08', popular: false, bonus: '+100 bonus' },
+  { id: 'credits_starter', credits: 10,  price: '₩3,900',  label: 'Starter',  perCredit: '390', popular: false, bonus: null },
+  { id: 'credits_basic',   credits: 30,  price: '₩9,900',  label: 'Basic',    perCredit: '330', popular: false, bonus: null },
+  { id: 'credits_popular', credits: 80,  price: '₩24,900', label: 'Popular',  perCredit: '281', popular: true,  bonus: '+10 bonus' },
+  { id: 'credits_value',   credits: 200, price: '₩59,900', label: 'Value',    perCredit: '256', popular: false, bonus: '+30 bonus' },
+  { id: 'credits_pro',     credits: 500, price: '₩119,000',label: 'Pro',      perCredit: '198', popular: false, bonus: '+100 bonus' },
 ]
 
 const WHAT_YOU_CAN_BUY = [
@@ -38,7 +38,7 @@ const MEMBERSHIP_CREDITS = [
 ]
 
 export default function CreditsPage() {
-  const [selected, setSelected] = useState('popular')
+  const [selected, setSelected] = useState('credits_popular')
   const router = useRouter()
 
   const selectedPack = PACKS.find(p => p.id === selected)!
@@ -74,8 +74,8 @@ export default function CreditsPage() {
                 {p.bonus && <span className={styles.bonusBadge}>{p.bonus}</span>}
                 <div className={styles.packCredits}>★{p.credits}</div>
                 <div className={styles.packLabel}>{p.label}</div>
-                <div className={styles.packPrice}>${p.price}</div>
-                <div className={styles.packPer}>${p.perCredit} / credit</div>
+                <div className={styles.packPrice}>{p.price}</div>
+                <div className={styles.packPer}>★1당 {p.perCredit}원</div>
               </button>
             ))}
           </div>
@@ -85,13 +85,13 @@ export default function CreditsPage() {
             <div className={styles.buyDetail}>
               <span className={styles.buyCredits}>★{selectedPack.credits}{selectedPack.bonus ? ` ${selectedPack.bonus}` : ''}</span>
               <span className={styles.buyArrow}>→</span>
-              <span className={styles.buyPrice}>${selectedPack.price}</span>
+              <span className={styles.buyPrice}>{selectedPack.price}</span>
             </div>
             <button
               className={styles.buyBtn}
-              onClick={() => router.push(`/checkout?plan=credits&pack=${selected}`)}
+              onClick={() => router.push(`/checkout?plan=${selected}`)}
             >
-              Buy ★{selectedPack.credits} Credits — ${selectedPack.price}
+              ★{selectedPack.credits} 크레딧 구매 — {selectedPack.price}
             </button>
             <p className={styles.buyNote}>Secure checkout · Credits added instantly · No auto-renewal</p>
           </div>

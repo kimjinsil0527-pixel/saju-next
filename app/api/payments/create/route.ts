@@ -6,8 +6,14 @@ import crypto from 'crypto'
 // ── Server-side price table (KRW) ────────────────────────────────────────────
 // Canonical prices. Client-sent amounts are IGNORED — only plan key matters.
 const PLAN_PRICES: Record<string, number> = {
-  premium: 10900,    // ₩10,900/월
-  vip: 29900,        // ₩29,900/세션
+  premium: 19900,           // ₩19,900/월
+  premium_annual: 149000,   // ₩149,000/년
+  vip: 79900,               // ₩79,900/세션
+  credits_starter: 3900,    // 10 크레딧
+  credits_basic: 9900,      // 30 크레딧
+  credits_popular: 24900,   // 80 크레딧 (+10 보너스)
+  credits_value: 59900,     // 200 크레딧 (+30 보너스)
+  credits_pro: 119000,      // 500 크레딧 (+100 보너스)
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

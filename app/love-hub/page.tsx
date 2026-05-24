@@ -6,10 +6,11 @@ import styles from './love-hub.module.css'
 const CATEGORIES = [
   { id: 'all', label: 'All' },
   { id: 'free', label: 'Free' },
-  { id: 'current', label: 'Current Love' },
+  { id: 'single', label: 'For Singles' },
+  { id: 'current', label: 'Current Relationship' },
   { id: 'future', label: 'Future & Soulmate' },
   { id: 'breakup', label: 'Breakup & Healing' },
-  { id: 'deep', label: 'Deep Analysis' },
+  { id: 'deep', label: 'Deep Insight' },
 ]
 
 const READINGS = [
@@ -61,6 +62,104 @@ const READINGS = [
     credit: 0,
     href: '/tarot',
     tag: 'Major Arcana',
+  },
+
+  // FOR SINGLES
+  {
+    id: 'when-love-s',
+    cat: 'single',
+    icon: '📅',
+    badge: '★ 12 credits',
+    badgeColor: 'gold',
+    title: 'When Will Love Arrive?',
+    desc: "Exactly when does your chart show a new romantic connection entering? Based on your 10-year cycle and current annual energy.",
+    credit: 12,
+    href: '/love-hub/when-love',
+    tag: 'Timing prediction',
+  },
+  {
+    id: 'ideal-partner',
+    cat: 'single',
+    icon: '🎯',
+    badge: '★ 12 credits',
+    badgeColor: 'gold',
+    title: 'My Ideal Partner Profile',
+    desc: "Your chart carries a blueprint of who you're elementally drawn to. Get a detailed profile — personality type, industry, lifestyle — of your most compatible match.",
+    credit: 12,
+    href: '/love-hub/ideal-partner',
+    tag: 'Your love blueprint',
+  },
+  {
+    id: 'my-love-style',
+    cat: 'single',
+    icon: '🪞',
+    badge: '★ 10 credits',
+    badgeColor: 'gold',
+    title: 'My Love Style Analysis',
+    desc: "How do you actually show up in love? Your attachment style, romantic blind spots, and what partners consistently experience with you.",
+    credit: 10,
+    href: '/love-hub/my-love-style',
+    tag: 'Self-awareness',
+  },
+  {
+    id: 'love-blockers',
+    cat: 'single',
+    icon: '🚧',
+    badge: '★ 10 credits',
+    badgeColor: 'gold',
+    title: 'What\'s Blocking My Love Life?',
+    desc: "Is something in your chart suppressing romantic connection? Identify the exact elemental obstacle — and when it lifts.",
+    credit: 10,
+    href: '/love-hub/love-blockers',
+    tag: 'Why love delays',
+  },
+  {
+    id: 'secret-admirer',
+    cat: 'single',
+    icon: '🫣',
+    badge: '★ 8 credits',
+    badgeColor: 'gold',
+    title: 'Is Someone Secretly in Love With Me?',
+    desc: "Your chart shows incoming romantic energy before it surfaces. Find out if someone in your world is carrying unexpressed feelings for you.",
+    credit: 8,
+    href: '/love-hub/secret-admirer',
+    tag: 'Incoming energy',
+  },
+  {
+    id: 'magnetic-timing',
+    cat: 'single',
+    icon: '✨',
+    badge: '★ 8 credits',
+    badgeColor: 'gold',
+    title: 'When Am I Most Magnetic This Year?',
+    desc: "Your attraction energy peaks and dips with your elemental cycles. Get your top 3 high-magnetism months and the windows to avoid for new beginnings.",
+    credit: 8,
+    href: '/love-hub/magnetic-timing',
+    tag: 'Peak timing',
+  },
+  {
+    id: 'toxic-pattern',
+    cat: 'single',
+    icon: '🔁',
+    badge: '★ 10 credits',
+    badgeColor: 'gold',
+    title: 'Why Do I Keep Meeting the Same Person?',
+    desc: "Different names, same relationship. Your chart carries the exact elemental reason — and the specific shift that breaks the cycle.",
+    credit: 10,
+    href: '/love-hub/toxic-pattern',
+    tag: 'Pattern breaking',
+  },
+  {
+    id: 'first-meeting',
+    cat: 'single',
+    icon: '🌷',
+    badge: '★ 8 credits',
+    badgeColor: 'gold',
+    title: 'Blind Date & First Meeting Energy',
+    desc: "What does the energy between your charts suggest about this first meeting? Chemistry type, first impression, and whether to pursue.",
+    credit: 8,
+    href: '/love-hub/first-meeting',
+    tag: 'Blind date reading',
   },
 
   // CURRENT LOVE
@@ -171,6 +270,42 @@ const READINGS = [
     credit: 12,
     href: '/love-hub/love-language',
     tag: 'Partner analysis',
+  },
+  {
+    id: 'marriage-stability',
+    cat: 'current',
+    icon: '🏛️',
+    badge: '★ 12 credits',
+    badgeColor: 'gold',
+    title: 'Will This Relationship Lead to Marriage?',
+    desc: "Is marriage actually on this path? Analyze both charts for commitment timing, long-term endurance, and what needs to happen for it to go the distance.",
+    credit: 12,
+    href: '/love-hub/marriage-stability',
+    tag: 'Commitment path',
+  },
+  {
+    id: 'partner-true-feelings',
+    cat: 'current',
+    icon: '💭',
+    badge: '★ 12 credits',
+    badgeColor: 'gold',
+    title: "What Does My Partner Really Feel?",
+    desc: "What they say vs. what their chart says. Understand your partner's true emotional state, what they need but won't express, and where this is heading.",
+    credit: 12,
+    href: '/love-hub/partner-true-feelings',
+    tag: 'Partner insight',
+  },
+  {
+    id: 'cohabitation',
+    cat: 'current',
+    icon: '🏠',
+    badge: '★ 10 credits',
+    badgeColor: 'gold',
+    title: 'Should We Move In Together?',
+    desc: "Cohabitation reveals what no date can. Find out if your elemental types are compatible for daily life — and what the #1 friction point will be.",
+    credit: 10,
+    href: '/love-hub/cohabitation',
+    tag: 'Living together',
   },
 
   // FUTURE & SOULMATE
@@ -297,6 +432,18 @@ const READINGS = [
     tag: 'Healing timeline',
   },
   {
+    id: 'remarriage',
+    cat: 'breakup',
+    icon: '🌻',
+    badge: '★ 12 credits',
+    badgeColor: 'gold',
+    title: 'Love After Divorce or Long-Term Heartbreak',
+    desc: "After a major ending — where are you in your recovery cycle, when will love genuinely re-open, and what does the next chapter of your love life look like?",
+    credit: 12,
+    href: '/love-hub/remarriage',
+    tag: 'New beginning',
+  },
+  {
     id: 'closure',
     cat: 'breakup',
     icon: '🕊️',
@@ -309,7 +456,19 @@ const READINGS = [
     tag: 'Emotional release',
   },
 
-  // DEEP ANALYSIS
+  // DEEP INSIGHT
+  {
+    id: 'third-party',
+    cat: 'deep',
+    icon: '👁️',
+    badge: '★ 15 credits',
+    badgeColor: 'gold',
+    title: 'Is There Someone Else?',
+    desc: "The question you're afraid to ask. Examine your partner's chart for signs of divided romantic energy — and whether your instincts are tracking something real.",
+    credit: 15,
+    href: '/love-hub/third-party',
+    tag: 'Relationship integrity',
+  },
   {
     id: 'full-compat',
     cat: 'deep',
@@ -410,10 +569,10 @@ export default function LoveHub() {
           </div>
           <div className={styles.creditPacks}>
             {[
-              { credits: 10, price: '$1.99' },
-              { credits: 30, price: '$4.99' },
-              { credits: 80, price: '$9.99', popular: true },
-              { credits: 200, price: '$19.99' },
+              { credits: 10, price: '₩3,900' },
+              { credits: 30, price: '₩9,900' },
+              { credits: 80, price: '₩24,900', popular: true },
+              { credits: 200, price: '₩59,900' },
             ].map(p => (
               <div key={p.credits} className={`${styles.pack} ${p.popular ? styles.packPopular : ''}`}>
                 {p.popular && <span className={styles.packBadge}>Best Value</span>}
@@ -464,7 +623,7 @@ export default function LoveHub() {
         <div className={styles.bottomCta}>
           <p className={styles.bottomCtaEyebrow}>Premium Members Get More</p>
           <h3 className={styles.bottomCtaTitle}>Subscribe to get <span className={styles.gold}>★80 credits/month</span> + unlimited deep readings</h3>
-          <p className={styles.bottomCtaSub}>Premium Annual plan · $8.99/mo · Cancel anytime</p>
+          <p className={styles.bottomCtaSub}>연간 플랜 · 월 ₩12,400 · 언제든 해지 가능</p>
           <Link href="/checkout?plan=premium" className={styles.btnPrimary}>Get Premium →</Link>
         </div>
       </div>
