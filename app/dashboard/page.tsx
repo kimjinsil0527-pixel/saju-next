@@ -48,7 +48,7 @@ export default function Dashboard() {
         {/* Main */}
         <main className={styles.main}>
           <div className={styles.welcome}>
-            <h1 className={styles.greeting}>Welcome back, Jane</h1>
+            <h1 className={styles.greeting}>Welcome to your dashboard</h1>
             <p className={styles.greetingSub}>Your cosmic record — all in one place.</p>
           </div>
 

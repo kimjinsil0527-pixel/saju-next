@@ -68,8 +68,8 @@ function SuccessContent() {
       {confirmed && (
         <>
           <div className={styles.actions}>
-            <Link href="/dashboard" className={styles.primary}>Go to Dashboard</Link>
-            <Link href="/" className={styles.ghost}>Home</Link>
+            <Link href="/" className={styles.primary}>Home</Link>
+            <Link href="/fortune" className={styles.ghost}>Start Reading</Link>
           </div>
           <div className={styles.note}>Final access is granted by the server webhook.</div>
         </>
