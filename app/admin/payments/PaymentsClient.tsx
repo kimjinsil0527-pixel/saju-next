@@ -14,7 +14,12 @@ type Payment = {
   created_at: string
 }
 
-function fmtMoney(n: number) { return '₩' + n.toLocaleString('ko-KR') }
+function fmtMoney(cents: number) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  }).format(cents / 100)
+}
 function fmtDate(s: string) {
   return new Date(s).toLocaleString('ko-KR', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
 }
