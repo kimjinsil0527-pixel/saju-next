@@ -1,6 +1,7 @@
 'use client'
+
 import Link from 'next/link'
-import { useEffect, useState, Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import styles from './success.module.css'
 
@@ -10,38 +11,45 @@ function SuccessContent() {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    const provider = params.get('provider')
+    const lemonOrderId = params.get('order_id') || params.get('orderId') || params.get('order_identifier')
+
+    if ((provider === 'lemonsqueezy' || provider === 'lemon') && lemonOrderId) {
+      setConfirmed(true)
+      return
+    }
+
     const paymentKey = params.get('paymentKey')
     const orderId = params.get('orderId')
     const amount = params.get('amount')
 
-    // 토스페이먼츠 리다이렉트로 온 경우 서버에서 승인 처리
-    if (paymentKey && orderId && amount) {
-      fetch('/api/payments/confirm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),
-      })
-        .then(r => r.json())
-        .then(data => {
-          if (data.ok) setConfirmed(true)
-          else setError(data.error || '결제 확인 중 오류 발생')
-        })
-        .catch(() => setError('네트워크 오류'))
-    } else {
-      // orderId만 있는 경우 (테스트 모드)
-      setConfirmed(true)
+    if (!paymentKey || !orderId || !amount) {
+      setError('Missing payment confirmation details. Please contact support if you were charged.')
+      return
     }
+
+    fetch('/api/payments/confirm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok) setConfirmed(true)
+        else setError(data.error || 'Payment confirmation failed.')
+      })
+      .catch(() => setError('Network error while confirming payment.'))
   }, [params])
 
   if (error) {
     return (
       <div className={styles.wrap}>
-        <div className={styles.iconError}>✕</div>
-        <h1 className={styles.title}>결제 확인 실패</h1>
+        <div className={styles.iconError}>!</div>
+        <h1 className={styles.title}>Payment Not Confirmed</h1>
         <p className={styles.sub}>{error}</p>
         <div className={styles.actions}>
-          <Link href="/checkout?plan=premium" className={styles.primary}>다시 시도하기</Link>
-          <Link href="/" className={styles.ghost}>홈으로</Link>
+          <Link href="/checkout?plan=premium" className={styles.primary}>Try Again</Link>
+          <Link href="/" className={styles.ghost}>Home</Link>
         </div>
       </div>
     )
@@ -49,22 +57,22 @@ function SuccessContent() {
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.icon}>{confirmed ? '✦' : '⟳'}</div>
+      <div className={styles.icon}>{confirmed ? '*' : '...'}</div>
       <h1 className={styles.title}>
-        {confirmed ? '결제가 완료되었습니다!' : '결제 확인 중...'}
+        {confirmed ? 'Payment Confirmed' : 'Confirming Payment'}
       </h1>
       <p className={styles.sub}>
         {confirmed
-          ? '구매해 주셔서 감사합니다. 프리미엄 리포트가 준비되었습니다.'
-          : '잠시만 기다려주세요.'}
+          ? 'Thank you. Your payment is being processed securely.'
+          : 'Please wait while we verify your payment with the provider.'}
       </p>
       {confirmed && (
         <>
           <div className={styles.actions}>
-            <Link href="/dashboard" className={styles.primary}>내 대시보드로 →</Link>
-            <Link href="/" className={styles.ghost}>홈으로</Link>
+            <Link href="/dashboard" className={styles.primary}>Go to Dashboard</Link>
+            <Link href="/" className={styles.ghost}>Home</Link>
           </div>
-          <div className={styles.note}>확인 이메일이 발송되었습니다.</div>
+          <div className={styles.note}>Final access is granted by the server webhook.</div>
         </>
       )}
     </div>
@@ -75,7 +83,7 @@ export default function CheckoutSuccess() {
   return (
     <div className={styles.page}>
       <div className={styles.bg} />
-      <Suspense fallback={<div className={styles.wrap}><div className={styles.icon}>⟳</div></div>}>
+      <Suspense fallback={<div className={styles.wrap}><div className={styles.icon}>...</div></div>}>
         <SuccessContent />
       </Suspense>
     </div>

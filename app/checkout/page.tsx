@@ -111,8 +111,12 @@ function CheckoutForm() {
     e.preventDefault()
     if (!name || !email || !lsUrl) return
     // 이름/이메일 pre-fill 후 overlay 열기
-    const url = `${lsUrl}?checkout[email]=${encodeURIComponent(email)}&checkout[name]=${encodeURIComponent(name)}`
-    lsLinkRef.current!.href = url
+    const checkoutUrl = new URL(lsUrl)
+    checkoutUrl.searchParams.set('checkout[email]', email)
+    checkoutUrl.searchParams.set('checkout[name]', name)
+    checkoutUrl.searchParams.set('checkout[custom][plan]', planKey)
+    checkoutUrl.searchParams.set('checkout[custom][source]', 'saju-next')
+    lsLinkRef.current!.href = checkoutUrl.toString()
     lsLinkRef.current!.click()
   }
 

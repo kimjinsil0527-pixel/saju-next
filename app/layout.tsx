@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   description: 'AI-powered Four Pillars of Destiny analysis. Daily fortune, annual reports, and expert 1:1 consultation.',
   keywords: 'four pillars, bazi, saju, fortune, astrology, compatibility, destiny, horoscope',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://saju-next-rho.vercel.app'),
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: ['/icon.svg'],
+  },
   openGraph: {
     title: 'UNMYUNG — Decode Your Destiny',
     description: 'AI-powered Four Pillars analysis. Start free, no sign-up required.',

@@ -21,6 +21,32 @@ const ELEMENT_LUCKY_COLORS: Record<string, string> = {
   earth: 'Yellow · Ochre', metal: 'White · Gold', water: 'Black · Navy',
 }
 
+type PremiumProfileFields = {
+  loveDetail?: unknown
+  wealthDetail?: unknown
+  healthDetail?: unknown
+}
+
+function hasAdminAccess(req: NextRequest): boolean {
+  const token = req.cookies.get('admin_token')?.value
+  const secret = process.env.AUTH_SECRET
+  return !!token && !!secret && token === secret
+}
+
+function stripPremiumProfileDetails<T extends PremiumProfileFields>(profile: T | null): (T & {
+  loveDetail: null
+  wealthDetail: null
+  healthDetail: null
+}) | null {
+  if (!profile) return null
+  return {
+    ...profile,
+    loveDetail: null,
+    wealthDetail: null,
+    healthDetail: null,
+  }
+}
+
 // Annual fortune texts keyed by the Ten God of current year's stem vs. Day Master
 const ANNUAL_FORTUNE: Record<string, string[]> = {
   '비견': [
@@ -136,6 +162,7 @@ function calcAnnualSipsin(dayMasterStemIdx: number, yearStemIdx: number): string
 
 export async function POST(req: NextRequest) {
   try {
+    const includePremium = hasAdminAccess(req)
     const body = await req.json()
     const { birthdate, gender, hourKey, calendar } = body as {
       birthdate: string
@@ -322,7 +349,7 @@ export async function POST(req: NextRequest) {
         todayFortune,
         ilgan: dayPillar.stem,
         ilganHanja: dayPillar.stemHanja,
-        ilganProfile,
+        ilganProfile: includePremium ? ilganProfile : stripPremiumProfileDetails(ilganProfile),
         dominantProfile,
         weaknessProfile,
         lifePeriod,
@@ -332,7 +359,7 @@ export async function POST(req: NextRequest) {
         hiddenStems,
         interactions,
         dayMasterStrength,
-        luckPillars,
+        luckPillars: includePremium ? luckPillars : undefined,
         annualSipsin,
         currentYearStem: currentYearPillar.stemHanja,
         currentYearBranch: currentYearPillar.branchHanja,
