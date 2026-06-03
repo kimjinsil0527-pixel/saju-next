@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from './fortune.module.css'
@@ -90,6 +90,9 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
   const [result, setResult] = useState<SajuResult | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [premiumEmail, setPremiumEmail] = useState('')
+  const [premiumLoading, setPremiumLoading] = useState(false)
+  const [premiumMessage, setPremiumMessage] = useState('')
 
   const date = params.get('date') || ''
   const gender = params.get('gender') || '여성'
@@ -107,13 +110,41 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
       .then(data => { if (data.error) setError(data.error); else setResult(data) })
       .catch(() => setError('분석 중 오류가 발생했습니다.'))
       .finally(() => setLoading(false))
-  }, [date, gender, hour, router])
+  }, [date, gender, hour, calendar, router])
+
+  async function handlePremiumVerify(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setPremiumLoading(true)
+    setPremiumMessage('')
+
+    try {
+      const res = await fetch('/api/premium/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: premiumEmail }),
+      })
+      const data = await res.json()
+
+      if (!res.ok || !data.ok) {
+        setPremiumMessage(data.error || 'Premium access could not be verified.')
+        return
+      }
+
+      setPremiumMessage('Premium access unlocked.')
+      window.location.reload()
+    } catch {
+      setPremiumMessage('Could not verify premium access. Please try again.')
+    } finally {
+      setPremiumLoading(false)
+    }
+  }
 
   if (loading) return <LoadingView />
   if (error || !result) return <ErrorView message={error} />
 
   const { pillars, analysis } = result
   const pillarList = [pillars.year, pillars.month, pillars.day, pillars.hour]
+  const hasPremiumAccess = isAdmin || Boolean(analysis.luckPillars) || Boolean(analysis.ilganProfile?.loveDetail)
 
   return (
     <main className={styles.page}>
@@ -126,6 +157,21 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
           Year of the <span>{analysis.zodiac}</span> · Day Master <span>{analysis.ilgan}</span>
         </p>
       </div>
+
+      {!hasPremiumAccess && (
+        <PremiumAccessPanel
+          email={premiumEmail}
+          loading={premiumLoading}
+          message={premiumMessage}
+          onEmailChange={setPremiumEmail}
+          onSubmit={handlePremiumVerify}
+        />
+      )}
+      {hasPremiumAccess && !isAdmin && (
+        <div className={styles.premiumUnlocked}>
+          Premium access unlocked for this browser.
+        </div>
+      )}
 
       {/* ─ 사주 원국 ─ */}
       <section className={styles.section}>
@@ -289,7 +335,7 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
             data={analysis.ilganProfile.loveDetail}
             lockLabel="Want to know more?"
             accentColor="var(--ember)"
-            isAdmin={isAdmin}
+            isAdmin={hasPremiumAccess}
           />
         </section>
       )}
@@ -302,7 +348,7 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
             data={analysis.ilganProfile.wealthDetail}
             lockLabel="Want to know more?"
             accentColor="var(--gold)"
-            isAdmin={isAdmin}
+            isAdmin={hasPremiumAccess}
           />
         </section>
       )}
@@ -315,7 +361,7 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
             data={analysis.ilganProfile.healthDetail}
             lockLabel="Want to know more?"
             accentColor="var(--jade)"
-            isAdmin={isAdmin}
+            isAdmin={hasPremiumAccess}
           />
         </section>
       )}
@@ -570,7 +616,7 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
               )
             })}
           </div>
-          {!isAdmin && <div className={styles.luckLockBox}>
+          {!hasPremiumAccess && <div className={styles.luckLockBox}>
             <div className={styles.luckLockInner}>
               <span>🔒</span>
               <div>
@@ -592,7 +638,7 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
       )}
 
       {/* ─ Premium CTA ─ */}
-      <section className={styles.upsellSection}>
+      {!hasPremiumAccess && <section className={styles.upsellSection}>
         <div className={styles.upsellCard}>
           <div className={styles.upsellTopLine} />
           <p className={styles.upsellEyebrow}>Premium Report</p>
@@ -613,8 +659,46 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
             <Link href="/" className="btn-ghost btn-large" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>← Back to Home</Link>
           </div>
         </div>
-      </section>
+      </section>}
     </main>
+  )
+}
+
+function PremiumAccessPanel({
+  email,
+  loading,
+  message,
+  onEmailChange,
+  onSubmit,
+}: {
+  email: string
+  loading: boolean
+  message: string
+  onEmailChange: (email: string) => void
+  onSubmit: (e: FormEvent<HTMLFormElement>) => void
+}) {
+  return (
+    <section className={styles.premiumAccessPanel}>
+      <div>
+        <div className={styles.premiumAccessLabel}>Already purchased?</div>
+        <p className={styles.premiumAccessText}>
+          Enter the email used at checkout to unlock premium details on this browser.
+        </p>
+      </div>
+      <form className={styles.premiumAccessForm} onSubmit={onSubmit}>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => onEmailChange(e.target.value)}
+          placeholder="purchase@email.com"
+          required
+        />
+        <button type="submit" className="btn-primary" disabled={loading}>
+          {loading ? 'Checking...' : 'Unlock'}
+        </button>
+      </form>
+      {message && <div className={styles.premiumAccessMessage}>{message}</div>}
+    </section>
   )
 }
 

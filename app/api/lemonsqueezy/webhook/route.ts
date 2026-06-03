@@ -96,6 +96,7 @@ export async function POST(req: NextRequest) {
 
   const attrs = payload.data?.attributes
   const status = getPaymentStatus(eventName, payload)
+  const customerEmail = attrs?.user_email || attrs?.customer_email || null
   const sb = createServiceClient()
 
   const { error } = await sb.from('payments').upsert({
@@ -105,7 +106,7 @@ export async function POST(req: NextRequest) {
     plan: getPlan(payload),
     status,
     customer_name: (attrs?.user_name || attrs?.customer_name || null)?.slice(0, 100) ?? null,
-    customer_email: (attrs?.user_email || attrs?.customer_email || null)?.slice(0, 254) ?? null,
+    customer_email: customerEmail?.trim().toLowerCase().slice(0, 254) ?? null,
   }, {
     onConflict: 'order_id',
   })
