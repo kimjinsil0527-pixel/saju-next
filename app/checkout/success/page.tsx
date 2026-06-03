@@ -12,9 +12,8 @@ function SuccessContent() {
 
   useEffect(() => {
     const provider = params.get('provider')
-    const lemonOrderId = params.get('order_id') || params.get('orderId') || params.get('order_identifier')
 
-    if ((provider === 'lemonsqueezy' || provider === 'lemon') && lemonOrderId) {
+    if (provider === 'lemonsqueezy' || provider === 'lemon') {
       setConfirmed(true)
       return
     }
