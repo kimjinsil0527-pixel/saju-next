@@ -1,54 +1,26 @@
 'use client'
 
 import Link from 'next/link'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import styles from './success.module.css'
 
 function SuccessContent() {
   const params = useSearchParams()
-  const [confirmed, setConfirmed] = useState(false)
-  const [error, setError] = useState('')
+  const provider = params.get('provider')
+  const isLemonSqueezy = provider === 'lemonsqueezy' || provider === 'lemon'
 
-  useEffect(() => {
-    const provider = params.get('provider')
-
-    if (provider === 'lemonsqueezy' || provider === 'lemon') {
-      setConfirmed(true)
-      return
-    }
-
-    const paymentKey = params.get('paymentKey')
-    const orderId = params.get('orderId')
-    const amount = params.get('amount')
-
-    if (!paymentKey || !orderId || !amount) {
-      setError('Missing payment confirmation details. Please contact support if you were charged.')
-      return
-    }
-
-    fetch('/api/payments/confirm', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ paymentKey, orderId, amount: Number(amount) }),
-    })
-      .then(r => r.json())
-      .then(data => {
-        if (data.ok) setConfirmed(true)
-        else setError(data.error || 'Payment confirmation failed.')
-      })
-      .catch(() => setError('Network error while confirming payment.'))
-  }, [params])
-
-  if (error) {
+  if (!isLemonSqueezy) {
     return (
       <div className={styles.wrap}>
         <div className={styles.iconError}>!</div>
-        <h1 className={styles.title}>Payment Not Confirmed</h1>
-        <p className={styles.sub}>{error}</p>
+        <h1 className={styles.title}>Payment Status Unavailable</h1>
+        <p className={styles.sub}>
+          This page cannot confirm a payment. If you were charged, please contact support with the email used at checkout.
+        </p>
         <div className={styles.actions}>
-          <Link href="/checkout?plan=premium" className={styles.primary}>Try Again</Link>
-          <Link href="/" className={styles.ghost}>Home</Link>
+          <Link href="/" className={styles.primary}>Home</Link>
+          <Link href="/#pricing" className={styles.ghost}>View Plans</Link>
         </div>
       </div>
     )
@@ -56,24 +28,18 @@ function SuccessContent() {
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.icon}>{confirmed ? '*' : '...'}</div>
-      <h1 className={styles.title}>
-        {confirmed ? 'Payment Confirmed' : 'Confirming Payment'}
-      </h1>
+      <div className={styles.icon}>...</div>
+      <h1 className={styles.title}>Checkout Received</h1>
       <p className={styles.sub}>
-        {confirmed
-          ? 'Thank you. Your payment is being processed securely.'
-          : 'Please wait while we verify your payment with the provider.'}
+        Lemon Squeezy is securely confirming your payment with our server. Premium access is granted only after that confirmation arrives.
       </p>
-      {confirmed && (
-        <>
-          <div className={styles.actions}>
-            <Link href="/" className={styles.primary}>Home</Link>
-            <Link href="/fortune" className={styles.ghost}>Start Reading</Link>
-          </div>
-          <div className={styles.note}>Final access is granted by the server webhook.</div>
-        </>
-      )}
+      <div className={styles.actions}>
+        <Link href="/fortune" className={styles.primary}>Start Reading</Link>
+        <Link href="/" className={styles.ghost}>Home</Link>
+      </div>
+      <div className={styles.note}>
+        On the reading page, use the same email entered at checkout to unlock Premium.
+      </div>
     </div>
   )
 }
