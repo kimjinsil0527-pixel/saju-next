@@ -54,7 +54,6 @@
 }
 @media (max-width: 480px) {
   .cta { gap: 8px; }
-  .cta button:first-child { display: none; }
   .logo { font-size: 18px; }
   .logo span { font-size: 9px; letter-spacing: 0.2em; }
 }

@@ -6,7 +6,6 @@ import Stats from '@/components/Stats'
 import FreeServices from '@/components/FreeServices'
 import LoveHubSection from '@/components/LoveHubSection'
 import Pricing from '@/components/Pricing'
-import PremiumServices from '@/components/PremiumServices'
 import ReportPreview from '@/components/ReportPreview'
 import Testimonials from '@/components/Testimonials'
 import CtaSection from '@/components/CtaSection'
@@ -24,7 +23,6 @@ export default function Home() {
         <FreeServices />
         <LoveHubSection />
         <Pricing />
-        <PremiumServices />
         <ReportPreview />
         <Testimonials />
         <CtaSection />

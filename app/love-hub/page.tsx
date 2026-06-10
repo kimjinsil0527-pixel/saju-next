@@ -558,31 +558,6 @@ export default function LoveHub() {
           <p className={styles.sub}>{freeCount} free readings · {totalCount - freeCount} premium readings · All based on your Four Pillars chart</p>
         </div>
 
-        {/* Credit Banner */}
-        <div className={styles.creditBanner}>
-          <div className={styles.creditLeft}>
-            <span className={styles.creditStar}>★</span>
-            <div>
-              <p className={styles.creditTitle}>Star Credits — Use for any reading below</p>
-              <p className={styles.creditSub}>Credits never expire · Use across all UNMYUNG services</p>
-            </div>
-          </div>
-          <div className={styles.creditPacks}>
-            {[
-              { credits: 10, price: '₩3,900' },
-              { credits: 30, price: '₩9,900' },
-              { credits: 80, price: '₩24,900', popular: true },
-              { credits: 200, price: '₩59,900' },
-            ].map(p => (
-              <div key={p.credits} className={`${styles.pack} ${p.popular ? styles.packPopular : ''}`}>
-                {p.popular && <span className={styles.packBadge}>Best Value</span>}
-                <span className={styles.packCredits}>★{p.credits}</span>
-                <span className={styles.packPrice}>{p.price}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Filter Tabs */}
         <div className={styles.tabs}>
           {CATEGORIES.map(c => (

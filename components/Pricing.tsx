@@ -67,28 +67,6 @@ export default function Pricing() {
               <button className={`${styles.btn} ${styles.btnFeatured}`} onClick={() => router.push('/checkout?plan=premium')}>Get Premium</button>
             </div>
 
-            {/* VIP */}
-            <div className={styles.card}>
-              <div className={styles.tier}>VIP</div>
-              <div className={styles.name}>VIP Consult</div>
-              <div className={styles.tagline}>Live session with a verified master<br />Deeply personalized reading</div>
-              <div className={styles.price}>
-                <div className={styles.priceMain}><span className={styles.won}>$</span>79.99</div>
-                <div className={styles.period}>~ per session · 30 min minimum</div>
-              </div>
-              <div className={styles.divider} />
-              <ul className={styles.features}>
-                <li><span>✓</span> Everything in Premium</li>
-                <li><span className={styles.ember}>◆</span> Certified Four Pillars master</li>
-                <li><span className={styles.ember}>◆</span> Chat / phone / video — your choice</li>
-                <li><span className={styles.ember}>◆</span> Session recording provided</li>
-                <li><span className={styles.ember}>◆</span> Custom name analysis service</li>
-                <li><span className={styles.ember}>◆</span> Auspicious date selection</li>
-                <li><span className={styles.ember}>◆</span> Family compatibility package</li>
-                <li><span className={styles.ember}>◆</span> Unlimited follow-up for one year</li>
-              </ul>
-              <button className={`${styles.btn} ${styles.btnEmber}`} onClick={() => router.push('/counseling')}>Book a Consultant</button>
-            </div>
           </div>
         </ScrollReveal>
       </div>

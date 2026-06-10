@@ -6,9 +6,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/admin', '/api/', '/dashboard', '/checkout'],
+        disallow: ['/admin', '/api/', '/dashboard', '/checkout', '/signin', '/signup', '/credits', '/counseling'],
       },
     ],
-    sitemap: 'https://unmyung.app/sitemap.xml',
+    sitemap: 'https://sajuunmyung.com/sitemap.xml',
   }
 }

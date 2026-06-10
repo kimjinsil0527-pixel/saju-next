@@ -8,7 +8,6 @@ const faqs = [
   { q: 'How do I get a refund?', a: 'We offer a 7-day satisfaction guarantee on all premium purchases. Contact us at the email below within 7 days of purchase and we\'ll process a full refund.' },
   { q: 'What\'s the difference between Free and Premium?', a: 'The free reading gives you your full Four Pillars chart and today\'s energy reading. Premium unlocks your annual detailed report (PDF), wealth/career/love deep analysis, 10-year cycle roadmap, and more.' },
   { q: 'Can I cancel my subscription?', a: 'Yes, anytime. Go to your Dashboard → Subscription settings, or contact us and we\'ll cancel immediately with no questions asked.' },
-  { q: 'How does the VIP consultation work?', a: 'Browse our verified consultants, select a session format (chat/phone/video), and book a time. You\'ll receive a session recording afterward. Sessions start from 30 minutes.' },
 ]
 
 export default function Support() {

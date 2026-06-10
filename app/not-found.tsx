@@ -26,7 +26,6 @@ export default function NotFound() {
             <Link href="/tarot" className={styles.suggestItem}>🃏 Tarot Reading</Link>
             <Link href="/lucky" className={styles.suggestItem}>🍀 Lucky Guide</Link>
             <Link href="/compatibility" className={styles.suggestItem}>☯️ Compatibility</Link>
-            <Link href="/credits" className={styles.suggestItem}>★ Get Credits</Link>
           </div>
         </div>
       </div>

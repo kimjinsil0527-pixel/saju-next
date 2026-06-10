@@ -4,14 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useState, useRef } from 'react'
 import styles from './checkout.module.css'
 
-// ── Lemon Squeezy checkout URLs per plan ─────────────────────────────────────
-// 상품 추가될 때마다 여기에 추가
 const LS_CHECKOUT_URLS: Record<string, string> = {
   premium: 'https://saju-unmyung.lemonsqueezy.com/checkout/buy/2a7e3b8e-66d5-4ba6-8930-edd92a56ddf5',
-  // premium_annual: 'https://saju-unmyung.lemonsqueezy.com/checkout/buy/...',
-  // vip: 'https://saju-unmyung.lemonsqueezy.com/checkout/buy/...',
-  // credits_starter: 'https://saju-unmyung.lemonsqueezy.com/checkout/buy/...',
-  // credits_popular: 'https://saju-unmyung.lemonsqueezy.com/checkout/buy/...',
 }
 
 const PLANS: Record<string, { name: string; displayPrice: string; billing: string; annualNote: string; features: string[] }> = {
@@ -30,73 +24,13 @@ const PLANS: Record<string, { name: string; displayPrice: string; billing: strin
       '매월 ★30 크레딧 지급',
     ],
   },
-  premium_annual: {
-    name: 'Premium 연간',
-    displayPrice: '₩149,000',
-    billing: '연 결제 (월 ₩12,400)',
-    annualNote: '월간 대비 38% 절약',
-    features: [
-      'Premium 월간의 모든 혜택',
-      '매월 ★80 크레딧 지급 (월간의 2.7배)',
-      '연간 전체 운세 리포트 PDF',
-      '우선 상담 예약 권한',
-    ],
-  },
-  vip: {
-    name: 'VIP 1:1 상담',
-    displayPrice: '₩79,900',
-    billing: '1회 세션 (60분)',
-    annualNote: '30분 세션은 ₩49,900',
-    features: [
-      'Premium의 모든 혜택',
-      '공인 사주 전문가 1:1 상담',
-      '채팅 / 전화 / 화상 중 선택',
-      '세션 녹화 제공',
-      '작명 서비스',
-      '택일 서비스',
-    ],
-  },
-  credits_starter: {
-    name: 'Star Credits Starter',
-    displayPrice: '₩3,900',
-    billing: '★10 크레딧',
-    annualNote: '만료 없음 · 즉시 충전',
-    features: ['사랑 리딩 1회 이용 가능', '만료 없음', '모든 리딩에 사용 가능'],
-  },
-  credits_basic: {
-    name: 'Star Credits Basic',
-    displayPrice: '₩9,900',
-    billing: '★30 크레딧',
-    annualNote: '만료 없음 · 즉시 충전',
-    features: ['연애 리딩 3~4회 이용', '만료 없음', '모든 리딩에 사용 가능'],
-  },
-  credits_popular: {
-    name: 'Star Credits Popular',
-    displayPrice: '₩24,900',
-    billing: '★80 크레딧 (+10 보너스)',
-    annualNote: '가장 인기 · 만료 없음',
-    features: ['★90 크레딧 실질 지급', '프리미엄 리딩 6~8회', '만료 없음'],
-  },
-  credits_value: {
-    name: 'Star Credits Value',
-    displayPrice: '₩59,900',
-    billing: '★200 크레딧 (+30 보너스)',
-    annualNote: '만료 없음 · 최대 절약',
-    features: ['★230 크레딧 실질 지급', '심층 리딩 15회 이상', '만료 없음'],
-  },
-  credits_pro: {
-    name: 'Star Credits Pro',
-    displayPrice: '₩119,000',
-    billing: '★500 크레딧 (+100 보너스)',
-    annualNote: '만료 없음 · 파워 유저용',
-    features: ['★600 크레딧 실질 지급', '전 리딩 무제한 이용', '만료 없음'],
-  },
 }
 
 function CheckoutForm() {
   const router = useRouter()
   const params = useSearchParams()
   const planKey = params.get('plan') ?? 'premium'
+  const isSupportedPlan = planKey === 'premium'
   const plan = PLANS[planKey] ?? PLANS.premium
   const lsUrl = LS_CHECKOUT_URLS[planKey]
 
@@ -105,6 +39,29 @@ function CheckoutForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const lsLinkRef = useRef<HTMLAnchorElement>(null)
+
+  if (!isSupportedPlan) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.bg} />
+        <div className={styles.header}>
+          <Link href="/" className={styles.logo}>UNMYUNG</Link>
+          <Link href="/#pricing" className={styles.back}>Back to plans</Link>
+        </div>
+        <div className={styles.layout}>
+          <div className={styles.formWrap}>
+            <h1 className={styles.formTitle}>This product is not available yet</h1>
+            <p className={styles.formSub}>
+              Only the Premium test checkout is currently enabled.
+            </p>
+            <Link href="/checkout?plan=premium" className={styles.submit}>
+              View Premium
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // ── Lemon Squeezy 결제 (LS URL이 있는 플랜) ───────────────────────────────
   function handleLSPayment(e: React.FormEvent) {

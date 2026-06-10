@@ -217,7 +217,6 @@ export default function AdminDashboard({ stats }: { stats: Stats }) {
               { label: '궁합', href: '/compatibility' },
               { label: '별자리', href: '/horoscope' },
               { label: '결제 페이지', href: '/checkout?plan=premium' },
-              { label: '대시보드', href: '/dashboard' },
             ].map(l => (
               <a key={l.href} href={l.href} target="_blank" className={styles.quickItem}>{l.label} ↗</a>
             ))}

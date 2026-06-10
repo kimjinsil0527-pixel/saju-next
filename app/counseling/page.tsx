@@ -24,7 +24,6 @@ export default function CounselingPage() {
         <div className={styles.navLinks}>
           <Link href="/#free-services">Free Reading</Link>
           <Link href="/#pricing">Plans</Link>
-          <Link href="/signin" className={styles.navCta}>Sign In</Link>
         </div>
       </nav>
 

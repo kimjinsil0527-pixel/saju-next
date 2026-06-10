@@ -33,16 +33,12 @@ export default function Footer() {
             <Link href="/horoscope">Horoscope</Link>
             <Link href="/calendar">Calendar</Link>
             <Link href="/year-ahead">Year Ahead</Link>
-            <Link href="/counseling">Expert Consult</Link>
           </div>
 
           <div className={styles.col}>
-            <div className={styles.colTitle}>Account</div>
-            <Link href="/credits">★ Credits</Link>
-            <Link href="/signin">Sign In</Link>
-            <Link href="/signup">Create Account</Link>
-            <Link href="/dashboard">Dashboard</Link>
+            <div className={styles.colTitle}>Help</div>
             <Link href="/support">Support</Link>
+            <Link href="/refund">Refund Policy</Link>
           </div>
 
           <div className={styles.col}>

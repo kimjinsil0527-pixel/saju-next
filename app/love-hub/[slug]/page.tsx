@@ -1,7 +1,6 @@
 'use client'
 import { useState, use } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import styles from './reading.module.css'
 
 type ReadingType = 'single' | 'couple'
@@ -1079,7 +1078,6 @@ const RELATED_LABELS: Record<string, string> = {
 
 export default function LoveReadingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params)
-  const router = useRouter()
   const reading = READINGS[slug]
 
   const [date1, setDate1] = useState('')
@@ -1207,12 +1205,13 @@ export default function LoveReadingPage({ params }: { params: Promise<{ slug: st
                 </p>
                 <button
                   className={styles.unlockBtn}
-                  onClick={() => router.push('/credits')}
+                  type="button"
+                  disabled
                 >
-                  Get ★{reading.credits} Credits — from ${reading.credits <= 8 ? '1.99' : reading.credits <= 12 ? '4.99' : '9.99'}
+                  Premium reading coming soon
                 </button>
                 <p className={styles.unlockNote}>
-                  Credits never expire · Use across all 30+ readings · No subscription required
+                  This product is not available for purchase yet.
                 </p>
               </div>
             </div>

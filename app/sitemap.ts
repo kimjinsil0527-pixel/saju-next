@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = 'https://unmyung.app'
+  const base = 'https://sajuunmyung.com'
   const now = new Date()
 
   const staticPages = [
@@ -16,8 +16,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/horoscope`, priority: 0.8, changeFrequency: 'weekly' as const },
     { url: `${base}/calendar`, priority: 0.7, changeFrequency: 'weekly' as const },
     { url: `${base}/year-ahead`, priority: 0.7, changeFrequency: 'monthly' as const },
-    { url: `${base}/credits`, priority: 0.7, changeFrequency: 'monthly' as const },
-    { url: `${base}/counseling`, priority: 0.7, changeFrequency: 'monthly' as const },
     { url: `${base}/partner`, priority: 0.5, changeFrequency: 'monthly' as const },
     { url: `${base}/support`, priority: 0.5, changeFrequency: 'monthly' as const },
     { url: `${base}/privacy`, priority: 0.3, changeFrequency: 'yearly' as const },
