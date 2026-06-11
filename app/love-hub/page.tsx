@@ -538,7 +538,6 @@ export default function LoveHub() {
     ? READINGS
     : READINGS.filter(r => r.cat === activeTab)
 
-  const freeCount = READINGS.filter(r => r.credit === 0).length
   const totalCount = READINGS.length
 
   return (
@@ -555,7 +554,9 @@ export default function LoveHub() {
         <div className={styles.header}>
           <p className={styles.eyebrow}>Love & Relationships</p>
           <h1 className={styles.title}>Every Question<br />About <span className={styles.rose}>Love</span></h1>
-          <p className={styles.sub}>{freeCount} free readings · {totalCount - freeCount} premium readings · All based on your Four Pillars chart</p>
+          <p className={styles.sub}>
+            {totalCount} free relationship previews · Detailed personalized readings are in development
+          </p>
         </div>
 
         {/* Filter Tabs */}
@@ -578,28 +579,23 @@ export default function LoveHub() {
               <div className={styles.cardTop}>
                 <span className={styles.cardIcon}>{r.icon}</span>
                 <span className={`${styles.badge} ${styles[`badge_${r.badgeColor}`]}`}>
-                  {r.badge}
+                  Free Preview
                 </span>
               </div>
               {r.tag && <span className={styles.tag}>{r.tag}</span>}
               <h3 className={styles.cardTitle}>{r.title}</h3>
               <p className={styles.cardDesc}>{r.desc}</p>
               <div className={styles.cardCta}>
-                {r.credit === 0
-                  ? <span className={styles.ctaFree}>Start Free →</span>
-                  : <span className={styles.ctaPaid}>Use ★{r.credit} credits →</span>
-                }
+                <span className={styles.ctaFree}>View Free Preview →</span>
               </div>
             </Link>
           ))}
         </div>
 
-        {/* Bottom CTA */}
         <div className={styles.bottomCta}>
-          <p className={styles.bottomCtaEyebrow}>Premium Members Get More</p>
-          <h3 className={styles.bottomCtaTitle}>Subscribe to get <span className={styles.gold}>★80 credits/month</span> + unlimited deep readings</h3>
-          <p className={styles.bottomCtaSub}>연간 플랜 · 월 ₩12,400 · 언제든 해지 가능</p>
-          <Link href="/checkout?plan=premium" className={styles.btnPrimary}>Get Premium →</Link>
+          <p className={styles.bottomCtaEyebrow}>Personalized Readings</p>
+          <h3 className={styles.bottomCtaTitle}>Detailed Love Hub readings are still in development</h3>
+          <p className={styles.bottomCtaSub}>The previews above remain available for free.</p>
         </div>
       </div>
     </div>

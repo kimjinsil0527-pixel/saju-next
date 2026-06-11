@@ -38,7 +38,7 @@ export default async function Dashboard() {
             <Link href="/dashboard" className={`${styles.sideItem} ${styles.sideActive}`}>
               Account
             </Link>
-            <Link href="/fortune" className={styles.sideItem}>Four Pillars</Link>
+            <Link href="/today" className={styles.sideItem}>Four Pillars</Link>
             <Link href="/today" className={styles.sideItem}>Today</Link>
             <Link href="/love-hub" className={styles.sideItem}>Love Hub</Link>
             <div className={styles.sideDivider} />
@@ -68,17 +68,19 @@ export default async function Dashboard() {
                 </div>
               </div>
             </div>
-            <Link href={hasPremium ? '/fortune' : '/#pricing'} className={styles.upgradeBtn}>
-              {hasPremium ? 'Start Reading' : 'View Plans'}
+            <Link href={hasPremium ? '/today' : '/#pricing'} className={styles.upgradeBtn}>
+              {hasPremium ? 'Start Premium Reading' : 'View Plans'}
             </Link>
           </div>
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Readings</h2>
             <div className={styles.quickGrid}>
-              <Link href="/fortune" className={styles.quickCard}>
+              <Link href="/today" className={styles.quickCard}>
                 <span className={styles.quickTitle}>Four Pillars</span>
-                <span className={styles.quickDesc}>Open your birth chart reading.</span>
+                <span className={styles.quickDesc}>
+                  Enter your birth information to open the full Premium analysis.
+                </span>
               </Link>
               <Link href="/today" className={styles.quickCard}>
                 <span className={styles.quickTitle}>Today</span>
@@ -86,7 +88,9 @@ export default async function Dashboard() {
               </Link>
               <Link href="/love-hub" className={styles.quickCard}>
                 <span className={styles.quickTitle}>Love Hub</span>
-                <span className={styles.quickDesc}>Explore relationship readings.</span>
+                <span className={styles.quickDesc}>
+                  Explore free relationship previews. Detailed readings are still in development.
+                </span>
               </Link>
             </div>
           </section>

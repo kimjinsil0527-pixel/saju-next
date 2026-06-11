@@ -1114,7 +1114,7 @@ export default function LoveReadingPage({ params }: { params: Promise<{ slug: st
         {/* Hero */}
         <div className={styles.hero}>
           <span className={styles.heroIcon}>{reading.icon}</span>
-          <div className={styles.heroBadge}>★{reading.credits} credits</div>
+          <div className={styles.heroBadge}>Free Preview</div>
           <span className={styles.heroTag}>{reading.tag}</span>
           <h1 className={styles.heroTitle}>{reading.title}</h1>
           <p className={styles.heroSub}>{reading.subtitle}</p>
@@ -1198,7 +1198,7 @@ export default function LoveReadingPage({ params }: { params: Promise<{ slug: st
                 </ul>
               </div>
               <div className={styles.unlockBox}>
-                <p className={styles.unlockTitle}>Unlock Your Personalized Reading</p>
+                <p className={styles.unlockTitle}>Personalized Reading In Development</p>
                 <p className={styles.unlockSub}>
                   The overview above is based on general elemental principles.<br />
                   The full reading is calculated from your exact birth data and both charts combined.
@@ -1208,10 +1208,10 @@ export default function LoveReadingPage({ params }: { params: Promise<{ slug: st
                   type="button"
                   disabled
                 >
-                  Premium reading coming soon
+                  Detailed reading coming soon
                 </button>
                 <p className={styles.unlockNote}>
-                  This product is not available for purchase yet.
+                  This preview is free. No payment is required for this unfinished feature.
                 </p>
               </div>
             </div>
@@ -1226,7 +1226,7 @@ export default function LoveReadingPage({ params }: { params: Promise<{ slug: st
               <Link key={s} href={`/love-hub/${s}`} className={styles.relatedCard}>
                 <span className={styles.relatedIcon}>{READINGS[s]?.icon ?? '💕'}</span>
                 <span className={styles.relatedTitle}>{RELATED_LABELS[s]}</span>
-                <span className={styles.relatedCredits}>★{READINGS[s]?.credits ?? 10}</span>
+                <span className={styles.relatedCredits}>Preview</span>
               </Link>
             ))}
           </div>
