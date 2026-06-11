@@ -10,13 +10,16 @@ import ReportPreview from '@/components/ReportPreview'
 import Testimonials from '@/components/Testimonials'
 import CtaSection from '@/components/CtaSection'
 import Footer from '@/components/Footer'
+import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
 
-export default function Home() {
+export default async function Home() {
+  const user = await getAuthenticatedUser()
+
   return (
     <>
       <StarCanvas />
       <CustomCursor />
-      <Nav />
+      <Nav signedIn={Boolean(user)} />
       <main>
         <Hero />
         <Stats />

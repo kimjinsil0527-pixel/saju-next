@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
-import SignUpForm from './SignUpForm'
-import styles from './signup.module.css'
+import ResetPasswordForm from './ResetPasswordForm'
+import styles from '@/app/signin/signin.module.css'
 
-export default async function SignUp() {
+export default async function ResetPasswordPage() {
   const user = await getAuthenticatedUser()
-  if (user) redirect('/dashboard')
+  if (!user) redirect('/forgot-password')
 
   return (
     <main className={styles.page}>
@@ -17,12 +17,9 @@ export default async function SignUp() {
         </Link>
         <section className={styles.card}>
           <div className={styles.topLine} />
-          <h1 className={styles.title}>Create Account</h1>
-          <p className={styles.sub}>Use your email to create a secure account.</p>
-          <SignUpForm />
-          <p className={styles.switch}>
-            Already have an account? <Link href="/signin">Sign in</Link>
-          </p>
+          <h1 className={styles.title}>Choose New Password</h1>
+          <p className={styles.sub}>Enter a new password for your account.</p>
+          <ResetPasswordForm />
         </section>
       </div>
     </main>

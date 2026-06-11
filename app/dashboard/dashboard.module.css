@@ -377,6 +377,22 @@
 
 .lockBtn:hover { opacity: 0.88; }
 
+.logoutButton {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  padding: 11px 20px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.logoutButton:hover {
+  border-color: rgba(212,175,55,0.35);
+  color: var(--text);
+}
+
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
   .sidebar { display: none; }

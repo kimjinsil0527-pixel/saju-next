@@ -48,12 +48,24 @@
   align-items: center;
 }
 
+.accountLink {
+  color: var(--text-mid);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.accountLink:hover {
+  color: var(--gold);
+}
+
 @media (max-width: 900px) {
   .nav { padding: 14px 20px; }
   .links { display: none; }
 }
 @media (max-width: 480px) {
   .cta { gap: 8px; }
+  .cta :global(.btn-primary) { display: none; }
   .logo { font-size: 18px; }
   .logo span { font-size: 9px; letter-spacing: 0.2em; }
 }

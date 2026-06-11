@@ -4,16 +4,18 @@ import FortuneClient from './FortuneClient'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import StarCanvas from '@/components/StarCanvas'
+import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
 
 export default async function FortunePage() {
   const cookieStore = await cookies()
   const token = cookieStore.get('admin_token')?.value
   const isAdmin = !!token && token === process.env.AUTH_SECRET
+  const user = await getAuthenticatedUser()
 
   return (
     <>
       <StarCanvas />
-      <Nav />
+      <Nav signedIn={Boolean(user)} />
       <Suspense fallback={<LoadingScreen />}>
         <FortuneClient isAdmin={isAdmin} />
       </Suspense>
