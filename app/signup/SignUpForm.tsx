@@ -42,15 +42,19 @@ export default function SignUpForm() {
             />
           </div>
           <div className={styles.field}>
-            <label htmlFor="confirmPassword">Confirm</label>
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <input
               id="confirmPassword"
               name="confirmPassword"
               type="password"
               autoComplete="new-password"
+              placeholder="Enter the same password again"
               minLength={8}
               required
             />
+            <span className={styles.fieldHint}>
+              Re-enter the password above exactly as written.
+            </span>
           </div>
         </div>
         <label className={styles.terms}>
