@@ -1,6 +1,7 @@
 import crypto from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import { verifyPaymentAccountSignature } from '@/lib/paymentAccount'
 
 export const runtime = 'nodejs'
 
@@ -67,6 +68,19 @@ function getPaymentStatus(eventName: string, payload: LemonSqueezyWebhook): stri
   return 'pending'
 }
 
+function getLinkedUserId(payload: LemonSqueezyWebhook, customerEmail: string | null) {
+  const userId = asString(payload.meta?.custom_data?.account_id)
+  const accountEmail = asString(payload.meta?.custom_data?.account_email)
+  const signature = asString(payload.meta?.custom_data?.account_signature)
+
+  if (!userId || !accountEmail || !signature || !customerEmail) return null
+  if (accountEmail.toLowerCase() !== customerEmail.toLowerCase()) return null
+
+  return verifyPaymentAccountSignature(userId, accountEmail, signature)
+    ? userId
+    : null
+}
+
 export async function POST(req: NextRequest) {
   const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET
   if (!secret) {
@@ -97,17 +111,23 @@ export async function POST(req: NextRequest) {
   const attrs = payload.data?.attributes
   const status = getPaymentStatus(eventName, payload)
   const customerEmail = attrs?.user_email || attrs?.customer_email || null
+  const normalizedEmail = customerEmail?.trim().toLowerCase().slice(0, 254) ?? null
+  const linkedUserId = getLinkedUserId(payload, normalizedEmail)
   const sb = createServiceClient()
 
-  const { error } = await sb.from('payments').upsert({
+  const paymentRecord: Record<string, string | number | null> = {
     order_id: `ls_${orderIdSource}`,
     payment_key: payload.data?.id ? `lemonsqueezy_order_${payload.data.id}` : `lemonsqueezy_${orderIdSource}`,
     amount: Number(attrs?.total ?? attrs?.total_usd ?? 0),
     plan: getPlan(payload),
     status,
     customer_name: (attrs?.user_name || attrs?.customer_name || null)?.slice(0, 100) ?? null,
-    customer_email: customerEmail?.trim().toLowerCase().slice(0, 254) ?? null,
-  }, {
+    customer_email: normalizedEmail,
+  }
+
+  if (linkedUserId) paymentRecord.user_id = linkedUserId
+
+  const { error } = await sb.from('payments').upsert(paymentRecord, {
     onConflict: 'order_id',
   })
 

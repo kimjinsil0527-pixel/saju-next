@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { signOutAction } from '@/app/auth/actions'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
+import { hasPremiumEntitlement } from '@/lib/premiumEntitlement'
 import styles from './dashboard.module.css'
 
 export default async function Dashboard() {
@@ -10,6 +11,13 @@ export default async function Dashboard() {
 
   const email = user.email ?? 'Account'
   const initial = email.charAt(0).toUpperCase()
+  let hasPremium = false
+
+  try {
+    hasPremium = await hasPremiumEntitlement(user)
+  } catch (error) {
+    console.error('dashboard premium status error:', error)
+  }
 
   return (
     <main className={styles.page}>
@@ -48,13 +56,21 @@ export default async function Dashboard() {
 
           <div className={styles.planBanner}>
             <div className={styles.planLeft}>
-              <div className={styles.planBadge}>ACTIVE</div>
+              <div className={styles.planBadge}>{hasPremium ? 'PREMIUM' : 'FREE'}</div>
               <div>
-                <div className={styles.planName}>Email account</div>
-                <div className={styles.planDesc}>Your sign-in session is protected by Supabase Auth.</div>
+                <div className={styles.planName}>
+                  {hasPremium ? 'Premium access active' : 'Free account'}
+                </div>
+                <div className={styles.planDesc}>
+                  {hasPremium
+                    ? 'Your completed purchase is securely linked to this account.'
+                    : 'Premium purchases made with this email can be linked automatically.'}
+                </div>
               </div>
             </div>
-            <Link href="/#pricing" className={styles.upgradeBtn}>View Plans</Link>
+            <Link href={hasPremium ? '/fortune' : '/#pricing'} className={styles.upgradeBtn}>
+              {hasPremium ? 'Start Reading' : 'View Plans'}
+            </Link>
           </div>
 
           <section className={styles.section}>

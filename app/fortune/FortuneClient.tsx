@@ -1,5 +1,5 @@
 'use client'
-import { type FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import styles from './fortune.module.css'
@@ -84,13 +84,18 @@ const ELEMENT_EMOJI: Record<string, string> = {
 const PILLAR_LABELS = ['Year', 'Month', 'Day', 'Hour']
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
-export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }) {
+export default function FortuneClient({
+  isAdmin = false,
+  accountEmail = null,
+}: {
+  isAdmin?: boolean
+  accountEmail?: string | null
+}) {
   const params = useSearchParams()
   const router = useRouter()
   const [result, setResult] = useState<SajuResult | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const [premiumEmail, setPremiumEmail] = useState('')
   const [premiumLoading, setPremiumLoading] = useState(false)
   const [premiumMessage, setPremiumMessage] = useState('')
 
@@ -112,16 +117,13 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
       .finally(() => setLoading(false))
   }, [date, gender, hour, calendar, router])
 
-  async function handlePremiumVerify(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  async function handlePremiumVerify() {
     setPremiumLoading(true)
     setPremiumMessage('')
 
     try {
       const res = await fetch('/api/premium/verify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: premiumEmail }),
       })
       const data = await res.json()
 
@@ -160,16 +162,15 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
 
       {!hasPremiumAccess && (
         <PremiumAccessPanel
-          email={premiumEmail}
+          accountEmail={accountEmail}
           loading={premiumLoading}
           message={premiumMessage}
-          onEmailChange={setPremiumEmail}
-          onSubmit={handlePremiumVerify}
+          onVerify={handlePremiumVerify}
         />
       )}
       {hasPremiumAccess && !isAdmin && (
         <div className={styles.premiumUnlocked}>
-          Premium access unlocked for this browser.
+          Premium access is linked to your account.
         </div>
       )}
 
@@ -665,38 +666,33 @@ export default function FortuneClient({ isAdmin = false }: { isAdmin?: boolean }
 }
 
 function PremiumAccessPanel({
-  email,
+  accountEmail,
   loading,
   message,
-  onEmailChange,
-  onSubmit,
+  onVerify,
 }: {
-  email: string
+  accountEmail: string | null
   loading: boolean
   message: string
-  onEmailChange: (email: string) => void
-  onSubmit: (e: FormEvent<HTMLFormElement>) => void
+  onVerify: () => void
 }) {
   return (
     <section className={styles.premiumAccessPanel}>
       <div>
         <div className={styles.premiumAccessLabel}>Already purchased?</div>
         <p className={styles.premiumAccessText}>
-          Enter the email used at checkout to unlock premium details on this browser.
+          {accountEmail
+            ? `Link a previous purchase made with ${accountEmail}.`
+            : 'Sign in with the same email used at checkout to unlock Premium securely.'}
         </p>
       </div>
-      <form className={styles.premiumAccessForm} onSubmit={onSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => onEmailChange(e.target.value)}
-          placeholder="purchase@email.com"
-          required
-        />
-        <button type="submit" className="btn-primary" disabled={loading}>
-          {loading ? 'Checking...' : 'Unlock'}
+      {accountEmail ? (
+        <button type="button" className="btn-primary" disabled={loading} onClick={onVerify}>
+          {loading ? 'Checking...' : 'Link Purchase'}
         </button>
-      </form>
+      ) : (
+        <Link href="/signin" className="btn-primary">Sign In</Link>
+      )}
       {message && <div className={styles.premiumAccessMessage}>{message}</div>}
     </section>
   )

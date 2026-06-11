@@ -26,12 +26,15 @@ create table if not exists payments (
   status          text not null default 'pending',  -- pending / done / failed / canceled
   customer_name   text,
   customer_email  text,
+  user_id         uuid references auth.users(id) on delete set null,
   created_at      timestamptz default now()
 );
 
 create index if not exists idx_payments_status     on payments (status);
 create index if not exists idx_payments_created_at on payments (created_at desc);
 create index if not exists idx_payments_order_id   on payments (order_id);
+create index if not exists idx_payments_user_id    on payments (user_id);
+create index if not exists idx_payments_entitlement on payments (user_id, plan, status);
 
 -- 3. 회원 테이블 (Supabase Auth 연동용)
 create table if not exists profiles (

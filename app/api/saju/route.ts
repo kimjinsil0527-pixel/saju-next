@@ -8,7 +8,8 @@ import {
 } from '@/lib/sajuCalc'
 import { ILGAN_PROFILE, ELEMENT_PROFILE, getLifePeriodFortune } from '@/lib/sajuContent'
 import { Lunar } from 'lunar-javascript'
-import { getPremiumAccessCookieName, verifyPremiumAccessToken } from '@/lib/premiumAccess'
+import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
+import { hasPremiumEntitlement } from '@/lib/premiumEntitlement'
 
 // Hour branch key → branch index
 const HOUR_BRANCH_IDX: Record<string, number> = {
@@ -32,11 +33,6 @@ function hasAdminAccess(req: NextRequest): boolean {
   const token = req.cookies.get('admin_token')?.value
   const secret = process.env.AUTH_SECRET
   return !!token && !!secret && token === secret
-}
-
-function hasPremiumAccess(req: NextRequest): boolean {
-  const token = req.cookies.get(getPremiumAccessCookieName())?.value
-  return !!verifyPremiumAccessToken(token)
 }
 
 function stripPremiumProfileDetails<T extends PremiumProfileFields>(profile: T | null): (T & {
@@ -168,7 +164,9 @@ function calcAnnualSipsin(dayMasterStemIdx: number, yearStemIdx: number): string
 
 export async function POST(req: NextRequest) {
   try {
-    const includePremium = hasAdminAccess(req) || hasPremiumAccess(req)
+    const isAdmin = hasAdminAccess(req)
+    const user = isAdmin ? null : await getAuthenticatedUser()
+    const includePremium = isAdmin || await hasPremiumEntitlement(user)
     const body = await req.json()
     const { birthdate, gender, hourKey, calendar } = body as {
       birthdate: string

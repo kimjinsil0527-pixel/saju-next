@@ -22,6 +22,7 @@ export type Payment = {
   status: string
   customer_name: string
   customer_email: string
+  user_id?: string | null
   created_at: string
 }
 

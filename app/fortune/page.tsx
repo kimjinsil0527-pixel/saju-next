@@ -17,7 +17,7 @@ export default async function FortunePage() {
       <StarCanvas />
       <Nav signedIn={Boolean(user)} />
       <Suspense fallback={<LoadingScreen />}>
-        <FortuneClient isAdmin={isAdmin} />
+        <FortuneClient isAdmin={isAdmin} accountEmail={user?.email ?? null} />
       </Suspense>
       <Footer />
     </>

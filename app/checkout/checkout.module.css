@@ -231,6 +231,18 @@
   outline: none;
 }
 
+.field input:read-only {
+  background: rgba(212,175,55,0.06);
+  border-color: rgba(212,175,55,0.25);
+  cursor: not-allowed;
+}
+
+.accountNote {
+  color: var(--gold);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 .field input:focus {
   border-color: var(--gold);
 }

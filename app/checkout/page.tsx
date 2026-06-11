@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Suspense, useState, useRef } from 'react'
+import { Suspense, useEffect, useState, useRef } from 'react'
 import styles from './checkout.module.css'
 
 const LS_CHECKOUT_URLS: Record<string, string> = {
@@ -38,7 +38,23 @@ function CheckoutForm() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [accountId, setAccountId] = useState('')
+  const [accountSignature, setAccountSignature] = useState('')
   const lsLinkRef = useRef<HTMLAnchorElement>(null)
+
+  useEffect(() => {
+    fetch('/api/checkout/account', { cache: 'no-store' })
+      .then(response => response.json())
+      .then(data => {
+        if (!data.signedIn || !data.email || !data.accountId || !data.accountSignature) return
+        setEmail(data.email)
+        setAccountId(data.accountId)
+        setAccountSignature(data.accountSignature)
+      })
+      .catch(() => {
+        // Guest checkout remains available if account lookup is unavailable.
+      })
+  }, [])
 
   if (!isSupportedPlan) {
     return (
@@ -73,6 +89,11 @@ function CheckoutForm() {
     checkoutUrl.searchParams.set('checkout[name]', name)
     checkoutUrl.searchParams.set('checkout[custom][plan]', planKey)
     checkoutUrl.searchParams.set('checkout[custom][source]', 'saju-next')
+    if (accountId && accountSignature) {
+      checkoutUrl.searchParams.set('checkout[custom][account_id]', accountId)
+      checkoutUrl.searchParams.set('checkout[custom][account_email]', email.trim().toLowerCase())
+      checkoutUrl.searchParams.set('checkout[custom][account_signature]', accountSignature)
+    }
     lsLinkRef.current!.href = checkoutUrl.toString()
     lsLinkRef.current!.click()
   }
@@ -122,7 +143,19 @@ function CheckoutForm() {
                   </div>
                   <div className={styles.field}>
                     <label>이메일</label>
-                    <input type="email" placeholder="example@email.com" required value={email} onChange={e => setEmail(e.target.value)} />
+                    <input
+                      type="email"
+                      placeholder="example@email.com"
+                      required
+                      value={email}
+                      readOnly={Boolean(accountId)}
+                      onChange={e => setEmail(e.target.value)}
+                    />
+                    {accountId && (
+                      <span className={styles.accountNote}>
+                        This purchase will be linked to your signed-in account.
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
