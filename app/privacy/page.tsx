@@ -12,18 +12,18 @@ export default function Privacy() {
       <div className={styles.content}>
         <p className={styles.eyebrow}>Legal</p>
         <h1 className={styles.title}>Privacy Policy</h1>
-        <p className={styles.updated}>Last updated: April 22, 2026</p>
+        <p className={styles.updated}>Last updated: June 12, 2026</p>
 
         <div className={styles.body}>
           <h2>1. Data Controller</h2>
-          <p>The data controller responsible for your personal data is <strong>UNMYUNG</strong>, reachable at <a href="mailto:support@unmyung.app">support@unmyung.app</a>. Payment processing and related data are handled by Paddle.com Market Limited as our Merchant of Record.</p>
+          <p>The data controller responsible for your personal data is <strong>UNMYUNG</strong>, reachable at <a href="mailto:support@unmyung.app">support@unmyung.app</a>. Payment processing and related data are handled by Lemon Squeezy as our Merchant of Record.</p>
 
           <h2>2. Information We Collect</h2>
           <p>We collect only what is necessary to provide the Service:</p>
           <ul>
             <li><strong>Reading data:</strong> Birth date, birth time, and gender entered for Four Pillars analysis.</li>
             <li><strong>Account data:</strong> Email address, if you choose to create an account.</li>
-            <li><strong>Payment data:</strong> Handled entirely by Paddle. We do not store card numbers or full payment details.</li>
+            <li><strong>Payment data:</strong> Handled by Lemon Squeezy. We store limited order records such as status, amount, customer email, and external order ID, but not card numbers or full payment details.</li>
             <li><strong>Usage data:</strong> Pages visited and features used, collected via Vercel Analytics for service improvement. This data is anonymized and aggregated.</li>
             <li><strong>Session data:</strong> A session cookie to maintain your login state.</li>
           </ul>
@@ -44,7 +44,7 @@ export default function Privacy() {
           <ul>
             <li><strong>Supabase Inc.</strong> (supabase.com) — Database and authentication hosting. Data may be stored on servers in the United States.</li>
             <li><strong>Vercel Inc.</strong> (vercel.com) — Website hosting and serverless functions. Servers located in the United States and EU regions.</li>
-            <li><strong>Paddle.com Market Limited</strong> — Payment processing and Merchant of Record. Governed by Paddle's own privacy policy.</li>
+            <li><strong>Lemon Squeezy</strong> — Payment processing and Merchant of Record. Governed by Lemon Squeezy's privacy policy.</li>
           </ul>
           <p>Each provider maintains appropriate data processing agreements and security certifications. Data transfers to the US are conducted under Standard Contractual Clauses (SCCs) as approved by the European Commission.</p>
 

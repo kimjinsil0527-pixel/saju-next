@@ -2,6 +2,7 @@ import crypto from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { verifyPaymentAccountSignature } from '@/lib/paymentAccount'
+import { grantCookiesForPayment } from '@/lib/cookieWallet'
 
 export const runtime = 'nodejs'
 
@@ -23,6 +24,10 @@ type LemonSqueezyWebhook = {
       refunded?: boolean
       total?: number
       total_usd?: number
+      billing_reason?: string
+      subscription_id?: number | string
+      product_name?: string
+      variant_name?: string
       first_order_item?: {
         product_name?: string
         variant_name?: string
@@ -55,9 +60,9 @@ function getPlan(payload: LemonSqueezyWebhook): string {
   const customPlan = asString(payload.meta?.custom_data?.plan)
   if (customPlan) return customPlan.slice(0, 80)
 
-  const variantName = payload.data?.attributes?.first_order_item?.variant_name
-  const productName = payload.data?.attributes?.first_order_item?.product_name
-  return (variantName || productName || 'lemonsqueezy').slice(0, 80)
+  // Premium is currently the only Lemon Squeezy product exposed by this app.
+  // Do not use a generic "Default" variant name as the internal entitlement key.
+  return 'premium'
 }
 
 function getPaymentStatus(eventName: string, payload: LemonSqueezyWebhook): string {
@@ -79,6 +84,28 @@ function getLinkedUserId(payload: LemonSqueezyWebhook, customerEmail: string | n
   return verifyPaymentAccountSignature(userId, accountEmail, signature)
     ? userId
     : null
+}
+
+async function resolveLinkedUserId(
+  payload: LemonSqueezyWebhook,
+  customerEmail: string | null,
+) {
+  const signedUserId = getLinkedUserId(payload, customerEmail)
+  if (signedUserId) return signedUserId
+  if (!customerEmail) return null
+
+  const sb = createServiceClient()
+  const { data, error } = await sb
+    .from('payments')
+    .select('user_id')
+    .ilike('customer_email', customerEmail)
+    .not('user_id', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (error) throw error
+  return data?.user_id ?? null
 }
 
 export async function POST(req: NextRequest) {
@@ -104,7 +131,12 @@ export async function POST(req: NextRequest) {
   const eventName = req.headers.get('x-event-name') || payload.meta?.event_name || ''
   const orderIdSource = payload.data?.attributes?.identifier || payload.data?.id
 
-  if (!orderIdSource || !eventName.startsWith('order_')) {
+  const isOrderEvent = eventName.startsWith('order_')
+  const isPaidRenewal =
+    eventName === 'subscription_payment_success' &&
+    payload.data?.attributes?.billing_reason === 'renewal'
+
+  if (!orderIdSource || (!isOrderEvent && !isPaidRenewal)) {
     return NextResponse.json({ ok: true, ignored: true })
   }
 
@@ -112,12 +144,26 @@ export async function POST(req: NextRequest) {
   const status = getPaymentStatus(eventName, payload)
   const customerEmail = attrs?.user_email || attrs?.customer_email || null
   const normalizedEmail = customerEmail?.trim().toLowerCase().slice(0, 254) ?? null
-  const linkedUserId = getLinkedUserId(payload, normalizedEmail)
+  let linkedUserId: string | null
+  try {
+    linkedUserId = await resolveLinkedUserId(payload, normalizedEmail)
+  } catch (error) {
+    console.error('lemonsqueezy account link error:', error)
+    return NextResponse.json({ error: 'Failed to resolve payment account.' }, { status: 500 })
+  }
   const sb = createServiceClient()
+  const storedOrderId = isPaidRenewal
+    ? `ls_invoice_${orderIdSource}`
+    : `ls_${orderIdSource}`
+  const paymentKey = isPaidRenewal
+    ? `lemonsqueezy_invoice_${payload.data?.id ?? orderIdSource}`
+    : payload.data?.id
+      ? `lemonsqueezy_order_${payload.data.id}`
+      : `lemonsqueezy_${orderIdSource}`
 
   const paymentRecord: Record<string, string | number | null> = {
-    order_id: `ls_${orderIdSource}`,
-    payment_key: payload.data?.id ? `lemonsqueezy_order_${payload.data.id}` : `lemonsqueezy_${orderIdSource}`,
+    order_id: storedOrderId,
+    payment_key: paymentKey,
     amount: Number(attrs?.total ?? attrs?.total_usd ?? 0),
     plan: getPlan(payload),
     status,
@@ -127,13 +173,28 @@ export async function POST(req: NextRequest) {
 
   if (linkedUserId) paymentRecord.user_id = linkedUserId
 
-  const { error } = await sb.from('payments').upsert(paymentRecord, {
-    onConflict: 'order_id',
-  })
+  const { data: storedPayment, error } = await sb
+    .from('payments')
+    .upsert(paymentRecord, { onConflict: 'order_id' })
+    .select('id, user_id, order_id')
+    .single()
 
   if (error) {
     console.error('lemonsqueezy webhook db error:', error)
     return NextResponse.json({ error: 'Failed to store webhook.' }, { status: 500 })
+  }
+
+  if (status === 'done' && storedPayment.user_id) {
+    try {
+      await grantCookiesForPayment(
+        storedPayment.user_id,
+        storedPayment.id,
+        storedPayment.order_id,
+      )
+    } catch (grantError) {
+      console.error('lemonsqueezy cookie grant error:', grantError)
+      return NextResponse.json({ error: 'Failed to grant cookies.' }, { status: 500 })
+    }
   }
 
   return NextResponse.json({ ok: true })

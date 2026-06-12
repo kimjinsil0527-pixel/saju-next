@@ -31,14 +31,14 @@ function SuccessContent() {
       <div className={styles.icon}>...</div>
       <h1 className={styles.title}>Checkout Received</h1>
       <p className={styles.sub}>
-        Lemon Squeezy is securely confirming your payment with our server. Premium access is granted only after that confirmation arrives.
+        Lemon Squeezy is securely confirming your payment. After the webhook is verified, 35 cookies are added to the account linked to your checkout email.
       </p>
       <div className={styles.actions}>
-        <Link href="/fortune" className={styles.primary}>Start Reading</Link>
+        <Link href="/dashboard" className={styles.primary}>Check Cookie Balance</Link>
         <Link href="/" className={styles.ghost}>Home</Link>
       </div>
       <div className={styles.note}>
-        On the reading page, use the same email entered at checkout to unlock Premium.
+        Sign in with the same confirmed email used at checkout. Paid readings spend cookies only when you choose to unlock them.
       </div>
     </div>
   )

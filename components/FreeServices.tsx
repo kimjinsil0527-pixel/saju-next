@@ -10,7 +10,7 @@ const services: { icon: string; title: string; desc: string; href: string; badge
   { icon: '💑', title: 'Compatibility Score', desc: 'Five Elements compatibility check between two birth charts — instant result.', href: '/compatibility' },
   { icon: '🌙', title: 'Dream Interpretation', desc: 'Search your dream symbols in our library of 1,200+ dream meanings.', href: '/dream' },
   { icon: '⭐', title: 'Zodiac Horoscope', desc: 'Weekly and monthly readings based on Western astrology for all 12 signs.', href: '/horoscope' },
-  { icon: '🀄', title: 'Year Ahead Preview',  desc: "A one-line summary of your year's energy — full depth available in premium.", href: '/year-ahead' },
+  { icon: '🀄', title: 'Year Ahead Preview',  desc: "A free preview of your year's energy. The detailed version is still in development.", href: '/year-ahead' },
   { icon: '🍀', title: 'Daily Lucky Guide',  desc: 'Lucky colors, numbers, power direction & crystal — refreshed every day. Always free.', href: '/lucky' },
   { icon: '💕', title: 'Love Hub',           desc: '30+ love readings: crush, soulmate, compatibility, breakup, marriage timing & more.', href: '/love-hub', badgeOverride: 'Free+' },
 ]
@@ -26,7 +26,7 @@ export default function FreeServices() {
             <h2 className="section-title">
               Start for <span className="gold">free</span> — no account needed
             </h2>
-            <p className="section-desc">Core features are fully free, no ads. Go deeper with Premium when you're ready.</p>
+            <p className="section-desc">Core features are free. Cookie-priced readings are clearly marked before anything is charged.</p>
           </div>
         </ScrollReveal>
 

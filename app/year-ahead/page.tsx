@@ -231,20 +231,20 @@ export default function YearAheadPage() {
                 ))}
               </div>
               <div className={styles.unlockBar}>
-                <p>Unlock all 12 months + personalized month-by-month guidance with Premium</p>
-                <Link href="/checkout?plan=premium" className={styles.unlockBtn}>Unlock Full Year →</Link>
+                <p>The detailed 12-month reading is still in development. No payment is required for this preview.</p>
+                <span className={styles.unlockBtn}>In Development</span>
               </div>
             </div>
 
             {/* Premium CTA */}
             <div className={styles.ctaCard}>
               <div className={styles.ctaLeft}>
-                <div className={styles.ctaTitle}>Go Deeper with Premium</div>
-                <p className={styles.ctaDesc}>Your Year Preview is just the beginning. Premium unlocks your full 10-year luck cycle, detailed monthly pillars, personalized remedies, and a complete Five Elements health and career analysis.</p>
+                <div className={styles.ctaTitle}>Detailed Year Reading</div>
+                <p className={styles.ctaDesc}>This product is not available for purchase yet. It will receive a clear cookie price only after the full reading is completed and tested.</p>
               </div>
               <div className={styles.ctaRight}>
-                <Link href="/checkout?plan=premium" className={styles.ctaBtn}>Get Full Report →</Link>
-                <div className={styles.ctaNote}>From $10.99 · Instant Access</div>
+                <span className={styles.ctaBtn}>Coming Later</span>
+                <div className={styles.ctaNote}>Free preview · No charge</div>
               </div>
             </div>
           </div>

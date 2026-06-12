@@ -9,7 +9,14 @@ import {
 import { ILGAN_PROFILE, ELEMENT_PROFILE, getLifePeriodFortune } from '@/lib/sajuContent'
 import { Lunar } from 'lunar-javascript'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
-import { hasPremiumEntitlement } from '@/lib/premiumEntitlement'
+import {
+  hasReadingUnlock,
+  syncCompletedPaymentCookieGrants,
+} from '@/lib/cookieWallet'
+import {
+  createFourPillarsReadingKey,
+  FOUR_PILLARS_DEEP_READING,
+} from '@/lib/readingProducts'
 
 // Hour branch key → branch index
 const HOUR_BRANCH_IDX: Record<string, number> = {
@@ -166,7 +173,6 @@ export async function POST(req: NextRequest) {
   try {
     const isAdmin = hasAdminAccess(req)
     const user = isAdmin ? null : await getAuthenticatedUser()
-    const includePremium = isAdmin || await hasPremiumEntitlement(user)
     const body = await req.json()
     const { birthdate, gender, hourKey, calendar } = body as {
       birthdate: string
@@ -212,6 +218,29 @@ export async function POST(req: NextRequest) {
     if (calendar && !['Solar', 'Lunar', '양력', '음력'].includes(calendar)) {
       return NextResponse.json({ error: 'Invalid calendar value.' }, { status: 400 })
     }
+
+    const readingKey = createFourPillarsReadingKey({
+      birthdate,
+      gender,
+      hourKey,
+      calendar,
+    })
+    let cookieBalance = 0
+    let hasSubscription = false
+    let readingUnlocked = isAdmin
+
+    if (user) {
+      const wallet = await syncCompletedPaymentCookieGrants(user)
+      cookieBalance = wallet.balance
+      hasSubscription = wallet.hasPaidPlan
+      readingUnlocked = await hasReadingUnlock(
+        user.id,
+        FOUR_PILLARS_DEEP_READING.key,
+        readingKey,
+      )
+    }
+
+    const includePremium = isAdmin || readingUnlocked
 
     // ─── Lunar → Solar conversion ──────────────────────────────────────────
     let isLunar = false
@@ -342,6 +371,10 @@ export async function POST(req: NextRequest) {
       meta: {
         isLunar,
         solarDate: `${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`,
+        hasSubscription,
+        cookieBalance,
+        readingUnlocked,
+        readingCost: FOUR_PILLARS_DEEP_READING.cookieCost,
       },
       analysis: {
         zodiac: yearPillar.zodiac,

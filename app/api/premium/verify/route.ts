@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
-import { hasPremiumEntitlement } from '@/lib/premiumEntitlement'
+import { syncCompletedPaymentCookieGrants } from '@/lib/cookieWallet'
 
 export async function POST() {
   try {
@@ -13,15 +13,15 @@ export async function POST() {
       )
     }
 
-    const entitled = await hasPremiumEntitlement(user)
-    if (!entitled) {
+    const wallet = await syncCompletedPaymentCookieGrants(user)
+    if (!wallet.hasPaidPlan) {
       return NextResponse.json(
-        { error: 'No completed Premium payment was found for this account email.' },
+        { error: 'No completed membership payment was found for this account email.' },
         { status: 404 },
       )
     }
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, balance: wallet.balance })
   } catch (error) {
     console.error('premium account link error:', error)
     return NextResponse.json(

@@ -13,8 +13,8 @@ export default function ReportPreview() {
             <div className={styles.card}>
               <div className={styles.cardTop}>
                 <div className={styles.cardHeader}>
-                  <span className={styles.cardTitle}>✦ Annual Fortune Report · 2026 Bing-Wu Year</span>
-                  <span className={styles.cardBadge}>PREMIUM</span>
+                  <span className={styles.cardTitle}>✦ Four Pillars Deep Reading</span>
+                  <span className={styles.cardBadge}>15 COOKIES</span>
                 </div>
                 <div className={styles.pillars}>
                   {[
@@ -54,9 +54,9 @@ export default function ReportPreview() {
                   </div>
                   <div className={styles.lockOverlay}>
                     <div className={styles.lockIcon}>🔒</div>
-                    <div className={styles.lockText}>Unlock full report with Premium</div>
-                    <button className="btn-primary" style={{ fontSize: '12px', padding: '8px 20px', marginTop: '4px' }} onClick={() => router.push('/checkout?plan=premium')}>
-                      Unlock Report — $29.99
+                    <div className={styles.lockText}>Unlock this exact chart with 15 cookies</div>
+                    <button className="btn-primary" style={{ fontSize: '12px', padding: '8px 20px', marginTop: '4px' }} onClick={() => router.push('/#hero')}>
+                      Start Free Chart
                     </button>
                   </div>
                 </div>
@@ -67,19 +67,19 @@ export default function ReportPreview() {
           <ScrollReveal delay={150}>
             <div className={styles.textSide}>
               <div className="section-header" style={{ textAlign: 'left', marginBottom: '32px' }}>
-                <p className="section-eyebrow">Report System</p>
+                <p className="section-eyebrow">Cookie Reading</p>
                 <div className="ornament-divider" style={{ justifyContent: 'flex-start' }}>
                   <span className="ornament-symbol">✦</span>
                 </div>
-                <h2 className="section-title">40 pages of <span className="gold">precision insight</span></h2>
+                <h2 className="section-title">Choose when to unlock <span className="gold">deeper insight</span></h2>
               </div>
 
               <div className={styles.features}>
                 {[
-                  { title: 'Monthly Fortune Graph', desc: 'Visualize the flow of wealth, relationships, health & career across all 12 months' },
-                  { title: '10-Year Major Cycle Map', desc: 'Your current position in the grand 10-year cycle — see the full arc of your life' },
-                  { title: 'Lucky Element Guide', desc: 'Colors, directions, numbers, career sectors, and relationship strategies that work for you' },
-                  { title: 'PDF Download', desc: 'Save and print anytime. Full classical Four Pillars commentary included — share with family' },
+                  { title: 'Love Detail', desc: 'A deeper interpretation of relationship tendencies in your birth chart' },
+                  { title: 'Wealth and Career', desc: 'Expanded guidance based on your Day Master and elemental balance' },
+                  { title: 'Health and Constitution', desc: 'Traditional Five Elements tendencies for personal reflection' },
+                  { title: '10-Year Major Cycles', desc: 'See the major luck-cycle structure calculated from your chart' },
                 ].map((f) => (
                   <div key={f.title} className={styles.feature}>
                     <div className={styles.featureDot} />
@@ -90,7 +90,7 @@ export default function ReportPreview() {
                 ))}
               </div>
 
-              <button className="btn-primary btn-large" onClick={() => router.push('/checkout?plan=premium')}>Preview Report Free →</button>
+              <button className="btn-primary btn-large" onClick={() => router.push('/#hero')}>Start Free Chart →</button>
             </div>
           </ScrollReveal>
         </div>

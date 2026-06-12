@@ -596,7 +596,7 @@ const READINGS: Record<string, Reading> = {
     ],
     lockedLabel: 'Get your complete 40-page compatibility report',
     lockedLines: [
-      "Complete 40-page PDF delivered instantly — printable and shareable",
+      "Detailed compatibility report planned for a future release",
       "Compatibility scores across 6 dimensions: love, communication, finances, values, growth, and long-term vision",
       "Full 12-month harmony and conflict calendar with specific months highlighted",
       "Personalized communication guide calibrated to your exact elemental dynamic",
@@ -604,7 +604,7 @@ const READINGS: Record<string, Reading> = {
       "Recommended elemental practices for strengthening your specific pairing",
     ],
     relatedSlugs: ['relationship-dive', 'conflict', 'love-language'],
-    tag: '40-page PDF',
+    tag: 'In development',
   },
   'loyalty': {
     icon: '🛡️', title: 'Loyalty & Trust Reading', subtitle: 'What does their chart say about commitment?',

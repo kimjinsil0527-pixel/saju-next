@@ -21,7 +21,7 @@ export default function CtaSection() {
           </p>
           <div className={styles.buttons}>
             <button className="btn-primary btn-large" onClick={() => { const el = document.querySelector('section'); el?.scrollIntoView({ behavior: 'smooth' }) }}>Start Free Reading →</button>
-            <button className="btn-ghost btn-large" onClick={() => router.push('/checkout?plan=premium')}>Explore Premium</button>
+            <button className="btn-ghost btn-large" onClick={() => router.push('/#pricing')}>View Cookie Plan</button>
           </div>
         </ScrollReveal>
       </div>

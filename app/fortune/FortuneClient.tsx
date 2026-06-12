@@ -51,6 +51,14 @@ type JohuResult = {
 
 type SajuResult = {
   pillars: { year: Pillar; month: Pillar; day: Pillar; hour: Pillar }
+  meta?: {
+    isLunar?: boolean
+    solarDate?: string
+    hasSubscription?: boolean
+    cookieBalance?: number
+    readingUnlocked?: boolean
+    readingCost?: number
+  }
   analysis: {
     zodiac: string; gender: string
     dominantElement: string; weaknessElement: string; dominantColor: string
@@ -96,8 +104,8 @@ export default function FortuneClient({
   const [result, setResult] = useState<SajuResult | null>(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
-  const [premiumLoading, setPremiumLoading] = useState(false)
-  const [premiumMessage, setPremiumMessage] = useState('')
+  const [unlockLoading, setUnlockLoading] = useState(false)
+  const [unlockMessage, setUnlockMessage] = useState('')
 
   const date = params.get('date') || ''
   const gender = params.get('gender') || '여성'
@@ -117,27 +125,36 @@ export default function FortuneClient({
       .finally(() => setLoading(false))
   }, [date, gender, hour, calendar, router])
 
-  async function handlePremiumVerify() {
-    setPremiumLoading(true)
-    setPremiumMessage('')
+  async function handleReadingUnlock() {
+    setUnlockLoading(true)
+    setUnlockMessage('')
 
     try {
-      const res = await fetch('/api/premium/verify', {
+      const res = await fetch('/api/readings/unlock', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          birthdate: date,
+          gender,
+          hourKey: hour,
+          calendar,
+        }),
       })
       const data = await res.json()
 
       if (!res.ok || !data.ok) {
-        setPremiumMessage(data.error || 'Premium access could not be verified.')
+        setUnlockMessage(data.error || 'This reading could not be unlocked.')
         return
       }
 
-      setPremiumMessage('Premium access unlocked.')
+      setUnlockMessage(data.charged
+        ? 'Reading unlocked. Refreshing your full analysis...'
+        : 'This reading was already unlocked. Refreshing...')
       window.location.reload()
     } catch {
-      setPremiumMessage('Could not verify premium access. Please try again.')
+      setUnlockMessage('Could not unlock this reading. Please try again.')
     } finally {
-      setPremiumLoading(false)
+      setUnlockLoading(false)
     }
   }
 
@@ -146,7 +163,14 @@ export default function FortuneClient({
 
   const { pillars, analysis } = result
   const pillarList = [pillars.year, pillars.month, pillars.day, pillars.hour]
-  const hasPremiumAccess = isAdmin || Boolean(analysis.luckPillars) || Boolean(analysis.ilganProfile?.loveDetail)
+  const hasPaidReadingAccess =
+    isAdmin ||
+    Boolean(result.meta?.readingUnlocked) ||
+    Boolean(analysis.luckPillars) ||
+    Boolean(analysis.ilganProfile?.loveDetail)
+  const hasSubscription = Boolean(result.meta?.hasSubscription)
+  const cookieBalance = Number(result.meta?.cookieBalance ?? 0)
+  const readingCost = Number(result.meta?.readingCost ?? 15)
 
   return (
     <main className={styles.page}>
@@ -160,17 +184,20 @@ export default function FortuneClient({
         </p>
       </div>
 
-      {!hasPremiumAccess && (
-        <PremiumAccessPanel
+      {!hasPaidReadingAccess && (
+        <CookieWalletPanel
           accountEmail={accountEmail}
-          loading={premiumLoading}
-          message={premiumMessage}
-          onVerify={handlePremiumVerify}
+          balance={cookieBalance}
+          cost={readingCost}
+          hasMembership={hasSubscription}
+          loading={unlockLoading}
+          message={unlockMessage}
+          onUnlock={handleReadingUnlock}
         />
       )}
-      {hasPremiumAccess && !isAdmin && (
+      {hasPaidReadingAccess && !isAdmin && (
         <div className={styles.premiumUnlocked}>
-          Premium access is linked to your account.
+          This reading is unlocked. Reopening this same chart will not use more cookies.
         </div>
       )}
 
@@ -336,7 +363,8 @@ export default function FortuneClient({
             data={analysis.ilganProfile.loveDetail}
             lockLabel="Want to know more?"
             accentColor="var(--ember)"
-            isAdmin={hasPremiumAccess}
+            unlocked={hasPaidReadingAccess}
+            showAdminPreview={isAdmin}
           />
         </section>
       )}
@@ -349,7 +377,8 @@ export default function FortuneClient({
             data={analysis.ilganProfile.wealthDetail}
             lockLabel="Want to know more?"
             accentColor="var(--gold)"
-            isAdmin={hasPremiumAccess}
+            unlocked={hasPaidReadingAccess}
+            showAdminPreview={isAdmin}
           />
         </section>
       )}
@@ -362,7 +391,8 @@ export default function FortuneClient({
             data={analysis.ilganProfile.healthDetail}
             lockLabel="Want to know more?"
             accentColor="var(--jade)"
-            isAdmin={hasPremiumAccess}
+            unlocked={hasPaidReadingAccess}
+            showAdminPreview={isAdmin}
           />
         </section>
       )}
@@ -617,7 +647,7 @@ export default function FortuneClient({
               )
             })}
           </div>
-          {!hasPremiumAccess && <div className={styles.luckLockBox}>
+          {!hasPaidReadingAccess && <div className={styles.luckLockBox}>
             <div className={styles.luckLockInner}>
               <span>🔒</span>
               <div>
@@ -629,9 +659,10 @@ export default function FortuneClient({
               <button
                 className="btn-primary"
                 style={{ flexShrink: 0, fontSize: '13px', padding: '10px 18px' }}
-                onClick={() => router.push('/checkout?plan=premium')}
+                onClick={handleReadingUnlock}
+                disabled={unlockLoading}
               >
-                Unlock Premium
+                {unlockLoading ? 'Unlocking...' : `Use ${readingCost} Cookies`}
               </button>
             </div>
           </div>}
@@ -639,24 +670,41 @@ export default function FortuneClient({
       )}
 
       {/* ─ Premium CTA ─ */}
-      {!hasPremiumAccess && <section className={styles.upsellSection}>
+      {!hasPaidReadingAccess && <section className={styles.upsellSection}>
         <div className={styles.upsellCard}>
           <div className={styles.upsellTopLine} />
-          <p className={styles.upsellEyebrow}>Premium Report</p>
+          <p className={styles.upsellEyebrow}>Deep Reading</p>
           <h3 className={styles.upsellTitle}>Ready to go deeper?</h3>
           <p className={styles.upsellDesc}>
-            Your 10-year major cycle, the exact timing wealth enters your life,<br />
-            love & marriage windows — all in a 40-page precision PDF.
+            Unlock the deeper interpretation for this exact birth chart with {readingCost} cookies.
+            Once unlocked, this same reading stays available without another charge.
           </p>
           <div className={styles.upsellFeatures}>
-            {['Monthly wealth, love, career & health analysis', '10-year major cycle roadmap', 'Lucky element detailed guide', 'Expert commentary PDF included'].map(f => (
+            {['Love and relationship detail', 'Wealth and career detail', 'Health and constitution detail', '10-year major luck cycles'].map(f => (
               <div key={f} className={styles.upsellFeature}>
                 <span className={styles.upsellCheck}>✦</span> {f}
               </div>
             ))}
           </div>
           <div className={styles.upsellButtons}>
-            <button className="btn-primary btn-large" style={{ minWidth: '200px' }} onClick={() => router.push('/checkout?plan=premium')}>Annual Report — $7.99/mo</button>
+            {accountEmail && cookieBalance >= readingCost ? (
+              <button
+                className="btn-primary btn-large"
+                style={{ minWidth: '200px' }}
+                onClick={handleReadingUnlock}
+                disabled={unlockLoading}
+              >
+                {unlockLoading ? 'Unlocking...' : `Use ${readingCost} Cookies`}
+              </button>
+            ) : (
+              <button
+                className="btn-primary btn-large"
+                style={{ minWidth: '200px' }}
+                onClick={() => router.push(accountEmail ? '/checkout?plan=premium' : '/signin')}
+              >
+                {accountEmail ? 'Get 35 Cookies — $14.99/mo' : 'Sign In to Unlock'}
+              </button>
+            )}
             <Link href="/" className="btn-ghost btn-large" style={{ display: 'inline-flex', alignItems: 'center', textDecoration: 'none' }}>← Back to Home</Link>
           </div>
         </div>
@@ -665,35 +713,56 @@ export default function FortuneClient({
   )
 }
 
-function PremiumAccessPanel({
+function CookieWalletPanel({
   accountEmail,
+  balance,
+  cost,
+  hasMembership,
   loading,
   message,
-  onVerify,
+  onUnlock,
 }: {
   accountEmail: string | null
+  balance: number
+  cost: number
+  hasMembership: boolean
   loading: boolean
   message: string
-  onVerify: () => void
+  onUnlock: () => void
 }) {
+  const canUnlock = Boolean(accountEmail) && balance >= cost
+
   return (
     <section className={styles.premiumAccessPanel}>
       <div>
-        <div className={styles.premiumAccessLabel}>Already purchased?</div>
+        <div className={styles.premiumAccessLabel}>
+          {hasMembership ? 'Member Cookie Wallet' : 'Deep Reading'}
+        </div>
         <p className={styles.premiumAccessText}>
           {accountEmail
-            ? `Link a previous purchase made with ${accountEmail}.`
-            : 'Sign in with the same email used at checkout to unlock Premium securely.'}
+            ? `Balance: ${balance} cookies. This reading costs ${cost} cookies and is charged only once.`
+            : 'Sign in first. Cookie balances and unlocked readings are securely tied to your account.'}
         </p>
       </div>
-      {accountEmail ? (
-        <button type="button" className="btn-primary" disabled={loading} onClick={onVerify}>
-          {loading ? 'Checking...' : 'Link Purchase'}
+      {canUnlock ? (
+        <button type="button" className="btn-primary" disabled={loading} onClick={onUnlock}>
+          {loading ? 'Unlocking...' : `Use ${cost} Cookies`}
         </button>
+      ) : accountEmail ? (
+        <Link href="/checkout?plan=premium" className="btn-primary">
+          Get 35 Cookies
+        </Link>
       ) : (
-        <Link href="/signin" className="btn-primary">Sign In</Link>
+        <Link href="/signin" className="btn-primary">
+          Sign In
+        </Link>
       )}
       {message && <div className={styles.premiumAccessMessage}>{message}</div>}
+      {accountEmail && !canUnlock && (
+        <div className={styles.premiumAccessMessage}>
+          You need {Math.max(0, cost - balance)} more cookies for this reading.
+        </div>
+      )}
     </section>
   )
 }
@@ -793,12 +862,14 @@ function DetailSection({
   data,
   lockLabel,
   accentColor,
-  isAdmin = false,
+  unlocked = false,
+  showAdminPreview = false,
 }: {
   data: { tags: string[]; body: string; lock: string }
   lockLabel: string
   accentColor: string
-  isAdmin?: boolean
+  unlocked?: boolean
+  showAdminPreview?: boolean
 }) {
   return (
     <div className={styles.detailCard}>
@@ -814,7 +885,7 @@ function DetailSection({
           <p key={i} className={styles.detailPara}>{para}</p>
         ))}
       </div>
-      {!isAdmin && (
+      {!unlocked && (
         <div className={styles.detailLock}>
           <div className={styles.detailLockInner}>
             <span className={styles.lockIcon}>🔒</span>
@@ -822,13 +893,11 @@ function DetailSection({
               <div className={styles.lockLabel}>{lockLabel}</div>
               <p className={styles.lockText}>{data.lock}</p>
             </div>
-            <button className="btn-primary" style={{ marginLeft: 'auto', flexShrink: 0, fontSize: '13px', padding: '10px 20px' }} onClick={() => window.location.href = '/checkout?plan=premium'}>
-              Unlock Premium
-            </button>
+            <span className={styles.lockLabel}>Unlock this reading above</span>
           </div>
         </div>
       )}
-      {isAdmin && (
+      {showAdminPreview && (
         <div style={{ marginTop: 12, padding: '6px 12px', background: 'rgba(212,175,55,0.1)', border: '1px solid rgba(212,175,55,0.3)', borderRadius: 6, fontSize: 11, color: 'var(--gold)', display: 'inline-block' }}>
           ✦ Admin Preview — hidden from users
         </div>

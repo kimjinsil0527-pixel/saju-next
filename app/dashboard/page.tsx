@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { signOutAction } from '@/app/auth/actions'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
-import { hasPremiumEntitlement } from '@/lib/premiumEntitlement'
+import { syncCompletedPaymentCookieGrants } from '@/lib/cookieWallet'
 import styles from './dashboard.module.css'
 
 export default async function Dashboard() {
@@ -11,12 +11,15 @@ export default async function Dashboard() {
 
   const email = user.email ?? 'Account'
   const initial = email.charAt(0).toUpperCase()
-  let hasPremium = false
+  let cookieBalance = 0
+  let hasPaidPlan = false
 
   try {
-    hasPremium = await hasPremiumEntitlement(user)
+    const wallet = await syncCompletedPaymentCookieGrants(user)
+    cookieBalance = wallet.balance
+    hasPaidPlan = wallet.hasPaidPlan
   } catch (error) {
-    console.error('dashboard premium status error:', error)
+    console.error('dashboard cookie wallet error:', error)
   }
 
   return (
@@ -56,20 +59,20 @@ export default async function Dashboard() {
 
           <div className={styles.planBanner}>
             <div className={styles.planLeft}>
-              <div className={styles.planBadge}>{hasPremium ? 'PREMIUM' : 'FREE'}</div>
+              <div className={styles.planBadge}>{hasPaidPlan ? 'MEMBER' : 'FREE'}</div>
               <div>
                 <div className={styles.planName}>
-                  {hasPremium ? 'Premium access active' : 'Free account'}
+                  {cookieBalance} cookies available
                 </div>
                 <div className={styles.planDesc}>
-                  {hasPremium
-                    ? 'Your completed purchase is securely linked to this account.'
-                    : 'Premium purchases made with this email can be linked automatically.'}
+                  {hasPaidPlan
+                    ? 'Each successful monthly payment adds 35 cookies. Unused cookies stay in your wallet.'
+                    : 'Join the monthly plan to receive 35 cookies for paid readings.'}
                 </div>
               </div>
             </div>
-            <Link href={hasPremium ? '/#hero' : '/#pricing'} className={styles.upgradeBtn}>
-              {hasPremium ? 'Start Premium Reading' : 'View Plans'}
+            <Link href={cookieBalance >= 15 ? '/#hero' : '/#pricing'} className={styles.upgradeBtn}>
+              {cookieBalance >= 15 ? 'Use Cookies' : 'Get Cookies'}
             </Link>
           </div>
 
@@ -79,7 +82,7 @@ export default async function Dashboard() {
               <Link href="/#hero" className={styles.quickCard}>
                 <span className={styles.quickTitle}>Four Pillars</span>
                 <span className={styles.quickDesc}>
-                  Enter your birth information to open the full Premium analysis.
+                  The deep reading costs 15 cookies. Reopening the same chart is free.
                 </span>
               </Link>
               <Link href="/today" className={styles.quickCard}>

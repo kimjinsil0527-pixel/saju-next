@@ -476,10 +476,10 @@ const READINGS = [
     badge: '★ 25 credits',
     badgeColor: 'gold',
     title: 'Full Compatibility Report',
-    desc: "The most comprehensive couples analysis available. 40-page PDF covering all five elemental interactions, conflict timing, ideal communication styles, and long-term potential.",
+    desc: "A detailed couples analysis planned for a future release. This preview cannot be purchased yet.",
     credit: 25,
     href: '/love-hub/full-compat',
-    tag: '40-page PDF',
+    tag: 'In development',
   },
   {
     id: 'loyalty',

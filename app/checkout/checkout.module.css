@@ -3,7 +3,10 @@
   background: var(--void);
   position: relative;
   padding: 0 0 80px;
+  overflow-x: hidden;
 }
+
+.page * { box-sizing: border-box; }
 
 .bg {
   position: fixed;
@@ -13,6 +16,7 @@
 }
 
 .header {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -47,6 +51,7 @@
 .back:hover { color: var(--gold); }
 
 .layout {
+  width: 100%;
   max-width: 960px;
   margin: 0 auto;
   padding: 60px 24px 0;
@@ -166,6 +171,7 @@
 /* Form */
 .formWrap {
   padding-top: 4px;
+  min-width: 0;
 }
 
 .formTitle {
@@ -209,6 +215,7 @@
   flex-direction: column;
   gap: 8px;
   margin-bottom: 16px;
+  min-width: 0;
 }
 
 .field label {
@@ -220,6 +227,9 @@
 }
 
 .field input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -300,7 +310,21 @@
 
 @media (max-width: 768px) {
   .header { padding: 20px 24px; }
-  .layout { grid-template-columns: 1fr; gap: 32px; }
+  .layout {
+    width: 100%;
+    box-sizing: border-box;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
   .summary { order: 2; }
   .formWrap { order: 1; }
+}
+
+@media (max-width: 560px) {
+  .header { gap: 16px; }
+  .back { text-align: right; }
+  .fieldRow { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .summaryCard { padding: 24px 20px; border-radius: 10px; }
+  .tossNote { align-items: flex-start; padding: 14px; }
+  .submit { width: 100%; }
 }

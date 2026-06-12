@@ -42,6 +42,7 @@ create table if not exists profiles (
   email       text,
   plan        text default 'free',       -- free / premium / vip
   plan_expires_at timestamptz,
+  cookie_balance integer not null default 0 check (cookie_balance >= 0),
   created_at  timestamptz default now()
 );
 
@@ -58,10 +59,10 @@ create policy "service only" on page_views
 create policy "service only" on payments
   for all using (false);
 
--- profiles: 본인 데이터만 접근
-create policy "own profile" on profiles
-  for all using (auth.uid() = id);
+-- profiles: 본인 데이터 조회만 허용. 잔액 변경은 service role/RPC만 수행.
+create policy "read own profile" on profiles
+  for select using (auth.uid() = id);
 
 -- ============================================================
--- 완료! 이제 .env.local 키 3개만 채우면 연동 끝.
+-- 쿠키 원장과 원자적 차감 함수는 supabase-cookie-wallet.sql도 실행하세요.
 -- ============================================================

@@ -10,18 +10,16 @@ const LS_CHECKOUT_URLS: Record<string, string> = {
 
 const PLANS: Record<string, { name: string; displayPrice: string; billing: string; annualNote: string; features: string[] }> = {
   premium: {
-    name: 'Premium 월간',
-    displayPrice: '₩19,900',
-    billing: '월 결제',
-    annualNote: '연간 결제 시 ₩12,400/월 (₩149,000/년)',
+    name: '쿠키 멤버십 월간',
+    displayPrice: '$14.99',
+    billing: '매월 결제 · 세금 별도',
+    annualNote: '',
     features: [
-      '전체 연간 운세 리포트 (PDF)',
-      '재물·직업·애정 심층 분석',
-      '10년 대운 로드맵',
-      '심층 궁합 리포트',
-      '10장 타로 스프레드',
-      '월별 운세 캘린더',
-      '매월 ★30 크레딧 지급',
+      '결제 성공 시 매월 35쿠키 지급',
+      '사주 심층 읽기 1회 15쿠키',
+      '같은 사주 결과 재열람은 추가 차감 없음',
+      '사용하지 않은 쿠키는 잔액에 유지',
+      '언제든지 구독 해지 가능',
     ],
   },
 }
@@ -68,10 +66,10 @@ function CheckoutForm() {
           <div className={styles.formWrap}>
             <h1 className={styles.formTitle}>This product is not available yet</h1>
             <p className={styles.formSub}>
-              Only the Premium test checkout is currently enabled.
+              Only the monthly cookie membership checkout is currently enabled.
             </p>
             <Link href="/checkout?plan=premium" className={styles.submit}>
-              View Premium
+              View Cookie Plan
             </Link>
           </div>
         </div>

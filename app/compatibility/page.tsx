@@ -225,8 +225,8 @@ export default function CompatibilityPage() {
             </div>
 
             <div className={styles.deepenCta}>
-              <p>For a full compatibility report with month-by-month analysis and relationship timing</p>
-              <Link href="/checkout?plan=premium" className={styles.deepenBtn}>Unlock Deep Report →</Link>
+              <p>The detailed compatibility report is still in development and cannot be purchased yet.</p>
+              <span className={styles.deepenBtn}>Free Preview</span>
             </div>
           </div>
         )}

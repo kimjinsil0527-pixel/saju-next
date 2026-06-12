@@ -205,7 +205,7 @@ export default function LuckyPage() {
             <p className={styles.ctaSub}>The daily guide above is based on the universal day element. Your personal lucky colors, numbers, and timing are calculated from your unique Four Pillars chart — and may differ significantly.</p>
             <div className={styles.ctaBtns}>
               <Link href="/fortune" className={styles.btnPrimary}>Get My Personal Reading — Free →</Link>
-              <Link href="/checkout?plan=premium" className={styles.btnGhost}>Unlock Full Annual Lucky Calendar</Link>
+              <Link href="/#hero" className={styles.btnGhost}>Open Four Pillars Chart</Link>
             </div>
           </div>
         </div>
