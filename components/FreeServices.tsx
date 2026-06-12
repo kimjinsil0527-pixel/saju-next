@@ -4,7 +4,7 @@ import styles from './FreeServices.module.css'
 
 const services: { icon: string; title: string; desc: string; href: string; badgeOverride?: string }[] = [
   { icon: '🔮', title: "Today's Fortune", desc: 'Daily energy reading across wealth, career, health, and love — refreshed every day.', href: '/today' },
-  { icon: '☯️', title: 'Four Pillars Chart', desc: 'Your full birth chart with all four pillars calculated and Five Elements distribution.', href: '/fortune' },
+  { icon: '☯️', title: 'Four Pillars Chart', desc: 'Your full birth chart with all four pillars calculated and Five Elements distribution.', href: '/#hero' },
   { icon: '📅', title: 'Ten Thousand Year Calendar', desc: 'Look up any date\'s heavenly stems, earthly branches, and solar terms. Find auspicious days.', href: '/calendar' },
   { icon: '🃏', title: 'Single Tarot Card', desc: 'One card for the day. A direct, intuitive message for wherever you are right now.', href: '/tarot' },
   { icon: '💑', title: 'Compatibility Score', desc: 'Five Elements compatibility check between two birth charts — instant result.', href: '/compatibility' },

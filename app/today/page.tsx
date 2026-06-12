@@ -176,7 +176,7 @@ export default function TodayPage() {
         {/* CTA */}
         <div className={styles.ctaWrap}>
           <p className={styles.ctaText}>Want a full annual reading based on your birth chart?</p>
-          <Link href="/" className={styles.ctaBtn}>Get My Free Reading →</Link>
+          <Link href="/#hero" className={styles.ctaBtn}>Enter My Birth Details →</Link>
         </div>
       </div>
     </div>

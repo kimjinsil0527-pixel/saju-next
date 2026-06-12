@@ -211,7 +211,7 @@ export default function AdminDashboard({ stats }: { stats: Stats }) {
           <div className={styles.quickGrid}>
             {[
               { label: '홈', href: '/' },
-              { label: '사주 차트', href: '/fortune' },
+              { label: '사주 차트', href: '/#hero' },
               { label: '오늘의 운세', href: '/today' },
               { label: '타로', href: '/tarot' },
               { label: '궁합', href: '/compatibility' },

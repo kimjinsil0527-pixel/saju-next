@@ -36,7 +36,7 @@ const READINGS = [
     title: 'Love Element Profile',
     desc: "Which of the Five Elements governs your romantic energy? Understand how you love and what you need in a partner.",
     credit: 0,
-    href: '/fortune',
+    href: '/#hero',
     tag: 'Based on your chart',
   },
   {

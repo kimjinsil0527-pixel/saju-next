@@ -12,7 +12,7 @@ export default function Nav({ signedIn }: { signedIn: boolean }) {
 
       <ul className={styles.links}>
         <li><Link href="/today">Today</Link></li>
-        <li><Link href="/today">Fortune</Link></li>
+        <li><Link href="/#hero">Fortune</Link></li>
         <li><Link href="/love-hub">Love</Link></li>
         <li><Link href="/lucky">Lucky</Link></li>
         <li><Link href="#pricing">Plans</Link></li>

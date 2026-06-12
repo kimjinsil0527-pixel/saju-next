@@ -20,7 +20,7 @@ export default function Footer() {
           <div className={styles.col}>
             <div className={styles.colTitle}>Free Readings</div>
             <Link href="/today">Today&apos;s Fortune</Link>
-            <Link href="/fortune">Four Pillars Chart</Link>
+            <Link href="/#hero">Four Pillars Chart</Link>
             <Link href="/tarot">Tarot Card</Link>
             <Link href="/compatibility">Compatibility</Link>
             <Link href="/dream">Dream Meanings</Link>
