@@ -23,9 +23,10 @@ export default function RefundPage() {
         <li>This waiver does not affect your statutory rights in cases of faulty or misdescribed services.</li>
       </ul>
 
-      <h2 style={{ marginTop: 32 }}>3. Cookies</h2>
+      <h2 style={{ marginTop: 32 }}>3. Cookies and One-Time Cookie Packs</h2>
       <p>Cookies are virtual tokens used within UNMYUNG:</p>
       <ul style={{ paddingLeft: 24, marginTop: 8 }}>
+        <li>One-time Cookie Packs do not start a subscription and may be purchased by free or membership accounts.</li>
         <li>Cookies spent to unlock a successfully delivered reading are generally non-refundable except where required by law or where the service failed.</li>
         <li>Unused Cookies remain in the account after membership cancellation.</li>
         <li>If no Cookies from a payment have been used, you may request a refund review within <strong>14 days</strong> by contacting us at <a href="mailto:support@unmyung.app" style={{ color: '#c9a96e' }}>support@unmyung.app</a>.</li>

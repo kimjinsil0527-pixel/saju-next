@@ -71,9 +71,12 @@ export default async function Dashboard() {
                 </div>
               </div>
             </div>
-            <Link href={cookieBalance >= 15 ? '/#hero' : '/#pricing'} className={styles.upgradeBtn}>
-              {cookieBalance >= 15 ? 'Use Cookies' : 'Get Cookies'}
-            </Link>
+            <div className={styles.walletActions}>
+              {cookieBalance >= 15 && (
+                <Link href="/#hero" className={styles.secondaryButton}>Use Cookies</Link>
+              )}
+              <Link href="/credits" className={styles.upgradeBtn}>Buy Cookies</Link>
+            </div>
           </div>
 
           <section className={styles.section}>

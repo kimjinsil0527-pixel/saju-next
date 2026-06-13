@@ -31,7 +31,7 @@ function SuccessContent() {
       <div className={styles.icon}>...</div>
       <h1 className={styles.title}>Checkout Received</h1>
       <p className={styles.sub}>
-        Lemon Squeezy is securely confirming your payment. After the webhook is verified, 35 cookies are added to the account linked to your checkout email.
+        Lemon Squeezy is securely confirming your payment. After the webhook verifies the exact product, its cookies are added to the account linked to your checkout email.
       </p>
       <div className={styles.actions}>
         <Link href="/dashboard" className={styles.primary}>Check Cookie Balance</Link>

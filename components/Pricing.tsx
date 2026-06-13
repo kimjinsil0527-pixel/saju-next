@@ -66,6 +66,27 @@ export default function Pricing() {
               <button className={`${styles.btn} ${styles.btnFeatured}`} onClick={() => router.push('/checkout?plan=premium')}>Get 35 Cookies Monthly</button>
             </div>
 
+            {/* ONE-TIME COOKIE PACKS */}
+            <div className={styles.card}>
+              <div className={styles.tier}>ONE-TIME PURCHASE</div>
+              <div className={styles.name}>Cookie Packs</div>
+              <div className={styles.tagline}>No subscription required<br />Top up whenever you need more</div>
+              <div className={styles.price}>
+                <div className={styles.priceMain}><span className={styles.won}>$</span>9.99</div>
+                <div className={styles.period}>from · one-time payment</div>
+                <div className={styles.priceSub}>20, 40, and 80 cookie packs</div>
+              </div>
+              <div className={styles.divider} />
+              <ul className={styles.features}>
+                <li><span>✓</span> Available without a membership</li>
+                <li><span>✓</span> Members can top up at any time</li>
+                <li><span>✓</span> Cookies remain in your wallet</li>
+                <li><span>✓</span> No recurring charge</li>
+                <li><span>✓</span> About 17% higher cost per cookie than monthly</li>
+              </ul>
+              <button className={styles.btn} onClick={() => router.push('/credits')}>View Cookie Packs</button>
+            </div>
+
           </div>
         </ScrollReveal>
       </div>

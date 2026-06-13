@@ -7,7 +7,13 @@ import styles from './signin.module.css'
 
 const initialState: AuthActionState = {}
 
-export default function SignInForm({ notice }: { notice?: string }) {
+export default function SignInForm({
+  notice,
+  nextPath,
+}: {
+  notice?: string
+  nextPath?: string
+}) {
   const [state, formAction, pending] = useActionState(signInAction, initialState)
 
   return (
@@ -15,6 +21,7 @@ export default function SignInForm({ notice }: { notice?: string }) {
       {notice && <div className={styles.success}>{notice}</div>}
       {state.error && <div className={styles.error}>{state.error}</div>}
       <form className={styles.form} action={formAction}>
+        <input type="hidden" name="next" value={nextPath ?? '/dashboard'} />
         <div className={styles.field}>
           <label htmlFor="email">Email</label>
           <input

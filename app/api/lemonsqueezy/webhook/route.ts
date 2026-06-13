@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { verifyPaymentAccountSignature } from '@/lib/paymentAccount'
 import { grantCookiesForPayment } from '@/lib/cookieWallet'
+import type { PaymentProduct } from '@/lib/paymentProductCatalog'
+import { getProductByVariantId } from '@/lib/lemonSqueezyProducts'
 
 export const runtime = 'nodejs'
 
@@ -26,6 +28,7 @@ type LemonSqueezyWebhook = {
       total_usd?: number
       billing_reason?: string
       subscription_id?: number | string
+      variant_id?: number | string
       product_name?: string
       variant_name?: string
       first_order_item?: {
@@ -56,13 +59,11 @@ function asString(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
-function getPlan(payload: LemonSqueezyWebhook): string {
-  const customPlan = asString(payload.meta?.custom_data?.plan)
-  if (customPlan) return customPlan.slice(0, 80)
-
-  // Premium is currently the only Lemon Squeezy product exposed by this app.
-  // Do not use a generic "Default" variant name as the internal entitlement key.
-  return 'premium'
+function resolveProduct(payload: LemonSqueezyWebhook): PaymentProduct | null {
+  const attrs = payload.data?.attributes
+  return getProductByVariantId(
+    attrs?.first_order_item?.variant_id ?? attrs?.variant_id,
+  )
 }
 
 function getPaymentStatus(eventName: string, payload: LemonSqueezyWebhook): string {
@@ -141,6 +142,24 @@ export async function POST(req: NextRequest) {
   }
 
   const attrs = payload.data?.attributes
+  const product = resolveProduct(payload)
+  if (!product) {
+    const source = asString(payload.meta?.custom_data?.source)
+    console.error('lemonsqueezy product verification failed:', {
+      eventName,
+      variantId: attrs?.first_order_item?.variant_id ?? attrs?.variant_id ?? null,
+    })
+
+    if (source !== 'saju-next') {
+      return NextResponse.json({ ok: true, ignored: true })
+    }
+
+    return NextResponse.json(
+      { error: 'Lemon Squeezy product is not configured or recognized.' },
+      { status: 500 },
+    )
+  }
+
   const status = getPaymentStatus(eventName, payload)
   const customerEmail = attrs?.user_email || attrs?.customer_email || null
   const normalizedEmail = customerEmail?.trim().toLowerCase().slice(0, 254) ?? null
@@ -165,7 +184,7 @@ export async function POST(req: NextRequest) {
     order_id: storedOrderId,
     payment_key: paymentKey,
     amount: Number(attrs?.total ?? attrs?.total_usd ?? 0),
-    plan: getPlan(payload),
+    plan: product.key,
     status,
     customer_name: (attrs?.user_name || attrs?.customer_name || null)?.slice(0, 100) ?? null,
     customer_email: normalizedEmail,
@@ -189,6 +208,7 @@ export async function POST(req: NextRequest) {
       await grantCookiesForPayment(
         storedPayment.user_id,
         storedPayment.order_id,
+        product,
       )
     } catch (grantError) {
       console.error('lemonsqueezy cookie grant error:', grantError)

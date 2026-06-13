@@ -1,7 +1,10 @@
 import type { User } from '@supabase/supabase-js'
 import { createServiceClient } from '@/lib/supabase'
-
-export const MONTHLY_COOKIE_GRANT = 35
+import {
+  getPaymentProduct,
+  PAYMENT_PRODUCT_KEYS,
+  type PaymentProduct,
+} from '@/lib/paymentProductCatalog'
 
 type WalletRpcRow = {
   balance: number
@@ -33,17 +36,24 @@ export async function ensureUserProfile(user: User) {
 export async function grantCookiesForPayment(
   userId: string,
   reference: string,
+  product: PaymentProduct,
 ) {
   if (!reference.trim()) throw new Error('Payment reference is required.')
 
+  const grantType =
+    product.kind === 'subscription' ? 'monthly-cookies' : 'cookie-pack-cookies'
   const sb = createServiceClient()
   const { data, error } = await sb.rpc('grant_cookies', {
     p_user_id: userId,
-    p_amount: MONTHLY_COOKIE_GRANT,
-    p_idempotency_key: `payment-ref:${reference}:monthly-cookies`,
-    p_kind: 'subscription_payment',
+    p_amount: product.cookies,
+    p_idempotency_key: `payment-ref:${reference}:${grantType}`,
+    p_kind: product.kind === 'subscription' ? 'subscription_payment' : 'cookie_pack_purchase',
     p_reference: reference,
-    p_metadata: { cookies: MONTHLY_COOKIE_GRANT },
+    p_metadata: {
+      cookies: product.cookies,
+      product_key: product.key,
+      product_kind: product.kind,
+    },
   })
 
   if (error) throw error
@@ -61,10 +71,10 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
 
   const { data: legacyPayments, error: legacyError } = await sb
     .from('payments')
-    .select('id')
+    .select('id, plan')
     .is('user_id', null)
     .ilike('customer_email', normalizedEmail)
-    .in('plan', ['premium', 'Premium', 'default', 'Default'])
+    .in('plan', [...PAYMENT_PRODUCT_KEYS, 'Premium', 'default', 'Default'])
     .eq('status', 'done')
 
   if (legacyError) throw legacyError
@@ -72,23 +82,39 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
   if (legacyPayments?.length) {
     const { error: linkError } = await sb
       .from('payments')
-      .update({ user_id: user.id, plan: 'premium' })
+      .update({ user_id: user.id })
       .in('id', legacyPayments.map(payment => payment.id))
 
     if (linkError) throw linkError
+
+    const legacyPlanIds = legacyPayments
+      .filter(payment => !getPaymentProduct(payment.plan))
+      .map(payment => payment.id)
+
+    if (legacyPlanIds.length) {
+      const { error: normalizeError } = await sb
+        .from('payments')
+        .update({ plan: 'premium' })
+        .in('id', legacyPlanIds)
+
+      if (normalizeError) throw normalizeError
+    }
   }
 
   const { data: payments, error: paymentsError } = await sb
     .from('payments')
-    .select('order_id')
+    .select('order_id, plan')
     .eq('user_id', user.id)
-    .in('plan', ['premium', 'Premium', 'default', 'Default'])
+    .in('plan', PAYMENT_PRODUCT_KEYS)
     .eq('status', 'done')
 
   if (paymentsError) throw paymentsError
 
   for (const payment of payments ?? []) {
-    await grantCookiesForPayment(user.id, payment.order_id)
+    const product = getPaymentProduct(payment.plan)
+    if (product) {
+      await grantCookiesForPayment(user.id, payment.order_id, product)
+    }
   }
 
   const { data: profile, error: profileError } = await sb
@@ -101,7 +127,7 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
 
   return {
     balance: Number(profile.cookie_balance ?? 0),
-    hasPaidPlan: Boolean(payments?.length),
+    hasPaidPlan: Boolean(payments?.some(payment => payment.plan === 'premium')),
   }
 }
 

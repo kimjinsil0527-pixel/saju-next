@@ -22,7 +22,7 @@ export default function Terms() {
           <p>UNMYUNG provides Four Pillars of Destiny (Saju/Bazi) analysis for <strong>entertainment and personal reflection purposes only</strong>. Our readings are based on traditional East Asian cosmological frameworks and do not constitute professional advice in legal, financial, medical, psychological, or any other regulated field. You agree to use readings at your own discretion and risk.</p>
 
           <h2>3. Free and Paid Services</h2>
-          <p>Core readings are available free of charge. The monthly Cookie Membership is a recurring subscription that grants 35 Cookies after each successful payment. Paid readings display their Cookie price before confirmation and are unlocked only when the account holder chooses to spend Cookies.</p>
+          <p>Core readings are available free of charge. The monthly Cookie Membership is a recurring subscription that grants 35 Cookies after each successful payment. One-time Cookie Packs add the displayed number of Cookies without starting a subscription. Paid readings display their Cookie price before confirmation and are unlocked only when the account holder chooses to spend Cookies.</p>
 
           <h2>4. Cookies</h2>
           <p>Cookies are virtual tokens used only within UNMYUNG.</p>

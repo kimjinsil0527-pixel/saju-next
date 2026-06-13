@@ -16,12 +16,19 @@ function readText(formData: FormData, key: string) {
   return typeof value === 'string' ? value.trim() : ''
 }
 
+function safeRedirectPath(value: string) {
+  return value.startsWith('/') && !value.startsWith('//')
+    ? value
+    : '/dashboard'
+}
+
 export async function signInAction(
   _state: AuthActionState,
   formData: FormData,
 ): Promise<AuthActionState> {
   const email = readText(formData, 'email').toLowerCase()
   const password = readText(formData, 'password')
+  const nextPath = safeRedirectPath(readText(formData, 'next'))
 
   if (!EMAIL_PATTERN.test(email) || !password) {
     return { error: 'Enter a valid email and password.' }
@@ -38,7 +45,7 @@ export async function signInAction(
     return { error: 'Sign in is temporarily unavailable. Please try again.' }
   }
 
-  redirect('/dashboard')
+  redirect(nextPath)
 }
 
 export async function signUpAction(

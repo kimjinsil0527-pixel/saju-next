@@ -9,14 +9,19 @@ type SignInPageProps = {
     confirmed?: string
     reset?: string
     error?: string
+    next?: string
   }>
 }
 
 export default async function SignIn({ searchParams }: SignInPageProps) {
-  const user = await getAuthenticatedUser()
-  if (user) redirect('/dashboard')
-
   const params = await searchParams
+  const nextPath =
+    params.next?.startsWith('/') && !params.next.startsWith('//')
+      ? params.next
+      : '/dashboard'
+  const user = await getAuthenticatedUser()
+  if (user) redirect(nextPath)
+
   const notice =
     params.confirmed === '1'
       ? 'Email confirmed. You can now sign in.'
@@ -37,7 +42,7 @@ export default async function SignIn({ searchParams }: SignInPageProps) {
           <div className={styles.topLine} />
           <h1 className={styles.title}>Welcome Back</h1>
           <p className={styles.sub}>Sign in to your UNMYUNG account.</p>
-          <SignInForm notice={notice} />
+          <SignInForm notice={notice} nextPath={nextPath} />
           <p className={styles.switch}>
             New to UNMYUNG? <Link href="/signup">Create an account</Link>
           </p>
