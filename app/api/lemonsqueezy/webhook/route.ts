@@ -188,7 +188,6 @@ export async function POST(req: NextRequest) {
     try {
       await grantCookiesForPayment(
         storedPayment.user_id,
-        storedPayment.id,
         storedPayment.order_id,
       )
     } catch (grantError) {

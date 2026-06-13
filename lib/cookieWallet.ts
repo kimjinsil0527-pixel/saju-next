@@ -32,14 +32,15 @@ export async function ensureUserProfile(user: User) {
 
 export async function grantCookiesForPayment(
   userId: string,
-  paymentId: string,
   reference: string,
 ) {
+  if (!reference.trim()) throw new Error('Payment reference is required.')
+
   const sb = createServiceClient()
   const { data, error } = await sb.rpc('grant_cookies', {
     p_user_id: userId,
     p_amount: MONTHLY_COOKIE_GRANT,
-    p_idempotency_key: `payment:${paymentId}:monthly-cookies`,
+    p_idempotency_key: `payment-ref:${reference}:monthly-cookies`,
     p_kind: 'subscription_payment',
     p_reference: reference,
     p_metadata: { cookies: MONTHLY_COOKIE_GRANT },
@@ -79,7 +80,7 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
 
   const { data: payments, error: paymentsError } = await sb
     .from('payments')
-    .select('id, order_id')
+    .select('order_id')
     .eq('user_id', user.id)
     .in('plan', ['premium', 'Premium', 'default', 'Default'])
     .eq('status', 'done')
@@ -87,7 +88,7 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
   if (paymentsError) throw paymentsError
 
   for (const payment of payments ?? []) {
-    await grantCookiesForPayment(user.id, payment.id, payment.order_id)
+    await grantCookiesForPayment(user.id, payment.order_id)
   }
 
   const { data: profile, error: profileError } = await sb

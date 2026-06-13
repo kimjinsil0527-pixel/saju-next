@@ -194,6 +194,30 @@
   gap: 0;
 }
 
+.accountGate {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.accountGate .submit {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.secondaryLink {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 18px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.secondaryLink:hover {
+  color: var(--gold);
+}
+
 .section {
   margin-bottom: 32px;
 }

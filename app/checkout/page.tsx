@@ -38,19 +38,28 @@ function CheckoutForm() {
   const [error, setError] = useState('')
   const [accountId, setAccountId] = useState('')
   const [accountSignature, setAccountSignature] = useState('')
+  const [accountStatus, setAccountStatus] = useState<'loading' | 'ready' | 'signed-out' | 'member' | 'error'>('loading')
   const lsLinkRef = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     fetch('/api/checkout/account', { cache: 'no-store' })
       .then(response => response.json())
       .then(data => {
-        if (!data.signedIn || !data.email || !data.accountId || !data.accountSignature) return
+        if (!data.signedIn) {
+          setAccountStatus('signed-out')
+          return
+        }
+        if (!data.email || !data.accountId || !data.accountSignature) {
+          setAccountStatus('error')
+          return
+        }
         setEmail(data.email)
         setAccountId(data.accountId)
         setAccountSignature(data.accountSignature)
+        setAccountStatus(data.hasMembership ? 'member' : 'ready')
       })
       .catch(() => {
-        // Guest checkout remains available if account lookup is unavailable.
+        setAccountStatus('error')
       })
   }, [])
 
@@ -80,18 +89,19 @@ function CheckoutForm() {
   // ── Lemon Squeezy 결제 (LS URL이 있는 플랜) ───────────────────────────────
   function handleLSPayment(e: React.FormEvent) {
     e.preventDefault()
-    if (!name || !email || !lsUrl) return
+    if (!name || !email || !lsUrl || accountStatus !== 'ready' || !accountId || !accountSignature) {
+      setError('로그인된 계정을 확인한 뒤 다시 시도해 주세요.')
+      return
+    }
     // 이름/이메일 pre-fill 후 overlay 열기
     const checkoutUrl = new URL(lsUrl)
     checkoutUrl.searchParams.set('checkout[email]', email)
     checkoutUrl.searchParams.set('checkout[name]', name)
     checkoutUrl.searchParams.set('checkout[custom][plan]', planKey)
     checkoutUrl.searchParams.set('checkout[custom][source]', 'saju-next')
-    if (accountId && accountSignature) {
-      checkoutUrl.searchParams.set('checkout[custom][account_id]', accountId)
-      checkoutUrl.searchParams.set('checkout[custom][account_email]', email.trim().toLowerCase())
-      checkoutUrl.searchParams.set('checkout[custom][account_signature]', accountSignature)
-    }
+    checkoutUrl.searchParams.set('checkout[custom][account_id]', accountId)
+    checkoutUrl.searchParams.set('checkout[custom][account_email]', email.trim().toLowerCase())
+    checkoutUrl.searchParams.set('checkout[custom][account_signature]', accountSignature)
     lsLinkRef.current!.href = checkoutUrl.toString()
     lsLinkRef.current!.click()
   }
@@ -129,52 +139,94 @@ function CheckoutForm() {
             </div>
           </div>
           <div className={styles.formWrap}>
-            <h1 className={styles.formTitle}>결제 정보 입력</h1>
-            <p className={styles.formSub}>이름과 이메일을 입력하면 결제창이 열립니다</p>
-            <form className={styles.form} onSubmit={handleLSPayment}>
-              <div className={styles.section}>
-                <h3 className={styles.sectionTitle}>고객 정보</h3>
-                <div className={styles.fieldRow}>
-                  <div className={styles.field}>
-                    <label>이름</label>
-                    <input type="text" placeholder="홍길동" required value={name} onChange={e => setName(e.target.value)} />
-                  </div>
-                  <div className={styles.field}>
-                    <label>이메일</label>
-                    <input
-                      type="email"
-                      placeholder="example@email.com"
-                      required
-                      value={email}
-                      readOnly={Boolean(accountId)}
-                      onChange={e => setEmail(e.target.value)}
-                    />
-                    {accountId && (
-                      <span className={styles.accountNote}>
-                        This purchase will be linked to your signed-in account.
-                      </span>
-                    )}
-                  </div>
-                </div>
+            {accountStatus === 'loading' && (
+              <div className={styles.accountGate}>
+                <h1 className={styles.formTitle}>계정 확인 중</h1>
+                <p className={styles.formSub}>안전한 결제를 위해 로그인 상태를 확인하고 있습니다.</p>
               </div>
-              <div className={styles.section}>
-                <h3 className={styles.sectionTitle}>결제 수단</h3>
-                <div className={styles.tossNote}>
-                  <div className={styles.tossNoteIcon}>💳</div>
-                  <div>
-                    <div className={styles.tossNoteTitle}>Lemon Squeezy 안전 결제</div>
-                    <div className={styles.tossNoteDesc}>신용카드 · PayPal · 글로벌 결제 지원 · VAT 자동 처리</div>
-                  </div>
-                </div>
+            )}
+            {accountStatus === 'signed-out' && (
+              <div className={styles.accountGate}>
+                <h1 className={styles.formTitle}>로그인이 필요합니다</h1>
+                <p className={styles.formSub}>
+                  매월 지급되는 쿠키를 안전하게 보관하려면 먼저 로그인해 주세요.
+                </p>
+                <Link href="/signin?next=%2Fcheckout%3Fplan%3Dpremium" className={styles.submit}>
+                  로그인하고 계속하기
+                </Link>
+                <Link href="/signup" className={styles.secondaryLink}>
+                  계정 만들기
+                </Link>
               </div>
-              {error && <div className={styles.errorMsg}>{error}</div>}
-              <button type="submit" className={styles.submit} disabled={!name || !email}>
-                {plan.displayPrice} 결제하기
-              </button>
-              <p className={styles.disclaimer}>
-                결제 완료 시 <Link href="/terms">이용약관</Link> 및 <Link href="/privacy">개인정보처리방침</Link>에 동의한 것으로 간주됩니다.
-              </p>
-            </form>
+            )}
+            {accountStatus === 'member' && (
+              <div className={styles.accountGate}>
+                <h1 className={styles.formTitle}>이미 멤버십이 연결되어 있습니다</h1>
+                <p className={styles.formSub}>
+                  같은 계정으로 월정액을 다시 결제하지 않아도 됩니다. 현재 쿠키와 이용 내역을 확인해 주세요.
+                </p>
+                <Link href="/dashboard" className={styles.submit}>
+                  대시보드로 이동
+                </Link>
+              </div>
+            )}
+            {accountStatus === 'error' && (
+              <div className={styles.accountGate}>
+                <h1 className={styles.formTitle}>계정을 확인하지 못했습니다</h1>
+                <p className={styles.formSub}>페이지를 새로고침하거나 다시 로그인한 뒤 시도해 주세요.</p>
+                <Link href="/signin?next=%2Fcheckout%3Fplan%3Dpremium" className={styles.submit}>
+                  다시 로그인하기
+                </Link>
+              </div>
+            )}
+            {accountStatus === 'ready' && (
+              <>
+                <h1 className={styles.formTitle}>결제 정보 입력</h1>
+                <p className={styles.formSub}>이름을 입력하면 로그인한 이메일로 결제창이 열립니다</p>
+                <form className={styles.form} onSubmit={handleLSPayment}>
+                  <div className={styles.section}>
+                    <h3 className={styles.sectionTitle}>고객 정보</h3>
+                    <div className={styles.fieldRow}>
+                      <div className={styles.field}>
+                        <label>이름</label>
+                        <input type="text" placeholder="홍길동" required value={name} onChange={e => setName(e.target.value)} />
+                      </div>
+                      <div className={styles.field}>
+                        <label>이메일</label>
+                        <input
+                          type="email"
+                          placeholder="example@email.com"
+                          required
+                          value={email}
+                          readOnly
+                          onChange={e => setEmail(e.target.value)}
+                        />
+                        <span className={styles.accountNote}>
+                          결제와 쿠키가 현재 로그인한 계정에 연결됩니다.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.section}>
+                    <h3 className={styles.sectionTitle}>결제 수단</h3>
+                    <div className={styles.tossNote}>
+                      <div className={styles.tossNoteIcon}>💳</div>
+                      <div>
+                        <div className={styles.tossNoteTitle}>Lemon Squeezy 안전 결제</div>
+                        <div className={styles.tossNoteDesc}>신용카드 · PayPal · 글로벌 결제 지원 · VAT 자동 처리</div>
+                      </div>
+                    </div>
+                  </div>
+                  {error && <div className={styles.errorMsg}>{error}</div>}
+                  <button type="submit" className={styles.submit} disabled={!name || !email}>
+                    {plan.displayPrice} 결제하기
+                  </button>
+                  <p className={styles.disclaimer}>
+                    결제 완료 시 <Link href="/terms">이용약관</Link> 및 <Link href="/privacy">개인정보처리방침</Link>에 동의한 것으로 간주됩니다.
+                  </p>
+                </form>
+              </>
+            )}
             {/* LS overlay trigger — hidden, clicked programmatically */}
             <a ref={lsLinkRef} href={lsUrl} className="lemonsqueezy-button" style={{ display: 'none' }}>checkout</a>
           </div>
