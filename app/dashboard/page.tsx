@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { signOutAction } from '@/app/auth/actions'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
 import { syncCompletedPaymentCookieGrants } from '@/lib/cookieWallet'
+import { getLemonCustomerPortalUrl } from '@/lib/lemonSqueezyProducts'
 import styles from './dashboard.module.css'
 
 export default async function Dashboard() {
@@ -11,6 +12,7 @@ export default async function Dashboard() {
 
   const email = user.email ?? 'Account'
   const initial = email.charAt(0).toUpperCase()
+  const customerPortalUrl = getLemonCustomerPortalUrl()
   let cookieBalance = 0
   let hasPaidPlan = false
 
@@ -72,6 +74,16 @@ export default async function Dashboard() {
               </div>
             </div>
             <div className={styles.walletActions}>
+              {hasPaidPlan && (
+                <a
+                  href={customerPortalUrl}
+                  className={styles.secondaryButton}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Manage Membership
+                </a>
+              )}
               {cookieBalance >= 15 && (
                 <Link href="/#hero" className={styles.secondaryButton}>Use Cookies</Link>
               )}

@@ -7,6 +7,8 @@ import {
 
 const MONTHLY_CHECKOUT_URL =
   'https://saju-unmyung.lemonsqueezy.com/checkout/buy/2a7e3b8e-66d5-4ba6-8930-edd92a56ddf5'
+const CUSTOMER_PORTAL_URL =
+  'https://saju-unmyung.lemonsqueezy.com/billing'
 
 function clean(value: string | undefined) {
   return value?.trim() || null
@@ -42,6 +44,10 @@ function productConfiguration() {
 
 export function getLemonCheckoutUrl(key: PaymentProductKey) {
   return productConfiguration()[key].checkoutUrl
+}
+
+export function getLemonCustomerPortalUrl() {
+  return CUSTOMER_PORTAL_URL
 }
 
 export function getProductByVariantId(
