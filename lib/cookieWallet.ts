@@ -5,6 +5,10 @@ import {
   PAYMENT_PRODUCT_KEYS,
   type PaymentProduct,
 } from '@/lib/paymentProductCatalog'
+import {
+  getSubscriptionMembership,
+  syncProfileMembership,
+} from '@/lib/subscriptionAccess'
 
 type WalletRpcRow = {
   balance: number
@@ -101,6 +105,14 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
     }
   }
 
+  const { error: subscriptionLinkError } = await sb
+    .from('subscriptions')
+    .update({ user_id: user.id })
+    .is('user_id', null)
+    .ilike('customer_email', normalizedEmail)
+
+  if (subscriptionLinkError) throw subscriptionLinkError
+
   const { data: payments, error: paymentsError } = await sb
     .from('payments')
     .select('order_id, plan')
@@ -125,9 +137,28 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
 
   if (profileError) throw profileError
 
+  const subscriptionMembership = await getSubscriptionMembership(sb, user.id)
+  const hasPaidPlan =
+    subscriptionMembership ??
+    Boolean(payments?.some(payment => payment.plan === 'premium'))
+
+  if (subscriptionMembership !== null) {
+    await syncProfileMembership(sb, user.id)
+  } else {
+    const { error: legacyPlanError } = await sb
+      .from('profiles')
+      .update({
+        plan: hasPaidPlan ? 'premium' : 'free',
+        plan_expires_at: null,
+      })
+      .eq('id', user.id)
+
+    if (legacyPlanError) throw legacyPlanError
+  }
+
   return {
     balance: Number(profile.cookie_balance ?? 0),
-    hasPaidPlan: Boolean(payments?.some(payment => payment.plan === 'premium')),
+    hasPaidPlan,
   }
 }
 

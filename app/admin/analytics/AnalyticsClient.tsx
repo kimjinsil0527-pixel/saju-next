@@ -33,6 +33,7 @@ export default function AnalyticsClient({ totalViews, todayViews, weekViews, top
         <nav className={styles.sidebarNav}>
           <a href="/admin" className={styles.navItem}><span>📊</span> 대시보드</a>
           <a href="/admin/payments" className={styles.navItem}><span>💳</span> 결제 내역</a>
+          <a href="/admin/refunds" className={styles.navItem}><span>↩</span> 환불 검토</a>
           <a href="/admin/analytics" className={`${styles.navItem} ${styles.navActive}`}><span>📈</span> 방문 분석</a>
         </nav>
         <div className={styles.sidebarBottom}>

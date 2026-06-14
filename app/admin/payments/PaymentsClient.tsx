@@ -29,9 +29,18 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
   pending:  { label: '대기', color: 'var(--gold)' },
   failed:   { label: '실패', color: 'var(--ember)' },
   canceled: { label: '취소', color: 'var(--muted)' },
+  refunded: { label: '전액 환불', color: 'var(--ember)' },
+  partial_refund: { label: '부분 환불', color: 'var(--gold)' },
 }
 
-const PLAN_LABEL: Record<string, string> = { premium: 'Premium', vip: 'VIP', annual: 'Annual' }
+const PLAN_LABEL: Record<string, string> = {
+  premium: 'Premium',
+  cookies20: '20 Cookies',
+  cookies40: '40 Cookies',
+  cookies80: '80 Cookies',
+  vip: 'VIP',
+  annual: 'Annual',
+}
 
 export default function PaymentsClient({ payments, error }: { payments: Payment[]; error: string | null }) {
   const router = useRouter()
@@ -53,6 +62,7 @@ export default function PaymentsClient({ payments, error }: { payments: Payment[
         <nav className={styles.sidebarNav}>
           <a href="/admin" className={styles.navItem}><span>📊</span> 대시보드</a>
           <a href="/admin/payments" className={`${styles.navItem} ${styles.navActive}`}><span>💳</span> 결제 내역</a>
+          <a href="/admin/refunds" className={styles.navItem}><span>↩</span> 환불 검토</a>
           <a href="/admin/analytics" className={styles.navItem}><span>📈</span> 방문 분석</a>
         </nav>
         <div className={styles.sidebarBottom}>

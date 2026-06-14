@@ -73,6 +73,9 @@ export default function AdminDashboard({ stats }: { stats: Stats }) {
           <a href="/admin/payments" className={styles.navItem}>
             <span>💳</span> 결제 내역
           </a>
+          <a href="/admin/refunds" className={styles.navItem}>
+            <span>↩</span> 환불 검토
+          </a>
           <a href="/admin/analytics" className={styles.navItem}>
             <span>📈</span> 방문 분석
           </a>

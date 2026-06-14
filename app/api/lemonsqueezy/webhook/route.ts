@@ -3,8 +3,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
 import { verifyPaymentAccountSignature } from '@/lib/paymentAccount'
 import { grantCookiesForPayment } from '@/lib/cookieWallet'
-import type { PaymentProduct } from '@/lib/paymentProductCatalog'
+import {
+  getPaymentProduct,
+  type PaymentProduct,
+} from '@/lib/paymentProductCatalog'
 import { getProductByVariantId } from '@/lib/lemonSqueezyProducts'
+import { syncProfileMembership } from '@/lib/subscriptionAccess'
 
 export const runtime = 'nodejs'
 
@@ -12,6 +16,7 @@ type LemonSqueezyWebhook = {
   meta?: {
     event_name?: string
     custom_data?: Record<string, unknown>
+    test_mode?: boolean
   }
   data?: {
     id?: string
@@ -24,11 +29,19 @@ type LemonSqueezyWebhook = {
       customer_email?: string
       status?: string
       refunded?: boolean
+      refunded_amount?: number
+      refunded_amount_usd?: number
       total?: number
       total_usd?: number
       billing_reason?: string
       subscription_id?: number | string
       variant_id?: number | string
+      cancelled?: boolean
+      test_mode?: boolean
+      renews_at?: string | null
+      ends_at?: string | null
+      created_at?: string | null
+      updated_at?: string | null
       product_name?: string
       variant_name?: string
       first_order_item?: {
@@ -41,8 +54,20 @@ type LemonSqueezyWebhook = {
   }
 }
 
+const SUBSCRIPTION_EVENTS = new Set([
+  'subscription_created',
+  'subscription_updated',
+  'subscription_cancelled',
+  'subscription_resumed',
+  'subscription_expired',
+  'subscription_paused',
+  'subscription_unpaused',
+])
+
 function verifySignature(rawBody: string, signatureHeader: string | null, secret: string): boolean {
-  if (!rawBody || !signatureHeader) return false
+  if (!rawBody || !signatureHeader || !/^[a-f0-9]{64}$/i.test(signatureHeader)) {
+    return false
+  }
 
   const digest = crypto
     .createHmac('sha256', secret)
@@ -59,19 +84,81 @@ function asString(value: unknown): string | null {
   return typeof value === 'string' && value.trim() ? value.trim() : null
 }
 
-function resolveProduct(payload: LemonSqueezyWebhook): PaymentProduct | null {
+function asIsoDate(value: unknown): string | null {
+  const text = asString(value)
+  if (!text) return null
+
+  const date = new Date(text)
+  return Number.isNaN(date.getTime()) ? null : date.toISOString()
+}
+
+function resolveDirectProduct(payload: LemonSqueezyWebhook): PaymentProduct | null {
   const attrs = payload.data?.attributes
   return getProductByVariantId(
     attrs?.first_order_item?.variant_id ?? attrs?.variant_id,
   )
 }
 
+async function resolvePaymentProduct(
+  payload: LemonSqueezyWebhook,
+): Promise<PaymentProduct | null> {
+  const directProduct = resolveDirectProduct(payload)
+  if (directProduct) return directProduct
+
+  const subscriptionId = payload.data?.attributes?.subscription_id
+  if (subscriptionId === null || subscriptionId === undefined) return null
+
+  const sb = createServiceClient()
+  const { data, error } = await sb
+    .from('subscriptions')
+    .select('product_key')
+    .eq('provider', 'lemonsqueezy')
+    .eq('external_id', String(subscriptionId))
+    .maybeSingle()
+
+  if (error) throw error
+  const storedProduct = getPaymentProduct(data?.product_key)
+  if (storedProduct) return storedProduct
+
+  const attrs = payload.data?.attributes
+  const customerEmail =
+    (attrs?.user_email || attrs?.customer_email || null)
+      ?.trim()
+      .toLowerCase()
+      .slice(0, 254) ?? null
+  const metadataProduct = getPaymentProduct(
+    asString(payload.meta?.custom_data?.plan),
+  )
+  const isSignedStorePayment =
+    asString(payload.meta?.custom_data?.source) === 'saju-next' &&
+    Boolean(getLinkedUserId(payload, customerEmail))
+
+  return isSignedStorePayment && metadataProduct?.kind === 'subscription'
+    ? metadataProduct
+    : null
+}
+
 function getPaymentStatus(eventName: string, payload: LemonSqueezyWebhook): string {
   const attrs = payload.data?.attributes
-  if (eventName === 'order_refunded' || attrs?.refunded) return 'refunded'
-  if (attrs?.status === 'paid') return 'done'
-  if (attrs?.status) return attrs.status.slice(0, 40)
+  const providerStatus = attrs?.status?.trim().toLowerCase()
+
+  if (providerStatus === 'refunded' || attrs?.refunded) return 'refunded'
+  if (providerStatus?.includes('refund')) return 'partial_refund'
+  if (eventName.endsWith('_refunded')) return 'refunded'
+  if (providerStatus === 'paid') return 'done'
+  if (providerStatus) return providerStatus.slice(0, 40)
   return 'pending'
+}
+
+function getSubscriptionStatus(eventName: string, payload: LemonSqueezyWebhook) {
+  const providerStatus = payload.data?.attributes?.status?.trim().toLowerCase()
+  if (providerStatus) return providerStatus.slice(0, 40)
+
+  return eventName
+    .replace(/^subscription_/, '')
+    .replace('resumed', 'active')
+    .replace('unpaused', 'active')
+    .slice(0, 40)
 }
 
 function getLinkedUserId(payload: LemonSqueezyWebhook, customerEmail: string | null) {
@@ -109,6 +196,121 @@ async function resolveLinkedUserId(
   return data?.user_id ?? null
 }
 
+async function handleSubscriptionEvent(
+  eventName: string,
+  payload: LemonSqueezyWebhook,
+) {
+  const externalId = asString(payload.data?.id)
+  const attrs = payload.data?.attributes
+  const product = resolveDirectProduct(payload)
+
+  if (!externalId || !product || product.kind !== 'subscription') {
+    const source = asString(payload.meta?.custom_data?.source)
+    if (source !== 'saju-next') return { ignored: true }
+    throw new Error('Subscription product is not configured or recognized.')
+  }
+
+  const variantId = attrs?.variant_id
+  if (variantId === null || variantId === undefined) {
+    throw new Error('Subscription variant ID is missing.')
+  }
+
+  const customerEmail =
+    (attrs?.user_email || attrs?.customer_email || null)
+      ?.trim()
+      .toLowerCase()
+      .slice(0, 254) ?? null
+  const linkedUserId = await resolveLinkedUserId(payload, customerEmail)
+
+  const sb = createServiceClient()
+  const { data, error } = await sb.rpc('upsert_subscription_state', {
+    p_external_id: externalId,
+    p_user_id: linkedUserId,
+    p_customer_email: customerEmail,
+    p_product_key: product.key,
+    p_variant_id: String(variantId),
+    p_status: getSubscriptionStatus(eventName, payload),
+    p_cancelled: Boolean(attrs?.cancelled || eventName === 'subscription_cancelled'),
+    p_renews_at: asIsoDate(attrs?.renews_at),
+    p_ends_at: asIsoDate(attrs?.ends_at),
+    p_test_mode: Boolean(attrs?.test_mode ?? payload.meta?.test_mode),
+    p_event_name: eventName,
+    p_provider_created_at: asIsoDate(attrs?.created_at),
+    p_provider_updated_at: asIsoDate(attrs?.updated_at),
+  })
+
+  if (error) throw error
+  const storedSubscription = Array.isArray(data) ? data[0] : null
+  if (storedSubscription?.linked_user_id) {
+    await syncProfileMembership(sb, storedSubscription.linked_user_id)
+  }
+
+  return { ignored: false }
+}
+
+async function recordRefundOutcome(params: {
+  eventName: string
+  payload: LemonSqueezyWebhook
+  payment: { id: string; user_id: string | null; order_id: string }
+  product: PaymentProduct
+  status: string
+}) {
+  const { eventName, payload, payment, product, status } = params
+  const attrs = payload.data?.attributes
+  const isFullRefund = status === 'refunded'
+  let autoReversed = false
+  let reviewRequired = !isFullRefund || !payment.user_id
+
+  if (isFullRefund && payment.user_id) {
+    const sb = createServiceClient()
+    const { data, error } = await sb.rpc('reverse_payment_cookies', {
+      p_user_id: payment.user_id,
+      p_reference: payment.order_id,
+      p_reason: eventName,
+      p_metadata: {
+        event_name: eventName,
+        product_key: product.key,
+      },
+    })
+
+    if (error) throw error
+    const reversal = Array.isArray(data) ? data[0] : null
+    autoReversed = Boolean(reversal && !reversal.review_required)
+    reviewRequired = Boolean(reversal?.review_required)
+  }
+
+  const eventId = asString(payload.data?.id) ?? payment.order_id
+  const refundedAmount = Number(
+    attrs?.refunded_amount ??
+    attrs?.refunded_amount_usd ??
+    attrs?.total ??
+    attrs?.total_usd ??
+    0,
+  )
+  const sb = createServiceClient()
+  const { error } = await sb
+    .from('payment_refund_reviews')
+    .upsert({
+      event_key: `${eventName}:${eventId}`,
+      payment_id: payment.id,
+      user_id: payment.user_id,
+      payment_reference: payment.order_id,
+      product_key: product.key,
+      refunded_amount: Number.isFinite(refundedAmount) ? refundedAmount : 0,
+      status: autoReversed && !reviewRequired ? 'auto_reversed' : 'pending_review',
+      reason: reviewRequired
+        ? 'Refund requires manual review because cookies were used, the refund was partial, or no account was linked.'
+        : 'Unused payment cookies were reversed automatically.',
+      metadata: {
+        event_name: eventName,
+        full_refund: isFullRefund,
+      },
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'event_key' })
+
+  if (error) throw error
+}
+
 export async function POST(req: NextRequest) {
   const secret = process.env.LEMONSQUEEZY_WEBHOOK_SECRET
   if (!secret) {
@@ -130,24 +332,45 @@ export async function POST(req: NextRequest) {
   }
 
   const eventName = req.headers.get('x-event-name') || payload.meta?.event_name || ''
-  const orderIdSource = payload.data?.attributes?.identifier || payload.data?.id
 
+  if (SUBSCRIPTION_EVENTS.has(eventName)) {
+    try {
+      const result = await handleSubscriptionEvent(eventName, payload)
+      return NextResponse.json({ ok: true, ...result })
+    } catch (error) {
+      console.error('lemonsqueezy subscription webhook error:', error)
+      return NextResponse.json({ error: 'Failed to store subscription state.' }, { status: 500 })
+    }
+  }
+
+  const orderIdSource = payload.data?.attributes?.identifier || payload.data?.id
   const isOrderEvent = eventName.startsWith('order_')
   const isPaidRenewal =
     eventName === 'subscription_payment_success' &&
     payload.data?.attributes?.billing_reason === 'renewal'
+  const isRefundedRenewal =
+    eventName === 'subscription_payment_refunded' &&
+    payload.data?.attributes?.billing_reason === 'renewal'
 
-  if (!orderIdSource || (!isOrderEvent && !isPaidRenewal)) {
+  if (!orderIdSource || (!isOrderEvent && !isPaidRenewal && !isRefundedRenewal)) {
     return NextResponse.json({ ok: true, ignored: true })
   }
 
+  let product: PaymentProduct | null
+  try {
+    product = await resolvePaymentProduct(payload)
+  } catch (error) {
+    console.error('lemonsqueezy product lookup error:', error)
+    return NextResponse.json({ error: 'Failed to verify payment product.' }, { status: 500 })
+  }
+
   const attrs = payload.data?.attributes
-  const product = resolveProduct(payload)
   if (!product) {
     const source = asString(payload.meta?.custom_data?.source)
     console.error('lemonsqueezy product verification failed:', {
       eventName,
       variantId: attrs?.first_order_item?.variant_id ?? attrs?.variant_id ?? null,
+      subscriptionId: attrs?.subscription_id ?? null,
     })
 
     if (source !== 'saju-next') {
@@ -170,11 +393,13 @@ export async function POST(req: NextRequest) {
     console.error('lemonsqueezy account link error:', error)
     return NextResponse.json({ error: 'Failed to resolve payment account.' }, { status: 500 })
   }
+
   const sb = createServiceClient()
-  const storedOrderId = isPaidRenewal
+  const isSubscriptionInvoice = isPaidRenewal || isRefundedRenewal
+  const storedOrderId = isSubscriptionInvoice
     ? `ls_invoice_${orderIdSource}`
     : `ls_${orderIdSource}`
-  const paymentKey = isPaidRenewal
+  const paymentKey = isSubscriptionInvoice
     ? `lemonsqueezy_invoice_${payload.data?.id ?? orderIdSource}`
     : payload.data?.id
       ? `lemonsqueezy_order_${payload.data.id}`
@@ -213,6 +438,21 @@ export async function POST(req: NextRequest) {
     } catch (grantError) {
       console.error('lemonsqueezy cookie grant error:', grantError)
       return NextResponse.json({ error: 'Failed to grant cookies.' }, { status: 500 })
+    }
+  }
+
+  if (status === 'refunded' || status === 'partial_refund') {
+    try {
+      await recordRefundOutcome({
+        eventName,
+        payload,
+        payment: storedPayment,
+        product,
+        status,
+      })
+    } catch (refundError) {
+      console.error('lemonsqueezy refund handling error:', refundError)
+      return NextResponse.json({ error: 'Failed to handle refund.' }, { status: 500 })
     }
   }
 
