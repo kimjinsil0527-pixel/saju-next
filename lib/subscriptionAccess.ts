@@ -5,6 +5,10 @@ type SubscriptionAccessRow = {
   ends_at: string | null
 }
 
+type SubscriptionPortalRow = SubscriptionAccessRow & {
+  test_mode: boolean
+}
+
 const ACTIVE_STATUSES = new Set([
   'active',
   'on_trial',
@@ -41,6 +45,22 @@ export async function getSubscriptionMembership(
   if (!data?.length) return null
 
   return data.some(subscription => subscriptionGrantsAccess(subscription))
+}
+
+export async function hasLiveManageableSubscription(
+  sb: SupabaseClient,
+  userId: string,
+) {
+  const { data, error } = await sb
+    .from('subscriptions')
+    .select('status, ends_at, test_mode')
+    .eq('user_id', userId)
+
+  if (error) throw error
+
+  return (data as SubscriptionPortalRow[] | null)?.some(subscription =>
+    !subscription.test_mode && subscriptionGrantsAccess(subscription),
+  ) ?? false
 }
 
 export async function syncProfileMembership(

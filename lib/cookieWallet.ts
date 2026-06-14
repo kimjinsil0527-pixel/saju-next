@@ -7,6 +7,7 @@ import {
 } from '@/lib/paymentProductCatalog'
 import {
   getSubscriptionMembership,
+  hasLiveManageableSubscription,
   syncProfileMembership,
 } from '@/lib/subscriptionAccess'
 
@@ -66,7 +67,11 @@ export async function grantCookiesForPayment(
 
 export async function syncCompletedPaymentCookieGrants(user: User) {
   if (!user.id || !user.email || !user.email_confirmed_at) {
-    return { balance: 0, hasPaidPlan: false }
+    return {
+      balance: 0,
+      hasPaidPlan: false,
+      canManageMembership: false,
+    }
   }
 
   await ensureUserProfile(user)
@@ -159,6 +164,10 @@ export async function syncCompletedPaymentCookieGrants(user: User) {
   return {
     balance: Number(profile.cookie_balance ?? 0),
     hasPaidPlan,
+    canManageMembership:
+      subscriptionMembership !== null
+        ? await hasLiveManageableSubscription(sb, user.id)
+        : false,
   }
 }
 

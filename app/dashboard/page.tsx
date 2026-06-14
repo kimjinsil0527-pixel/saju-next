@@ -15,11 +15,13 @@ export default async function Dashboard() {
   const customerPortalUrl = getLemonCustomerPortalUrl()
   let cookieBalance = 0
   let hasPaidPlan = false
+  let canManageMembership = false
 
   try {
     const wallet = await syncCompletedPaymentCookieGrants(user)
     cookieBalance = wallet.balance
     hasPaidPlan = wallet.hasPaidPlan
+    canManageMembership = wallet.canManageMembership
   } catch (error) {
     console.error('dashboard cookie wallet error:', error)
   }
@@ -74,7 +76,7 @@ export default async function Dashboard() {
               </div>
             </div>
             <div className={styles.walletActions}>
-              {hasPaidPlan && (
+              {canManageMembership && (
                 <a
                   href={customerPortalUrl}
                   className={styles.secondaryButton}
