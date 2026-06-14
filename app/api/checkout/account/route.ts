@@ -7,6 +7,10 @@ import {
   getLemonCheckoutUrl,
   hasConfiguredVariant,
 } from '@/lib/lemonSqueezyProducts'
+import {
+  enforceRateLimit,
+  rateLimitResponse,
+} from '@/lib/apiSecurity'
 
 export async function GET(req: NextRequest) {
   const product = getPaymentProduct(req.nextUrl.searchParams.get('plan') ?? 'premium')
@@ -18,6 +22,14 @@ export async function GET(req: NextRequest) {
   }
 
   const user = await getAuthenticatedUser()
+  const rateLimit = await enforceRateLimit({
+    req,
+    scope: 'checkout-account',
+    limit: user?.id ? 30 : 12,
+    windowSeconds: 60,
+    userId: user?.id,
+  })
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfter)
 
   if (!user?.id || !user.email || !user.email_confirmed_at) {
     return NextResponse.json(

@@ -17,6 +17,13 @@ import {
   createFourPillarsReadingKey,
   FOUR_PILLARS_DEEP_READING,
 } from '@/lib/readingProducts'
+import {
+  apiRequestErrorResponse,
+  enforceRateLimit,
+  rateLimitResponse,
+  readJsonBody,
+} from '@/lib/apiSecurity'
+import { parseFourPillarsInput } from '@/lib/fourPillarsInput'
 
 // Hour branch key → branch index
 const HOUR_BRANCH_IDX: Record<string, number> = {
@@ -173,51 +180,31 @@ export async function POST(req: NextRequest) {
   try {
     const isAdmin = hasAdminAccess(req)
     const user = isAdmin ? null : await getAuthenticatedUser()
-    const body = await req.json()
-    const { birthdate, gender, hourKey, calendar } = body as {
-      birthdate: string
-      gender: string
-      hourKey?: string
-      calendar?: string  // 'Solar' | 'Lunar'
-    }
+    const minuteLimit = await enforceRateLimit({
+      req,
+      scope: 'saju-minute',
+      limit: isAdmin ? 120 : user?.id ? 30 : 15,
+      windowSeconds: 60,
+      userId: isAdmin ? 'admin' : user?.id,
+    })
+    if (!minuteLimit.allowed) return rateLimitResponse(minuteLimit.retryAfter)
 
-    if (!birthdate || typeof birthdate !== 'string') {
-      return NextResponse.json({ error: 'Please enter your birth date.' }, { status: 400 })
-    }
+    const dailyLimit = await enforceRateLimit({
+      req,
+      scope: 'saju-day',
+      limit: isAdmin ? 2000 : user?.id ? 300 : 120,
+      windowSeconds: 86400,
+      userId: isAdmin ? 'admin' : user?.id,
+    })
+    if (!dailyLimit.allowed) return rateLimitResponse(dailyLimit.retryAfter)
 
-    // Strict date format validation
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthdate)) {
-      return NextResponse.json({ error: 'Invalid date format. Use YYYY-MM-DD.' }, { status: 400 })
-    }
-
+    const body = await readJsonBody<unknown>(req, 2048)
+    const { birthdate, gender, hourKey, calendar } = parseFourPillarsInput(body)
     const [yearStr, monthStr, dayStr] = birthdate.split('-')
     let year = parseInt(yearStr, 10)
     let month = parseInt(monthStr, 10)
     let day = parseInt(dayStr, 10)
-
-    if (isNaN(year) || isNaN(month) || isNaN(day)) {
-      return NextResponse.json({ error: 'Invalid date format.' }, { status: 400 })
-    }
-
-    // Reject obviously invalid dates
     const NOW_YEAR = new Date().getFullYear()
-    if (year < 1900 || year > NOW_YEAR) {
-      return NextResponse.json({ error: 'Birth year must be between 1900 and the current year.' }, { status: 400 })
-    }
-    if (month < 1 || month > 12) {
-      return NextResponse.json({ error: 'Invalid month.' }, { status: 400 })
-    }
-    if (day < 1 || day > 31) {
-      return NextResponse.json({ error: 'Invalid day.' }, { status: 400 })
-    }
-
-    // Validate gender and calendar enum values
-    if (gender && !['male', 'female', 'M', 'F', 'Male', 'Female'].includes(gender)) {
-      return NextResponse.json({ error: 'Invalid gender value.' }, { status: 400 })
-    }
-    if (calendar && !['Solar', 'Lunar', '양력', '음력'].includes(calendar)) {
-      return NextResponse.json({ error: 'Invalid calendar value.' }, { status: 400 })
-    }
 
     const readingKey = createFourPillarsReadingKey({
       birthdate,
@@ -407,6 +394,9 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (err) {
+    const requestError = apiRequestErrorResponse(err)
+    if (requestError) return requestError
+
     console.error('Saju API error:', err)
     return NextResponse.json(
       { error: 'A server error occurred. Please try again.' },

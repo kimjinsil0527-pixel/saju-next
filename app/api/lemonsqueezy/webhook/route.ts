@@ -317,7 +317,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Webhook secret is not configured.' }, { status: 500 })
   }
 
+  const contentLength = Number(req.headers.get('content-length') ?? 0)
+  if (Number.isFinite(contentLength) && contentLength > 262_144) {
+    return NextResponse.json({ error: 'Webhook payload is too large.' }, { status: 413 })
+  }
+
   const rawBody = await req.text()
+  if (new TextEncoder().encode(rawBody).byteLength > 262_144) {
+    return NextResponse.json({ error: 'Webhook payload is too large.' }, { status: 413 })
+  }
   const signature = req.headers.get('x-signature')
 
   if (!verifySignature(rawBody, signature, secret)) {

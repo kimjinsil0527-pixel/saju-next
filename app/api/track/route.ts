@@ -1,12 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase'
+import {
+  apiRequestErrorResponse,
+  enforceRateLimit,
+  rateLimitResponse,
+  readJsonBody,
+} from '@/lib/apiSecurity'
 
 const ALLOWED_PATH_RE = /^\/[a-zA-Z0-9\-_/]*$/  // only safe URL characters
 const MAX_PATH_LEN = 200
 
 export async function POST(req: NextRequest) {
   try {
-    const { path } = await req.json()
+    const rateLimit = await enforceRateLimit({
+      req,
+      scope: 'page-track',
+      limit: 30,
+      windowSeconds: 60,
+    })
+    if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfter)
+
+    const body = await readJsonBody<unknown>(req, 1024)
+    const path =
+      body && typeof body === 'object' && !Array.isArray(body)
+        ? (body as Record<string, unknown>).path
+        : null
 
     // Validate path before storing
     if (
@@ -29,7 +47,9 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({ ok: true })
-  } catch {
+  } catch (error) {
+    const requestError = apiRequestErrorResponse(error)
+    if (requestError) return requestError
     return NextResponse.json({ ok: false })
   }
 }

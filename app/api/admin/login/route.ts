@@ -1,89 +1,81 @@
+import crypto from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
+import {
+  apiRequestErrorResponse,
+  enforceRateLimit,
+  rateLimitResponse,
+  readJsonBody,
+} from '@/lib/apiSecurity'
 
-// ── Brute-force protection ────────────────────────────────────────────────────
-// Map: ip → { attempts, lockedUntil }
-const loginAttempts = new Map<string, { attempts: number; lockedUntil: number }>()
-const MAX_ATTEMPTS = 5
-const LOCKOUT_MS = 15 * 60 * 1000  // 15 minutes
-
-function getClientIp(req: NextRequest): string {
+function safeEqual(value: string, expected: string) {
+  const actualBuffer = Buffer.from(value)
+  const expectedBuffer = Buffer.from(expected)
   return (
-    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-    req.headers.get('x-real-ip') ??
-    'unknown'
+    actualBuffer.length === expectedBuffer.length &&
+    crypto.timingSafeEqual(actualBuffer, expectedBuffer)
   )
 }
 
-function checkBruteForce(ip: string): { blocked: boolean; retryAfterSeconds?: number } {
-  const now = Date.now()
-  const entry = loginAttempts.get(ip)
-
-  if (entry && now < entry.lockedUntil) {
-    return { blocked: true, retryAfterSeconds: Math.ceil((entry.lockedUntil - now) / 1000) }
-  }
-
-  return { blocked: false }
-}
-
-function recordFailedAttempt(ip: string) {
-  const now = Date.now()
-  const entry = loginAttempts.get(ip)
-
-  if (!entry || now >= entry.lockedUntil) {
-    loginAttempts.set(ip, { attempts: 1, lockedUntil: 0 })
-  } else {
-    entry.attempts++
-    if (entry.attempts >= MAX_ATTEMPTS) {
-      entry.lockedUntil = now + LOCKOUT_MS
-    }
-  }
-}
-
-function clearAttempts(ip: string) {
-  loginAttempts.delete(ip)
-}
-
-// ── Route ─────────────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req)
+  try {
+    const rateLimit = await enforceRateLimit({
+      req,
+      scope: 'admin-login',
+      limit: 5,
+      windowSeconds: 15 * 60,
+    })
+    if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfter)
 
-  // Check lockout before even reading the body
-  const { blocked, retryAfterSeconds } = checkBruteForce(ip)
-  if (blocked) {
+    const body = await readJsonBody<unknown>(req, 1024)
+    const password =
+      body && typeof body === 'object' && !Array.isArray(body)
+        ? (body as Record<string, unknown>).password
+        : null
+
+    if (typeof password !== 'string' || !password || password.length > 256) {
+      return NextResponse.json(
+        { error: '비밀번호를 입력해주세요.' },
+        { status: 400, headers: { 'Cache-Control': 'no-store' } },
+      )
+    }
+
+    const adminPassword = process.env.ADMIN_PASSWORD
+    const authSecret = process.env.AUTH_SECRET
+    if (!adminPassword || !authSecret) {
+      console.error('admin authentication configuration is missing')
+      return NextResponse.json(
+        { error: '관리자 로그인을 사용할 수 없습니다.' },
+        { status: 503, headers: { 'Cache-Control': 'no-store' } },
+      )
+    }
+
+    if (!safeEqual(password, adminPassword)) {
+      return NextResponse.json(
+        { error: '비밀번호가 틀렸습니다.' },
+        { status: 401, headers: { 'Cache-Control': 'no-store' } },
+      )
+    }
+
+    const response = NextResponse.json(
+      { ok: true },
+      { headers: { 'Cache-Control': 'no-store' } },
+    )
+    response.cookies.set('admin_token', authSecret, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
+    })
+    return response
+  } catch (error) {
+    const requestError = apiRequestErrorResponse(error)
+    if (requestError) return requestError
+
+    console.error('admin login security error:', error)
     return NextResponse.json(
-      { error: `Too many failed attempts. Try again in ${Math.ceil(retryAfterSeconds! / 60)} minutes.` },
-      { status: 429, headers: { 'Retry-After': String(retryAfterSeconds) } },
+      { error: '관리자 로그인을 처리할 수 없습니다.' },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
     )
   }
-
-  let password: string
-  try {
-    const body = await req.json()
-    password = body?.password
-  } catch {
-    return NextResponse.json({ error: '잘못된 요청입니다.' }, { status: 400 })
-  }
-
-  if (!password || typeof password !== 'string') {
-    return NextResponse.json({ error: '비밀번호를 입력해주세요.' }, { status: 400 })
-  }
-
-  if (password !== process.env.ADMIN_PASSWORD) {
-    recordFailedAttempt(ip)
-    // Return same generic message regardless of reason to avoid enumeration
-    return NextResponse.json({ error: '비밀번호가 틀렸습니다.' }, { status: 401 })
-  }
-
-  // Success — clear attempts, set cookie
-  clearAttempts(ip)
-
-  const res = NextResponse.json({ ok: true })
-  res.cookies.set('admin_token', process.env.AUTH_SECRET!, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 7, // 7일
-    path: '/',
-  })
-  return res
 }

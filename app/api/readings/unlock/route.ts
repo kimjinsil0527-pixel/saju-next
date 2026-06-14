@@ -8,6 +8,13 @@ import {
   createFourPillarsReadingKey,
   FOUR_PILLARS_DEEP_READING,
 } from '@/lib/readingProducts'
+import {
+  apiRequestErrorResponse,
+  enforceRateLimit,
+  rateLimitResponse,
+  readJsonBody,
+} from '@/lib/apiSecurity'
+import { parseFourPillarsInput } from '@/lib/fourPillarsInput'
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,26 +26,17 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const body = await req.json()
-    const { birthdate, gender, hourKey, calendar } = body as {
-      birthdate?: string
-      gender?: string
-      hourKey?: string
-      calendar?: string
-    }
+    const minuteLimit = await enforceRateLimit({
+      req,
+      scope: 'reading-unlock-minute',
+      limit: 8,
+      windowSeconds: 60,
+      userId: user.id,
+    })
+    if (!minuteLimit.allowed) return rateLimitResponse(minuteLimit.retryAfter)
 
-    if (!birthdate || !gender) {
-      return NextResponse.json({ error: 'Reading information is missing.' }, { status: 400 })
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthdate)) {
-      return NextResponse.json({ error: 'Invalid birth date.' }, { status: 400 })
-    }
-    if (!['male', 'female', 'M', 'F', 'Male', 'Female'].includes(gender)) {
-      return NextResponse.json({ error: 'Invalid gender.' }, { status: 400 })
-    }
-    if (calendar && !['Solar', 'Lunar', '양력', '음력'].includes(calendar)) {
-      return NextResponse.json({ error: 'Invalid calendar.' }, { status: 400 })
-    }
+    const body = await readJsonBody<unknown>(req, 2048)
+    const { birthdate, gender, hourKey, calendar } = parseFourPillarsInput(body)
 
     const wallet = await syncCompletedPaymentCookieGrants(user)
     const readingKey = createFourPillarsReadingKey({
@@ -61,6 +59,9 @@ export async function POST(req: NextRequest) {
       charged: result?.charged ?? false,
     })
   } catch (error) {
+    const requestError = apiRequestErrorResponse(error)
+    if (requestError) return requestError
+
     const message = error instanceof Error ? error.message : String(error)
     if (message.includes('INSUFFICIENT_COOKIES')) {
       return NextResponse.json(

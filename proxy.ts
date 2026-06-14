@@ -5,34 +5,6 @@ import {
   hasSupabaseAuthCookie,
 } from '@/lib/supabase/auth-config'
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX = 60
-let lastCleanup = Date.now()
-
-function isRateLimited(ip: string) {
-  const now = Date.now()
-  const entry = rateLimitMap.get(ip)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS })
-    return false
-  }
-
-  entry.count += 1
-  return entry.count > RATE_LIMIT_MAX
-}
-
-function maybeCleanup() {
-  const now = Date.now()
-  if (now - lastCleanup < 120_000) return
-
-  lastCleanup = now
-  for (const [key, value] of rateLimitMap.entries()) {
-    if (now > value.resetAt) rateLimitMap.delete(key)
-  }
-}
-
 function timingSafeEqual(a: string, b: string) {
   if (a.length !== b.length) return false
 
@@ -90,24 +62,6 @@ export async function proxy(request: NextRequest) {
       return copyCookies(
         response,
         NextResponse.redirect(new URL('/admin/login', request.url)),
-      )
-    }
-  }
-
-  if (pathname.startsWith('/api/')) {
-    maybeCleanup()
-    const ip =
-      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
-      request.headers.get('x-real-ip') ??
-      'unknown'
-
-    if (isRateLimited(ip)) {
-      return copyCookies(
-        response,
-        NextResponse.json(
-          { error: 'Too many requests. Please try again in a minute.' },
-          { status: 429, headers: { 'Retry-After': '60' } },
-        ),
       )
     }
   }
