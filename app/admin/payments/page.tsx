@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import PaymentsClient from './PaymentsClient'
+import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
 async function getPayments() {
   try {
@@ -20,8 +21,8 @@ async function getPayments() {
 
 export default async function PaymentsPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('admin_token')?.value
-  if (!token || token !== process.env.AUTH_SECRET) redirect('/admin/login')
+  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value
+  if (!verifyAdminSession(token)) redirect('/admin/login')
 
   const { payments, error } = await getPayments()
   return <PaymentsClient payments={payments} error={error} />

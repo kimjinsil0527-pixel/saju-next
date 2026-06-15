@@ -4,16 +4,7 @@ import {
   getSupabaseAuthConfig,
   hasSupabaseAuthCookie,
 } from '@/lib/supabase/auth-config'
-
-function timingSafeEqual(a: string, b: string) {
-  if (a.length !== b.length) return false
-
-  let diff = 0
-  for (let index = 0; index < a.length; index += 1) {
-    diff |= a.charCodeAt(index) ^ b.charCodeAt(index)
-  }
-  return diff === 0
-}
+import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
 function copyCookies(source: NextResponse, target: NextResponse) {
   source.cookies.getAll().forEach(cookie => target.cookies.set(cookie))
@@ -50,13 +41,8 @@ export async function proxy(request: NextRequest) {
   }
 
   if (pathname !== '/admin/login' && pathname.startsWith('/admin')) {
-    const token = request.cookies.get('admin_token')?.value
-    const validToken = process.env.AUTH_SECRET
-    const isValid = Boolean(
-      token &&
-      validToken &&
-      timingSafeEqual(token, validToken),
-    )
+    const token = request.cookies.get(ADMIN_COOKIE_NAME)?.value
+    const isValid = verifyAdminSession(token)
 
     if (!isValid) {
       return copyCookies(

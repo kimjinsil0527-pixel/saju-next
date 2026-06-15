@@ -6,6 +6,11 @@ import {
   rateLimitResponse,
   readJsonBody,
 } from '@/lib/apiSecurity'
+import {
+  ADMIN_COOKIE_NAME,
+  adminCookieOptions,
+  createAdminSession,
+} from '@/lib/adminAuth'
 
 function safeEqual(value: string, expected: string) {
   const actualBuffer = Buffer.from(value)
@@ -40,8 +45,7 @@ export async function POST(req: NextRequest) {
     }
 
     const adminPassword = process.env.ADMIN_PASSWORD
-    const authSecret = process.env.AUTH_SECRET
-    if (!adminPassword || !authSecret) {
+    if (!adminPassword || !process.env.AUTH_SECRET) {
       console.error('admin authentication configuration is missing')
       return NextResponse.json(
         { error: '관리자 로그인을 사용할 수 없습니다.' },
@@ -60,13 +64,11 @@ export async function POST(req: NextRequest) {
       { ok: true },
       { headers: { 'Cache-Control': 'no-store' } },
     )
-    response.cookies.set('admin_token', authSecret, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    })
+    response.cookies.set(
+      ADMIN_COOKIE_NAME,
+      createAdminSession(),
+      adminCookieOptions(),
+    )
     return response
   } catch (error) {
     const requestError = apiRequestErrorResponse(error)

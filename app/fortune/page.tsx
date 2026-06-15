@@ -5,11 +5,12 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import StarCanvas from '@/components/StarCanvas'
 import { getAuthenticatedUser } from '@/lib/supabase/auth-server'
+import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
 export default async function FortunePage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('admin_token')?.value
-  const isAdmin = !!token && token === process.env.AUTH_SECRET
+  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value
+  const isAdmin = verifyAdminSession(token)
   const user = await getAuthenticatedUser()
 
   return (

@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import RefundsClient from './RefundsClient'
+import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
 async function getRefundReviews() {
   try {
@@ -41,8 +42,8 @@ async function getRefundReviews() {
 
 export default async function RefundsPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('admin_token')?.value
-  if (!token || token !== process.env.AUTH_SECRET) redirect('/admin/login')
+  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value
+  if (!verifyAdminSession(token)) redirect('/admin/login')
 
   const { reviews, error } = await getRefundReviews()
   return <RefundsClient reviews={reviews} error={error} />

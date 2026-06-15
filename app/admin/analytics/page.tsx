@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import AnalyticsClient from './AnalyticsClient'
+import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
 async function getAnalytics() {
   try {
@@ -50,8 +51,8 @@ async function getAnalytics() {
 
 export default async function AnalyticsPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('admin_token')?.value
-  if (!token || token !== process.env.AUTH_SECRET) redirect('/admin/login')
+  const token = cookieStore.get(ADMIN_COOKIE_NAME)?.value
+  if (!verifyAdminSession(token)) redirect('/admin/login')
 
   const data = await getAnalytics()
   return <AnalyticsClient {...data} />

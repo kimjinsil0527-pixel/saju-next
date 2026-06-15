@@ -24,6 +24,7 @@ import {
   readJsonBody,
 } from '@/lib/apiSecurity'
 import { parseFourPillarsInput } from '@/lib/fourPillarsInput'
+import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
 // Hour branch key → branch index
 const HOUR_BRANCH_IDX: Record<string, number> = {
@@ -44,9 +45,7 @@ type PremiumProfileFields = {
 }
 
 function hasAdminAccess(req: NextRequest): boolean {
-  const token = req.cookies.get('admin_token')?.value
-  const secret = process.env.AUTH_SECRET
-  return !!token && !!secret && token === secret
+  return verifyAdminSession(req.cookies.get(ADMIN_COOKIE_NAME)?.value)
 }
 
 function stripPremiumProfileDetails<T extends PremiumProfileFields>(profile: T | null): (T & {
