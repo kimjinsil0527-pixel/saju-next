@@ -3,6 +3,10 @@ import { redirect } from 'next/navigation'
 import AdminDashboard from './AdminDashboard'
 import { createServiceClient } from '@/lib/supabase'
 import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
+import { maskEmail, maskIdentifier } from '@/lib/adminPrivacy'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function getStats() {
   try {
@@ -21,7 +25,11 @@ async function getStats() {
       sb.from('page_views').select('*', { count: 'exact', head: true }),
       sb.from('page_views').select('*', { count: 'exact', head: true }).gte('created_at', todayStart),
       sb.from('payments').select('amount, status, plan, created_at').eq('status', 'done'),
-      sb.from('payments').select('*').order('created_at', { ascending: false }).limit(20),
+      sb
+        .from('payments')
+        .select('id, order_id, amount, plan, status, customer_name, customer_email, created_at')
+        .order('created_at', { ascending: false })
+        .limit(20),
       sb.from('page_views').select('path').gte('created_at', monthStart),
     ])
 
@@ -46,7 +54,11 @@ async function getStats() {
       totalRevenue,
       monthRevenue,
       totalPayments: (payments ?? []).length,
-      recentPayments: recentPayments ?? [],
+      recentPayments: (recentPayments ?? []).map(payment => ({
+        ...payment,
+        order_id: maskIdentifier(payment.order_id),
+        customer_email: maskEmail(payment.customer_email),
+      })),
       topPages,
     }
   } catch {

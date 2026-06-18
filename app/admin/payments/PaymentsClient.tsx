@@ -5,7 +5,6 @@ import styles from '../admin.module.css'
 type Payment = {
   id: string
   order_id: string
-  payment_key: string | null
   amount: number
   plan: string
   status: string

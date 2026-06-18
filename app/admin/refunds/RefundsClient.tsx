@@ -5,7 +5,6 @@ import styles from '../admin.module.css'
 
 type RefundReview = {
   id: string
-  event_key: string
   payment_reference: string | null
   product_key: string | null
   refunded_amount: number

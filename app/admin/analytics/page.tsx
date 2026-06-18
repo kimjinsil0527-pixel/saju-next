@@ -4,6 +4,9 @@ import { createServiceClient } from '@/lib/supabase'
 import AnalyticsClient from './AnalyticsClient'
 import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 async function getAnalytics() {
   try {
     const sb = createServiceClient()

@@ -3,6 +3,30 @@ import { redirect } from 'next/navigation'
 import { createServiceClient } from '@/lib/supabase'
 import RefundsClient from './RefundsClient'
 import { ADMIN_COOKIE_NAME, verifyAdminSession } from '@/lib/adminAuth'
+import { maskEmail, maskIdentifier } from '@/lib/adminPrivacy'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+type RefundPaymentCustomer = {
+  customer_name: string | null
+  customer_email: string | null
+}
+
+function sanitizeRefundCustomer(value: unknown): RefundPaymentCustomer | null {
+  const customer = Array.isArray(value) ? value[0] : value
+  if (!customer || typeof customer !== 'object') return null
+
+  const record = customer as Record<string, unknown>
+  return {
+    customer_name:
+      typeof record.customer_name === 'string' ? record.customer_name : null,
+    customer_email:
+      typeof record.customer_email === 'string'
+        ? maskEmail(record.customer_email)
+        : null,
+  }
+}
 
 async function getRefundReviews() {
   try {
@@ -11,7 +35,6 @@ async function getRefundReviews() {
       .from('payment_refund_reviews')
       .select(`
         id,
-        event_key,
         payment_reference,
         product_key,
         refunded_amount,
@@ -29,9 +52,8 @@ async function getRefundReviews() {
     if (error) throw error
     const reviews = (data ?? []).map(review => ({
       ...review,
-      payments: Array.isArray(review.payments)
-        ? review.payments[0] ?? null
-        : review.payments ?? null,
+      payment_reference: maskIdentifier(review.payment_reference),
+      payments: sanitizeRefundCustomer(review.payments),
     }))
 
     return { reviews, error: null }
