@@ -5,11 +5,6 @@ import {
   type PaymentProductKey,
 } from '@/lib/paymentProductCatalog'
 
-const MONTHLY_CHECKOUT_URL =
-  'https://saju-unmyung.lemonsqueezy.com/checkout/buy/2a7e3b8e-66d5-4ba6-8930-edd92a56ddf5'
-const CUSTOMER_PORTAL_URL =
-  'https://saju-unmyung.lemonsqueezy.com/billing'
-
 function clean(value: string | undefined) {
   return value?.trim() || null
 }
@@ -21,7 +16,7 @@ function productConfiguration() {
 
   return {
     premium: {
-      checkoutUrl: MONTHLY_CHECKOUT_URL,
+      checkoutUrl: clean(process.env.LEMONSQUEEZY_MONTHLY_CHECKOUT_URL),
       variantId: clean(process.env.LEMONSQUEEZY_MONTHLY_VARIANT_ID),
     },
     cookies20: {
@@ -47,7 +42,7 @@ export function getLemonCheckoutUrl(key: PaymentProductKey) {
 }
 
 export function getLemonCustomerPortalUrl() {
-  return CUSTOMER_PORTAL_URL
+  return clean(process.env.LEMONSQUEEZY_CUSTOMER_PORTAL_URL)
 }
 
 export function getProductByVariantId(

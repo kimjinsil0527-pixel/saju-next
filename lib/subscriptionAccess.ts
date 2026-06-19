@@ -3,6 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 type SubscriptionAccessRow = {
   status: string
   ends_at: string | null
+  test_mode?: boolean
 }
 
 type SubscriptionPortalRow = SubscriptionAccessRow & {
@@ -20,6 +21,8 @@ export function subscriptionGrantsAccess(
   subscription: SubscriptionAccessRow,
   now = new Date(),
 ) {
+  if (subscription.test_mode) return false
+
   const status = subscription.status.trim().toLowerCase()
 
   if (ACTIVE_STATUSES.has(status)) return true
@@ -38,7 +41,7 @@ export async function getSubscriptionMembership(
 ) {
   const { data, error } = await sb
     .from('subscriptions')
-    .select('status, ends_at')
+    .select('status, ends_at, test_mode')
     .eq('user_id', userId)
 
   if (error) throw error
@@ -69,7 +72,7 @@ export async function syncProfileMembership(
 ) {
   const { data: activeSubscriptions, error: activeError } = await sb
     .from('subscriptions')
-    .select('status, ends_at')
+    .select('status, ends_at, test_mode')
     .eq('user_id', userId)
 
   if (activeError) throw activeError

@@ -76,7 +76,7 @@ export default async function Dashboard() {
               </div>
             </div>
             <div className={styles.walletActions}>
-              {canManageMembership && (
+              {canManageMembership && customerPortalUrl && (
                 <a
                   href={customerPortalUrl}
                   className={styles.secondaryButton}
