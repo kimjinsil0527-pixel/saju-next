@@ -116,6 +116,11 @@
 .contactValue {
   font-size: 14px;
   color: var(--text);
+  text-decoration: none;
+}
+
+a.contactValue:hover {
+  color: var(--gold);
 }
 
 .faqTitle {

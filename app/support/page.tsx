@@ -1,6 +1,9 @@
 'use client'
 import Link from 'next/link'
+import { useState } from 'react'
 import styles from './support.module.css'
+
+const SUPPORT_EMAIL = 'support@unmyung.app'
 
 const faqs = [
   { q: 'How accurate is the Four Pillars reading?', a: 'Our analysis is based on classical Bazi/Saju methodology with thousands of years of refinement. Accuracy depends on the precision of your birth data, especially birth time. For the most precise reading, knowing your exact birth hour is recommended.' },
@@ -11,6 +14,26 @@ const faqs = [
 ]
 
 export default function Support() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [subject, setSubject] = useState('')
+  const [message, setMessage] = useState('')
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const body = [
+      `Name: ${name || '(not provided)'}`,
+      `Email: ${email || '(not provided)'}`,
+      '',
+      message,
+    ].join('\n')
+    const mailtoUrl = new URL(`mailto:${SUPPORT_EMAIL}`)
+    mailtoUrl.searchParams.set('subject', subject || 'UNMYUNG support request')
+    mailtoUrl.searchParams.set('body', body)
+    window.location.href = mailtoUrl.toString()
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.bg} />
@@ -29,21 +52,23 @@ export default function Support() {
             <span>✉</span>
             <div>
               <div className={styles.contactLabel}>Email Support</div>
-              <div className={styles.contactValue}>support@unmyung.app</div>
+              <a className={styles.contactValue} href={`mailto:${SUPPORT_EMAIL}`}>
+                {SUPPORT_EMAIL}
+              </a>
             </div>
           </div>
           <div className={styles.contactItem}>
             <span>⏱</span>
             <div>
               <div className={styles.contactLabel}>Response Time</div>
-              <div className={styles.contactValue}>Within 24 hours</div>
+              <div className={styles.contactValue}>Within 3 business days</div>
             </div>
           </div>
           <div className={styles.contactItem}>
             <span>☽</span>
             <div>
               <div className={styles.contactLabel}>Hours</div>
-              <div className={styles.contactValue}>Mon–Fri, 9am–6pm EST</div>
+              <div className={styles.contactValue}>Mon-Fri</div>
             </div>
           </div>
         </div>
@@ -60,26 +85,49 @@ export default function Support() {
 
         <div className={styles.contactForm}>
           <h2 className={styles.faqTitle}>Send us a message</h2>
-          <form className={styles.form} onSubmit={e => e.preventDefault()}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.fieldRow}>
               <div className={styles.field}>
                 <label>Your name</label>
-                <input type="text" placeholder="Jane Doe" />
+                <input
+                  type="text"
+                  placeholder="Jane Doe"
+                  value={name}
+                  onChange={event => setName(event.target.value)}
+                />
               </div>
               <div className={styles.field}>
                 <label>Email</label>
-                <input type="email" placeholder="you@example.com" />
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  value={email}
+                  onChange={event => setEmail(event.target.value)}
+                />
               </div>
             </div>
             <div className={styles.field}>
               <label>Subject</label>
-              <input type="text" placeholder="How can we help?" />
+              <input
+                type="text"
+                placeholder="How can we help?"
+                required
+                value={subject}
+                onChange={event => setSubject(event.target.value)}
+              />
             </div>
             <div className={styles.field}>
               <label>Message</label>
-              <textarea rows={5} placeholder="Describe your question or issue..." />
+              <textarea
+                rows={5}
+                placeholder="Describe your question or issue..."
+                required
+                value={message}
+                onChange={event => setMessage(event.target.value)}
+              />
             </div>
-            <button type="submit" className={styles.submit}>Send Message →</button>
+            <button type="submit" className={styles.submit}>Open Email</button>
           </form>
         </div>
       </div>
