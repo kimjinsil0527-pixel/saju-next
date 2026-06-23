@@ -54,8 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <PageTracker />
         <Analytics />
-        {/* Lemon Squeezy overlay checkout */}
-        <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
       </body>
     </html>
   )

@@ -10,6 +10,19 @@ import {
 const ALLOWED_PATH_RE = /^\/[a-zA-Z0-9\-_/]*$/  // only safe URL characters
 const MAX_PATH_LEN = 200
 
+function safeReferrer(value: string | null) {
+  if (!value) return null
+
+  try {
+    const url = new URL(value)
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null
+
+    return `${url.origin}${url.pathname}`.slice(0, 500)
+  } catch {
+    return null
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const rateLimit = await enforceRateLimit({
@@ -36,13 +49,13 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: false })
     }
 
-    const referrer = req.headers.get('referer') ?? null
+    const referrer = safeReferrer(req.headers.get('referer'))
     const userAgent = req.headers.get('user-agent') ?? null
 
     const sb = createServiceClient()
     await sb.from('page_views').insert({
       path,
-      referrer: referrer ? referrer.slice(0, 500) : null,  // cap length
+      referrer,
       user_agent: userAgent ? userAgent.slice(0, 300) : null,
     })
 

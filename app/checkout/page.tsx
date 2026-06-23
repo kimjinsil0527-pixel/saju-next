@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Script from 'next/script'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import {
@@ -316,8 +317,11 @@ function CheckoutForm() {
 
 export default function CheckoutPage() {
   return (
-    <Suspense>
-      <CheckoutForm />
-    </Suspense>
+    <>
+      <Suspense>
+        <CheckoutForm />
+      </Suspense>
+      <Script src="https://app.lemonsqueezy.com/js/lemon.js" strategy="afterInteractive" />
+    </>
   )
 }
