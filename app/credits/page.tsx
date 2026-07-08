@@ -78,8 +78,8 @@ export default async function CreditsPage() {
           <p className={styles.eyebrow}>BETTER MONTHLY VALUE</p>
           <h2>Need cookies regularly?</h2>
           <p>
-            The monthly membership provides 35 cookies for $14.99. One-time packs cost
-            about 17% more per cookie, so the membership remains the better recurring value.
+            The monthly membership provides 35 cookies for $14.99. One-time packs are
+            priced higher per cookie, so the membership remains the better recurring value.
           </p>
         </div>
         <Link href="/checkout?plan=premium" className={styles.membership}>

@@ -25,8 +25,8 @@ export const PAYMENT_PRODUCTS = {
     name: '40 Cookie Pack',
     shortName: '40 Cookies',
     cookies: 40,
-    priceCents: 1999,
-    displayPrice: '$19.99',
+    priceCents: 1899,
+    displayPrice: '$18.99',
     billing: 'one-time payment',
   },
   cookies80: {
@@ -35,8 +35,8 @@ export const PAYMENT_PRODUCTS = {
     name: '80 Cookie Pack',
     shortName: '80 Cookies',
     cookies: 80,
-    priceCents: 3999,
-    displayPrice: '$39.99',
+    priceCents: 3699,
+    displayPrice: '$36.99',
     billing: 'one-time payment',
   },
 } as const

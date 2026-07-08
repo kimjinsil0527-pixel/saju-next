@@ -4,9 +4,9 @@ import { createPaymentAccountSignature } from '@/lib/paymentAccount'
 import { syncCompletedPaymentCookieGrants } from '@/lib/cookieWallet'
 import { getPaymentProduct } from '@/lib/paymentProductCatalog'
 import {
-  getLemonCheckoutUrl,
-  hasConfiguredVariant,
-} from '@/lib/lemonSqueezyProducts'
+  hasConfiguredCreemProduct,
+  hasCreemApiKey,
+} from '@/lib/creemProducts'
 import {
   enforceRateLimit,
   rateLimitResponse,
@@ -40,9 +40,8 @@ export async function GET(req: NextRequest) {
 
   const email = user.email.trim().toLowerCase()
   const wallet = await syncCompletedPaymentCookieGrants(user)
-  const checkoutUrl = getLemonCheckoutUrl(product.key)
   const productConfigured = Boolean(
-    checkoutUrl && hasConfiguredVariant(product.key),
+    hasCreemApiKey() && hasConfiguredCreemProduct(product.key),
   )
 
   return NextResponse.json(
@@ -52,7 +51,6 @@ export async function GET(req: NextRequest) {
       accountId: user.id,
       accountSignature: createPaymentAccountSignature(user.id, email),
       hasMembership: wallet.hasPaidPlan,
-      checkoutUrl: productConfigured ? checkoutUrl : null,
       productConfigured,
     },
     { headers: { 'Cache-Control': 'no-store' } },

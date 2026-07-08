@@ -82,7 +82,7 @@ export default function Pricing() {
                 <li><span>✓</span> Members can top up at any time</li>
                 <li><span>✓</span> Cookies remain in your wallet</li>
                 <li><span>✓</span> No recurring charge</li>
-                <li><span>✓</span> About 17% higher cost per cookie than monthly</li>
+                <li><span>✓</span> Monthly membership remains the best per-cookie value</li>
               </ul>
               <button className={styles.btn} onClick={() => router.push('/credits')}>View Cookie Packs</button>
             </div>

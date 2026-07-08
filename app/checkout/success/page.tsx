@@ -8,9 +8,10 @@ import styles from './success.module.css'
 function SuccessContent() {
   const params = useSearchParams()
   const provider = params.get('provider')
-  const isLemonSqueezy = provider === 'lemonsqueezy' || provider === 'lemon'
+  const isSupportedProvider =
+    provider === 'creem' || provider === 'lemonsqueezy' || provider === 'lemon'
 
-  if (!isLemonSqueezy) {
+  if (!isSupportedProvider) {
     return (
       <div className={styles.wrap}>
         <div className={styles.iconError}>!</div>
@@ -31,7 +32,7 @@ function SuccessContent() {
       <div className={styles.icon}>...</div>
       <h1 className={styles.title}>Checkout Received</h1>
       <p className={styles.sub}>
-        Lemon Squeezy is securely confirming your payment. After the webhook verifies the exact product, its cookies are added to the account linked to your checkout email.
+        Creem is securely confirming your payment. After the webhook verifies the exact product, its cookies are added to the account linked to your checkout email.
       </p>
       <div className={styles.actions}>
         <Link href="/dashboard" className={styles.primary}>Check Cookie Balance</Link>
