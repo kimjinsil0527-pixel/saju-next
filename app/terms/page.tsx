@@ -12,7 +12,7 @@ export default function Terms() {
       <div className={styles.content}>
         <p className={styles.eyebrow}>Legal</p>
         <h1 className={styles.title}>Terms of Use</h1>
-        <p className={styles.updated}>Last updated: June 12, 2026</p>
+        <p className={styles.updated}>Last updated: July 9, 2026</p>
 
         <div className={styles.body}>
           <h2>1. Acceptance of Terms</h2>
@@ -34,16 +34,16 @@ export default function Terms() {
           </ul>
 
           <h2>5. Payments & Billing</h2>
-          <p>Payments are processed by <strong>Lemon Squeezy</strong>, our Merchant of Record. Lemon Squeezy handles payment details, applicable taxes, receipts, and payment disputes. By starting a recurring plan, you authorize monthly charges until cancellation.</p>
+          <p>Payments are processed by <strong>Creem</strong>, our Merchant of Record. Creem handles payment details, applicable taxes, receipts, and payment disputes. By starting a recurring plan, you authorize monthly charges until cancellation.</p>
 
           <h2>6. Refunds & Cancellations</h2>
-          <p>Refunds and cancellation terms are set out in our <Link href="/refund">Refund Policy</Link>. The monthly membership may be cancelled at any time, with cancellation taking effect according to the billing terms shown by Lemon Squeezy.</p>
+          <p>Refunds and cancellation terms are set out in our <Link href="/refund">Refund Policy</Link>. The monthly membership may be cancelled at any time, with cancellation taking effect according to the billing terms shown by Creem.</p>
 
           <h2>7. Data Retention & Account Deletion</h2>
           <p>User data is retained for a maximum of 90 days from the date of last account activity or cancellation. After this period, all personal data is permanently deleted. Accounts inactive for 90 days will be automatically closed and deleted. In the event of service discontinuation, all user data will be deleted within 90 days of the closure date, with at least 30 days advance notice to registered users. Financial transaction records may be retained for up to 5 years as required by applicable tax and accounting law, but will be anonymized after the 90-day period.</p>
 
           <h2>8. Account Responsibility</h2>
-          <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Notify us immediately at <a href="mailto:support@unmyung.app">support@unmyung.app</a> if you suspect unauthorized access.</p>
+          <p>You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. Notify us immediately at <a href="mailto:jgim76298@gmail.com">jgim76298@gmail.com</a> if you suspect unauthorized access.</p>
 
           <h2>9. Intellectual Property</h2>
           <p>All content on UNMYUNG — including analysis text, reports, design elements, and software — is the intellectual property of UNMYUNG and protected by applicable copyright laws. You may not reproduce, distribute, or create derivative works without our express written permission.</p>
@@ -55,7 +55,7 @@ export default function Terms() {
           <p>You agree not to: (a) use the Service for any unlawful purpose; (b) attempt to reverse-engineer, scrape, or copy our proprietary analysis systems; (c) resell or commercially exploit readings without written permission; (d) impersonate another person or entity.</p>
 
           <h2>12. Dispute Resolution</h2>
-          <p>We encourage you to contact us first at <a href="mailto:support@unmyung.app">support@unmyung.app</a> to resolve any dispute. If we cannot resolve a dispute informally, it shall be submitted to binding arbitration under the rules of a mutually agreed arbitration body, except where prohibited by local law. EU and UK consumers retain the right to bring claims before their national courts and may use the EU Online Dispute Resolution platform at <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
+          <p>We encourage you to contact us first at <a href="mailto:jgim76298@gmail.com">jgim76298@gmail.com</a> to resolve any dispute. If we cannot resolve a dispute informally, it shall be submitted to binding arbitration under the rules of a mutually agreed arbitration body, except where prohibited by local law. EU and UK consumers retain the right to bring claims before their national courts and may use the EU Online Dispute Resolution platform at <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>.</p>
 
           <h2>13. Governing Law</h2>
           <p>These Terms are governed by and construed in accordance with applicable law. For EU residents, mandatory consumer protection provisions of your country of residence apply regardless of any governing law clause. For UK residents, English law applies where not superseded by mandatory UK consumer law.</p>
@@ -64,7 +64,7 @@ export default function Terms() {
           <p>We may update these Terms from time to time. For material changes, registered users will be notified by email at least 14 days before the changes take effect. Continued use of the Service after the effective date constitutes acceptance. If you do not agree to the updated Terms, you must discontinue use of the Service.</p>
 
           <h2>15. Contact</h2>
-          <p>For questions about these Terms, contact us at <a href="mailto:support@unmyung.app">support@unmyung.app</a> or visit our <Link href="/support">Support</Link> page.</p>
+          <p>For questions about these Terms, contact us at <a href="mailto:jgim76298@gmail.com">jgim76298@gmail.com</a> or visit our <Link href="/support">Support</Link> page.</p>
         </div>
       </div>
     </div>
